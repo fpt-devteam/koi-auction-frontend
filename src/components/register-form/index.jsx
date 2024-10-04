@@ -1,11 +1,31 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox, Card } from 'antd';
+import { Form, Input, Button, Checkbox, Card, message } from 'antd';
 import { LockOutlined, UserOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
 import './index.scss'; // Custom CSS for styling
+import userApi from '../../config/userApi';
 
 const RegisterForm = () => {
-  const onFinish = (values) => {
-    console.log('Success:', values);
+  const handleRegister = async (values) => {
+    try {
+      // Submit the form data to the back-end API
+      const response = await userApi.post('user-service/register', {
+        firstname: values.firstName,
+        lastname: values.lastName,
+        username: values.username,
+        phone: values.phone,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (response.status === 201) {
+        message.success('Registration successful! Please log in.');
+        window.location.href = '/login';
+      }
+    } catch (error) {
+      if (error.response) {
+        message.error(error.response.data.message || 'Register failed. Please try again.')
+      }
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -31,7 +51,7 @@ const RegisterForm = () => {
           initialValues={{
             remember: true,
           }}
-          onFinish={onFinish}
+          onFinish={handleRegister}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >

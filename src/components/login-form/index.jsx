@@ -1,15 +1,39 @@
-import React from 'react';
-import { Form, Input, Button, Card, Checkbox } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import './index.scss'; // Custom CSS for styling
+import React from "react";
+import { Form, Input, Button, Card, Checkbox, message } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import "./index.scss"; // Custom CSS for styling
+import userApi from "../../config/userApi";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/features/userSlice";
+
 
 const LoginForm = () => {
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
+  const dispatch = useDispatch();
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
+  };
+  
+  const handleLogin = async (values) => {
+    try {
+      const response = await userApi.post('user-service/login', {
+        username: values.username,
+        password: values.password,
+      });
+      console.log(response)
+      if (response.status === 200) {
+        console.log(response)
+        const { user } = response.data;
+        dispatch(loginSuccess({ user }));
+        message.success('Login successful!');
+        window.location.href = '/';
+      }
+    } catch (error) {
+      if (error.response) {
+        message.error(error.response.data.message || 'Login failed. Please try again.');
+      } 
+      
+    }
   };
 
   return (
@@ -19,10 +43,10 @@ const LoginForm = () => {
         bordered={false}
         style={{
           maxWidth: 500,
-          margin: '0 auto',
-          padding: '20px',
-          borderRadius: '10px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          margin: "0 auto",
+          padding: "20px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
         }}
       >
         <Form
@@ -31,7 +55,7 @@ const LoginForm = () => {
           initialValues={{
             remember: true,
           }}
-          onFinish={onFinish}
+          onFinish={handleLogin}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
@@ -39,19 +63,25 @@ const LoginForm = () => {
           <Form.Item
             label="Username"
             name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Enter your username" />
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Enter your username"
+            />
           </Form.Item>
 
           {/* Password */}
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: "Please input your password!" }]}
             hasFeedback
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Enter your password"
+            />
           </Form.Item>
 
           {/* Remember Me */}
@@ -67,10 +97,10 @@ const LoginForm = () => {
           </Form.Item>
 
           {/* Forgot Password and Register Link */}
-          <p style={{ textAlign: 'center' }}>
+          <p style={{ textAlign: "center" }}>
             Forgot your password? <a href="/forgot-password">Click here</a>.
           </p>
-          <p style={{ textAlign: 'center' }}>
+          <p style={{ textAlign: "center" }}>
             Don't have an account? <a href="/register">Create an account</a>.
           </p>
         </Form>
