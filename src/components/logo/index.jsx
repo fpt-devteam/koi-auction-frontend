@@ -10,7 +10,8 @@ function Logo({ width = 10, height = 10 }) {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
+        // xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
         width={width}
         zoomAndPan="magnify"
         height={height}
