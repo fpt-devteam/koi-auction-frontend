@@ -5,6 +5,9 @@ import {
 import './App.css'
 import AppLayout from "./components/app-layout";
 import Home from "./pages/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import React from "react";
 
 function App() {
   const router = createBrowserRouter([
@@ -13,6 +16,8 @@ function App() {
       element: <AppLayout />,
       children: [
         { path: "", element: <Home /> },
+        { path: "/login", element: <Login /> },
+        { path: "/register", element: <Register /> }
       ],
     },
   ]);
