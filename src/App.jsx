@@ -8,6 +8,7 @@ import HomePage from "./pages/home-page";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import React from "react";
+import CreateAuctionPage from "./pages/create-auction-page";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,6 +30,16 @@ function App() {
         {
           path: "/management/create-lot-request",
           element: <CreateLotPage />,
+        },
+      ],
+    },
+    {
+      path: "/management",
+      element: <MngLayout />,
+      children: [
+        {
+          path: "/management/create-auction-request",
+          element: <CreateAuctionPage />,
         },
       ],
     },
