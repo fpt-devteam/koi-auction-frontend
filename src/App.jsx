@@ -5,9 +5,8 @@ import MngLayout from "./components/mng-layout";
 import LotManagementPage from "./pages/lot-management-page";
 import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import React from "react";
+import Login from "./pages/login-page";
+import Register from "./pages/register-page";
 
 function App() {
   const router = createBrowserRouter([

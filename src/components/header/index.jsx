@@ -23,8 +23,8 @@ function Header() {
                     height={150}
                     onClick={() => navigate("/")} /> */}
         <Logo
-          width={100}
-          height={100}
+          width={55}
+          height={80}
           className="header__logo"
           onClick={() => navigate("/")}
         />
@@ -44,4 +44,5 @@ function Header() {
     </div>
   );
 }
-export default Header;
+export default Header; 
+ // this 

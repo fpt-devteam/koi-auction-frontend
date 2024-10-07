@@ -12,7 +12,6 @@ import {
   InputNumber,
 } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
-
 const { Option } = Select;
 
 // Component Upload

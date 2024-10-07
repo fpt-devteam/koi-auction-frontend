@@ -1,4 +1,3 @@
-import React from "react";
 import { Form, Input, Button, Card, Checkbox, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./index.scss"; // Custom CSS for styling
@@ -22,11 +21,15 @@ const LoginForm = () => {
       });
       console.log(response)
       if (response.status === 200) {
+        console.log(response.data);
         console.log(response)
         const { user } = response.data;
+        
         dispatch(loginSuccess({ user }));
         message.success('Login successful!');
-        window.location.href = '/';
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000); 
       }
     } catch (error) {
       if (error.response) {

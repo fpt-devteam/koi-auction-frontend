@@ -6,23 +6,24 @@
   min-height: 90vh;
   background: linear-gradient(135deg, #f0f2f5 40%, #ffffff 100%);
   padding: 20px;
+  
 }
 
-.ant-card {
+.res-card {
   background-color: #ffffff;
 }
 
-.ant-input,
-.ant-input-affix-wrapper {
+.res-input,
+.ant-input-affix-wrapper { 
   height: 45px;
   border-radius: 5px;
 }
 
-.ant-form-item {
+.form-item {
   margin-bottom: 10px;
 }
 
-.ant-btn-primary {
+.res-btn {
   background-color: #1890ff;
   border: none;
   height: 45px;
@@ -30,15 +31,15 @@
   font-size: 16px;
 }
 
-.ant-btn-primary:hover {
+.res-btn:hover {
   background-color: #40a9ff;
 }
 
-.ant-card-bordered {
-  border: none;
-}
+// .ant-card-bordered {
+//   border: none;
+// }
 
-.ant-card-head-title {
+.register-form-title {
   font-size: 24px;
   text-align: center;
 }
