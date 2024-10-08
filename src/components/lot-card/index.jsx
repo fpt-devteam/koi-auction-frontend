@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Button,
   Card,
@@ -17,33 +16,34 @@ import { DeleteOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
-const LotCard = ({ lot, onLotDelete }) => {
+const LotCard = ({ lot, refetch }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleModalCancel = () => {
     setIsModalVisible(false);
   };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-  const handleDelete = async () => {
+  const handleLotDelete = async () => {
     try {
-      console.log(lot.lotId);
       await lotApi.delete(`lots/${lot.lotId}`);
       message.success("Deleted successfully!");
-      onLotDelete(); // Gọi hàm onLotDelete để cập nhật lại danh sách
+      refetch();
     } catch (error) {
       message.error("Failed to delete lot: " + error.message);
     }
   };
   return (
     <>
-      <Card title={`${lot.koiFishDto.variety} #${lot.sku}`}>
+      <Card
+        title={
+          <div style={{ textAlign: "left" }}>
+            {`${lot.koiFishDto.variety} #${lot.sku}`}
+          </div>
+        }
+      >
         <Row gutter={[16, 16]}>
           {/* Image Placeholder */}
           <Col
@@ -58,12 +58,9 @@ const LotCard = ({ lot, onLotDelete }) => {
               alignItems: "center",
             }}
           >
-            {/* <div
-              style={{ width: 80, height: 80, backgroundColor: "#B0B0B0" }}
-            /> */}
             <Image
               src={
-                lot.koiFishDto.koiMedia?.$values?.[0]?.filePath ||
+                lot.koiFishDto.koiMedia?.[0]?.filePath ||
                 "default-placeholder.png"
               }
               width={80}
@@ -86,7 +83,7 @@ const LotCard = ({ lot, onLotDelete }) => {
             <br />
 
             <Text strong>By: </Text>
-            <span>{lot.ownerName || "Unknown"}</span>
+            <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
           </Col>
 
           {/* View Button */}
@@ -114,7 +111,7 @@ const LotCard = ({ lot, onLotDelete }) => {
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
             <Popconfirm
               title="Are you sure to delete this item?"
-              onConfirm={handleDelete}
+              onConfirm={handleLotDelete}
               okText="Yes"
               cancelText="No"
             >
@@ -131,13 +128,16 @@ const LotCard = ({ lot, onLotDelete }) => {
       {/* Modal hiển thị trang UpdateLotPage */}
       <Modal
         open={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={handleModalCancel}
         footer={null} // Bỏ footer để tùy chỉnh nút trong trang UpdateLotPage
         width={1200} // Đặt chiều rộng modal tùy ý
       >
         {/* Render trang UpdateLotPage */}
-        <LotDetailPage lotData={lot} handleCancel={handleCancel} />
+        <LotDetailPage
+          lotData={lot}
+          refetch={refetch}
+          handleModalCancel={handleModalCancel}
+        />
       </Modal>
     </>
   );

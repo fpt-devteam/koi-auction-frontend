@@ -60,7 +60,11 @@ const UploadKoiMedia = ({ initData, form }) => {
   };
 
   return (
-    <Form.Item style={{ marginBottom: "24px" }} name="koiMedia">
+    <Form.Item
+      style={{ marginBottom: "24px" }}
+      name="koiMedia"
+      rules={[{ required: true, message: "Please upload at least 1 picture" }]}
+    >
       {/* Khu vực upload ảnh */}
       <Upload
         beforeUpload={handleBeforeUploadImage}

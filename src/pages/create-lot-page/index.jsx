@@ -6,7 +6,7 @@ import { message } from "antd";
 const CreateLotPage = () => {
   const navigate = useNavigate();
 
-  const handleSave = async (values) => {
+  const onCreate = async (values) => {
     // console.log(values);
     // Xử lý lưu form
     const updatedValues = {
@@ -14,9 +14,6 @@ const CreateLotPage = () => {
       breederId: 1, // Thêm trường mới
     };
 
-    console.log("Saving form data", updatedValues);
-    // console.log(updatedValues);
-    // Gọi API tạo mới Lot
     try {
       const response = await lotApi.post("lots", updatedValues);
       // console.log("Create Lot Response:", response);
@@ -27,16 +24,13 @@ const CreateLotPage = () => {
     }
   };
 
-  const handleCancel = () => {};
-
   return (
     <LotLayout
       title="Create New Lot"
       uploadKoiMediaData={null}
       lotData={null}
       showLotStatus={false}
-      onSave={handleSave}
-      onCancel={handleCancel}
+      onCreate={onCreate}
       isView={false} // Chế độ Edit nên là false
     />
   );
