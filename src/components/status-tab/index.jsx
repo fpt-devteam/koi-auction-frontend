@@ -3,7 +3,6 @@ import { Tabs, Spin, message } from "antd";
 import { AndroidOutlined, AppleOutlined } from "@ant-design/icons";
 import lotApi from "../../config/lotApi";
 
-// eslint-disable-next-line react/prop-types
 const StatusTab = ({ LotList }) => {
   const [tabsData, setTabsData] = useState([]); // Lưu trữ danh sách tab từ API
   const [loading, setLoading] = useState(true); // Trạng thái loading
@@ -13,10 +12,8 @@ const StatusTab = ({ LotList }) => {
   const fetchTabsData = async () => {
     try {
       const response = await lotApi.get("lot-statuses");
-      // console.log(response);
-      const data = response.data.$values;
+      const data = response.data;
       setTabsData(data); // Cập nhật danh sách tab
-      // console.log("Fetched tabs data: ", data);
       setLoading(false); // Tắt trạng thái loading
     } catch (error) {
       message.error(error.message); // Hiển thị thông báo lỗi nếu gọi API thất bại

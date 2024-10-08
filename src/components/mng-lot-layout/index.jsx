@@ -1,21 +1,45 @@
-/* eslint-disable react/prop-types */
-import { Row, Col, Button, Form } from "antd";
+import { Row, Col, Button, Form, message } from "antd";
 import LotInfo from "../lot-info";
 import UploadKoiMedia from "../upload-koi-media";
+import { useState } from "react";
 
 const LotLayout = ({
   title,
   uploadKoiMediaData,
   lotInfoData,
-  onSave,
-  onCancel,
-  //   isView,
+  onCreate,
+  onUpdate,
+  onApprove,
+  onReject,
 }) => {
   const [form] = Form.useForm(); // Khởi tạo form
+  const [action, setAction] = useState(""); // Trạng thái để lưu hành động hiện tại (Create, Update)
 
   // Hàm xử lý khi submit form
-  const handleSubmit = (values) => {
-    onSave(values); // Gọi hàm onSave với giá trị của form
+  const handleSubmit = async (values) => {
+    if (action === "create") {
+      await onCreate(values); // Gọi hàm onCreate với giá trị của form
+    } else if (action === "update") {
+      await onUpdate(values); // Gọi hàm onUpdate với giá trị của form
+    }
+  };
+
+  const handleCreate = () => {
+    setAction("create");
+    form.submit(); // Submit form
+  };
+
+  const handleUpdate = () => {
+    setAction("update");
+    form.submit(); // Submit form
+  };
+
+  const handleApprove = async () => {
+    await onApprove();
+  };
+
+  const handleReject = async () => {
+    await onReject();
   };
 
   return (
@@ -46,7 +70,6 @@ const LotLayout = ({
             <LotInfo initData={lotInfoData} showLotStatus={false} form={form} />
 
             {/* Save and Cancel*/}
-            {/* {!isView && ( */}
             <div
               style={{
                 display: "flex",
@@ -54,14 +77,25 @@ const LotLayout = ({
                 marginTop: "24px",
               }}
             >
-              <Button danger onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit">
+              {/* <Button type="primary" htmlType="submit">
                 Save
+              </Button> */}
+              <Button color="primary" variant="solid" onClick={handleCreate}>
+                Create
+              </Button>
+
+              <Button color="primary" variant="solid" onClick={handleUpdate}>
+                Update
+              </Button>
+
+              <Button color="primary" variant="solid" onClick={handleApprove}>
+                Approve
+              </Button>
+
+              <Button color="danger" variant="solid" onClick={handleReject}>
+                Reject
               </Button>
             </div>
-            {/* )} */}
           </Col>
           {/* Upload Section */}
           <Col span={8}>
