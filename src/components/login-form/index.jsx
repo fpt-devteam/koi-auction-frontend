@@ -5,10 +5,12 @@ import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
+import { useNavigate } from "react-router-dom";
 
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -16,9 +18,12 @@ const LoginForm = () => {
   
   const handleLogin = async (values) => {
     try {
-      const response = await userApi.post('user-service/login', {
+      const response = await userApi.post('/login', {
         username: values.username,
         password: values.password,
+        rememberMe: values.remember,
+      }, {
+        withCredentials: true,
       });
       console.log(response)
       if (response.status === 200) {
@@ -26,13 +31,19 @@ const LoginForm = () => {
         const { user } = response.data;
         dispatch(loginSuccess({ user }));
         message.success('Login successful!');
-        window.location.href = '/';
+        navigate('/');
       }
     } catch (error) {
       if (error.response) {
+        // Server-side error (received a response from the server)
         message.error(error.response.data.message || 'Login failed. Please try again.');
-      } 
-      
+      } else if (error.request) {
+        // Network error (request was made but no response received)
+        message.error('Network error. Please check your internet connection.');
+      } else {
+        // Other types of errors (coding issues, etc.)
+        message.error('An unexpected error occurred. Please try again later.');
+      }
     }
   };
 
