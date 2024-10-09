@@ -12,8 +12,17 @@ import HomePage from "./pages/home-page";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập khi app load
+    dispatch({ type: "auth/checkAuth" });
+  }, [dispatch]);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -27,7 +36,7 @@ function App() {
     {
       path: "/management",
       element: (
-        <PrivateRoute allowedRoles={[2, 3]}>
+        <PrivateRoute allowedRoles={[2, 3, 4]}>
           <MngLayout />
         </PrivateRoute>
       ),

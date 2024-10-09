@@ -29,7 +29,7 @@ function Header() {
           onClick={() => navigate("/")}
         />
         <ul className="header__navigation">
-          <li>Home</li>
+          <li onClick={() => navigate("/")}>Home</li>
           <li>Auction</li>
           <li>About</li>
         </ul>

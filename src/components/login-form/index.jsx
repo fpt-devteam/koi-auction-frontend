@@ -29,11 +29,12 @@ const LoginForm = () => {
       );
       console.log(response);
       if (response.status === 200) {
-        console.log(response);
         const { user } = response.data;
         dispatch(loginSuccess({ user }));
         message.success("Login successful!");
-        navigate("/");
+        if (user.UserRoleId == 1) {
+          navigate("/");
+        } else navigate("/management");
       }
     } catch (error) {
       if (error.response) {

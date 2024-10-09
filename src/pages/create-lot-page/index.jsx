@@ -6,16 +6,16 @@ import { useSelector } from "react-redux";
 
 const CreateLotPage = () => {
   const navigate = useNavigate();
-  const userId = useSelector((store) => store.user.user?.user.userId);
+  const { user } = useSelector((store) => store.user);
 
   const onCreate = async (values) => {
     // console.log(values);
     // Xử lý lưu form
     const updatedValues = {
       ...values, // Giữ lại các trường từ form
-      breederId: { userId }, // Thêm trường mới
+      breederId: user.UserId, // Thêm trường mới
     };
-
+    console.log(updatedValues);
     try {
       const response = await lotApi.post("lots", updatedValues);
       // console.log("Create Lot Response:", response);

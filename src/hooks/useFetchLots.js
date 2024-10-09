@@ -13,11 +13,10 @@ const useFetchLots = (
   const [lots, setLots] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái loading
   const [error, setError] = useState(null); // Trạng thái lỗi nếu có
-
   const fetchLots = useCallback(async () => {
     try {
       const url =
-        breederId == 2
+        breederId != null
           ? `lots?LotStatusId=${lotStatusId}&SortBy=${sortBy}&IsDescending=${isDescending}&BreederId=${breederId}`
           : `lots?LotStatusId=${lotStatusId}&SortBy=${sortBy}&IsDescending=${isDescending}`;
       setLoading(true); // Bắt đầu loading khi fetch dữ liệu

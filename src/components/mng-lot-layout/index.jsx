@@ -45,7 +45,7 @@ const LotLayout = ({
 
   // const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
 
-  const userRoleId = useSelector((state) => state.user.user?.user?.userRoleId);
+  const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
   const statusId = useSelector((state) => state.status.statusId);
   if (statusId === null || userRoleId === null) {
     return null;

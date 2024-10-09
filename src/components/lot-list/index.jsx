@@ -11,7 +11,12 @@ import React from "react";
 import useFetchLots from "../../hooks/useFetchLots";
 
 const LotList = ({ lotStatusId, breederId = null }) => {
-  const { lots, loading, refetch } = useFetchLots(lotStatusId, breederId);
+  const { lots, loading, refetch } = useFetchLots(
+    lotStatusId,
+    "UpdatedAt",
+    false,
+    breederId
+  );
 
   return loading ? (
     <Spin />

@@ -19,7 +19,7 @@ const { Text } = Typography;
 
 const LotCard = ({ lot, refetch }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const user = useSelector((store) => store.user.user?.user);
+  const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -86,7 +86,7 @@ const LotCard = ({ lot, refetch }) => {
             <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
             <br />
 
-            {user.userRoleId > 2 && (
+            {userRoleId > 2 && (
               <>
                 <Text strong>By: </Text>
                 <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
@@ -118,7 +118,7 @@ const LotCard = ({ lot, refetch }) => {
             </Button>
 
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
-            {user?.userRoleId === 2 && statusId < 3 && (
+            {userRoleId === 2 && statusId < 3 && (
               <Popconfirm
                 title="Are you sure to delete this item?"
                 onConfirm={handleLotDelete}

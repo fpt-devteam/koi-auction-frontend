@@ -10,7 +10,8 @@ const StatusTab = ({ LotList }) => {
   const [loading, setLoading] = useState(true); // Trạng thái loading
   const [activeTab, setActiveTab] = useState("1"); // Tab đang được chọn
   const dispatch = useDispatch(); // Sử dụng dispatch từ Redux
-  const breederId = useSelector((store) => store.user.user?.user?.userRoleId); // Lấy breederId từ Redux
+  const { user } = useSelector((store) => store.user); // Lấy user từ Redux
+  const breederId = user.UserRoleId == 2 ? user.UserId : null;
 
   // Gọi API để lấy danh sách tab
   const fetchTabsData = async () => {
@@ -47,8 +48,8 @@ const StatusTab = ({ LotList }) => {
     icon: tab.lotStatusId % 2 === 0 ? <AppleOutlined /> : <AndroidOutlined />,
   }));
 
-  if (breederId == null) {
-    return null; // Nếu không có breederId thì không hiển thị tab
+  if (user == null) {
+    <Spin />; // Nếu không có breederId thì không hiển thị tab
   }
 
   return loading ? (

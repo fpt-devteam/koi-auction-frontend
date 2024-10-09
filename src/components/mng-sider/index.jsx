@@ -16,14 +16,14 @@ function getItem(label, key, icon, url = "/management") {
 }
 
 function MngSider() {
-  const user = useSelector((store) => store.user.user?.user);
+  const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
   let counter = 1; // Biến đếm bắt đầu từ 1
 
   // Danh sách các items cơ bản, sử dụng biến đếm counter
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
 
   // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
-  if (user.userRoleId === 2) {
+  if (userRoleId === 2) {
     items.push(
       getItem(
         "Create a lot",
