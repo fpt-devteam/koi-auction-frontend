@@ -14,6 +14,7 @@ import Register from "./pages/register";
 import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import CreateAuctionPage from "./pages/create-auction-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -46,6 +47,10 @@ function App() {
         {
           path: "/management/create-lot-request",
           element: <CreateLotPage />,
+        },
+        {
+          path: "/management/create-auction-request",
+          element: <CreateAuctionPage />,
         },
       ],
     },
