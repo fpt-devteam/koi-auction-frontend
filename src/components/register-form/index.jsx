@@ -14,7 +14,7 @@ const RegisterForm = () => {
   const handleRegister = async (values) => {
     try {
       // Submit the form data to the back-end API
-      const response = await userApi.post("user-service/register", {
+      const response = await userApi.post("/register", {
         firstname: values.firstName,
         lastname: values.lastName,
         username: values.username,
@@ -26,8 +26,8 @@ const RegisterForm = () => {
       if (response.status === 201) {
         message.success("Registration successful! Please log in.");
         setTimeout(() => {
-          navigate('/login');
-        }, 1000) 
+          navigate("/login");
+        }, 1000);
       }
     } catch (error) {
       if (error.response) {
