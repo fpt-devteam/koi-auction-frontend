@@ -13,11 +13,13 @@ import { useState } from "react";
 import LotDetailPage from "../../pages/lot-detail-page";
 import lotApi from "../../config/lotApi";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
 const { Text } = Typography;
 
 const LotCard = ({ lot, refetch }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -35,6 +37,8 @@ const LotCard = ({ lot, refetch }) => {
       message.error("Failed to delete lot: " + error.message);
     }
   };
+  const statusId = useSelector((state) => state.status.statusId);
+
   return (
     <>
       <Card
@@ -82,8 +86,13 @@ const LotCard = ({ lot, refetch }) => {
             <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
             <br />
 
-            <Text strong>By: </Text>
-            <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
+            {userRoleId > 2 && (
+              <>
+                <Text strong>By: </Text>
+                <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
+                <br />
+              </>
+            )}
           </Col>
 
           {/* View Button */}
@@ -109,19 +118,21 @@ const LotCard = ({ lot, refetch }) => {
             </Button>
 
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
-            <Popconfirm
-              title="Are you sure to delete this item?"
-              onConfirm={handleLotDelete}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button
-                type="primary"
-                danger
-                shape="circle"
-                icon={<DeleteOutlined />}
-              />
-            </Popconfirm>
+            {userRoleId === 2 && statusId < 3 && (
+              <Popconfirm
+                title="Are you sure to delete this item?"
+                onConfirm={handleLotDelete}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  type="primary"
+                  danger
+                  shape="circle"
+                  icon={<DeleteOutlined />}
+                />
+              </Popconfirm>
+            )}
           </Col>
         </Row>
       </Card>

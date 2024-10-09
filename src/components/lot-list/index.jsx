@@ -10,26 +10,13 @@ import lotApi from "../../config/lotApi";
 import React from "react";
 import useFetchLots from "../../hooks/useFetchLots";
 
-const LotList = ({ lotStatusId }) => {
-  // const [lots, setLots] = useState([]);
-  // const [loading, setLoading] = useState(true); // Trạng thái loading
-
-  // useEffect(() => {
-  //   const fetchLots = async () => {
-  //     try {
-  //       const response = await lotApi.get(`lots?LotStatusId=${lotStatusId}`);
-  //       const fetchedLots = response.data.$values;
-  //       setLots(fetchedLots);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       message.error(error.message);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchLots();
-  // }, [lotStatusId]); // Gọi API khi component được mount
-
-  const { lots, loading, refetch } = useFetchLots(lotStatusId);
+const LotList = ({ lotStatusId, breederId = null }) => {
+  const { lots, loading, refetch } = useFetchLots(
+    lotStatusId,
+    "UpdatedAt",
+    false,
+    breederId
+  );
 
   return loading ? (
     <Spin />
