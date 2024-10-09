@@ -22,6 +22,12 @@ function MngSider() {
       <FormOutlined />,
       "/management/create-lot-request"
     ),
+    getItem(
+      "Create an auction",
+      "3",
+      <FormOutlined />,
+      "/management/create-auction-request"
+    ),
     // getItem("Option 1", "1", <PieChartOutlined />),
     // getItem("Option 2", "2", <DesktopOutlined />),
     // getItem("User", "sub1", <UserOutlined />, [

@@ -7,10 +7,10 @@ import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import PrivateRoute from "./components/private-route";  // Import component PrivateRoute
+import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
+import CreateAuctionPage from "./pages/create-auction-page";
 
 function App() {
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -24,7 +24,7 @@ function App() {
     {
       path: "/management",
       element: (
-        <PrivateRoute allowedRoles={[2, 3]}> 
+        <PrivateRoute allowedRoles={[2, 3]}>
           <MngLayout />
         </PrivateRoute>
       ),
@@ -35,11 +35,17 @@ function App() {
           path: "/management/create-lot-request",
           element: <CreateLotPage />,
         },
+        {
+          path: "/management/create-auction-request",
+          element: <CreateAuctionPage />,
+        },
       ],
     },
     {
       path: "/unauthorized",
-      element: <h1>Unauthorized: You do not have permission to access this page.</h1>,
+      element: (
+        <h1>Unauthorized: You do not have permission to access this page.</h1>
+      ),
     },
   ]);
 
