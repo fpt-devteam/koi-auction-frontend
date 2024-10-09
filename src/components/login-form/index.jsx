@@ -6,33 +6,33 @@ import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
 
-
 const LoginForm = () => {
   const dispatch = useDispatch();
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   const handleLogin = async (values) => {
     try {
-      const response = await userApi.post('user-service/login', {
+      const response = await userApi.post("user-service/login", {
         username: values.username,
         password: values.password,
       });
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
-        console.log(response)
+        console.log(response);
         const { user } = response.data;
         dispatch(loginSuccess({ user }));
-        message.success('Login successful!');
-        window.location.href = '/';
+        message.success("Login successful!");
+        window.location.href = "/";
       }
     } catch (error) {
       if (error.response) {
-        message.error(error.response.data.message || 'Login failed. Please try again.');
-      } 
-      
+        message.error(
+          error.response.data.message || "Login failed. Please try again."
+        );
+      }
     }
   };
 
@@ -101,7 +101,8 @@ const LoginForm = () => {
             Forgot your password? <a href="/forgot-password">Click here</a>.
           </p>
           <p style={{ textAlign: "center" }}>
-            Don't have an account? <a href="/register">Create an account</a>.
+            Don&apos;t have an account?{" "}
+            <a href="/register">Create an account</a>.
           </p>
         </Form>
       </Card>

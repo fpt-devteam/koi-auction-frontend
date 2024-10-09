@@ -2,16 +2,18 @@ import { useNavigate } from "react-router-dom";
 import LotLayout from "../../components/mng-lot-layout";
 import lotApi from "../../config/lotApi";
 import { message } from "antd";
+import { useSelector } from "react-redux";
 
 const CreateLotPage = () => {
   const navigate = useNavigate();
+  const userId = useSelector((store) => store.user.user?.user.userId);
 
   const onCreate = async (values) => {
     // console.log(values);
     // Xử lý lưu form
     const updatedValues = {
       ...values, // Giữ lại các trường từ form
-      breederId: 1, // Thêm trường mới
+      breederId: { userId }, // Thêm trường mới
     };
 
     try {

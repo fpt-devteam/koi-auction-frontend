@@ -1,13 +1,15 @@
 import { message } from "antd";
 import LotLayout from "../../components/mng-lot-layout";
 import lotApi from "../../config/lotApi";
+import { useSelector } from "react-redux";
 
 const LotDetailPage = ({ lotData, refetch, handleModalCancel }) => {
+  const userId = useSelector((store) => store.user.user?.user.userId);
   const handleUpdate = async (values) => {
     // Xử lý lưu form
     const updatedValues = {
       ...values, // Giữ lại các trường từ form
-      breederId: 1, // Thêm trường mới
+      breederId: { userId }, // Thêm trường mới
     };
 
     // Gọi API tạo mới Lot
