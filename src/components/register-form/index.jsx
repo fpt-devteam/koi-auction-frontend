@@ -7,8 +7,10 @@ import {
 } from "@ant-design/icons";
 import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const handleRegister = async (values) => {
     try {
       // Submit the form data to the back-end API
@@ -23,7 +25,9 @@ const RegisterForm = () => {
 
       if (response.status === 201) {
         message.success("Registration successful! Please log in.");
-        window.location.href = "/login";
+        setTimeout(() => {
+          navigate('/login');
+        }, 1000) 
       }
     } catch (error) {
       if (error.response) {

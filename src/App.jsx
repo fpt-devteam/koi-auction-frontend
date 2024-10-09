@@ -11,30 +11,9 @@ import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "./redux/features/userSlice";
+import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
 
 function App() {
-  const dispatch = useDispatch();
-  const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
-
-  useEffect(() => {
-    // Lấy user từ localStorage
-    const savedUser = localStorage.getItem("user");
-
-    if (savedUser) {
-      // Cập nhật Redux với user từ localStorage
-      const userObj = JSON.parse(savedUser);
-      dispatch(loginSuccess({ user: userObj }));
-      setIsUserLoaded(true);
-    }
-  }, [dispatch]);
-  const user = useSelector((store) => store.user.user?.user);
-
-  if (!isUserLoaded) {
-    return null;
-  }
   const router = createBrowserRouter([
     {
       path: "/",
@@ -47,12 +26,11 @@ function App() {
     },
     {
       path: "/management",
-      element:
-        user?.userRoleId > 1 ? (
+      element: (
+        <PrivateRoute allowedRoles={[2, 3]}>
           <MngLayout />
-        ) : (
-          <Navigate to="/login" replace /> // Điều hướng đến trang login nếu userRoleId không phải là 2
-        ),
+        </PrivateRoute>
+      ),
       children: [
         { path: "/management/lots", element: <LotManagementPage /> },
         { path: "/management", element: <LotManagementPage /> },
@@ -61,6 +39,12 @@ function App() {
           element: <CreateLotPage />,
         },
       ],
+    },
+    {
+      path: "/unauthorized",
+      element: (
+        <h1>Unauthorized: You do not have permission to access this page.</h1>
+      ),
     },
   ]);
 
