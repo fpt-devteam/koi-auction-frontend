@@ -7,7 +7,6 @@ import {
   TimePicker,
   Form,
   Button,
-  Input,
   DatePicker,
   Table,
   Popconfirm,
@@ -16,21 +15,36 @@ import {
   Col,
   Image,
   Typography,
-  Modal,
 } from "antd";
 const { Text } = Typography;
 import dayjs from "dayjs";
-import axios from "axios";
-import useFetchLots from "../../hooks/useFetchLots";
-import Card from "antd/es/card/Card";
-import LotDetailPage from "../lot-detail-page";
-// import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+ import useFetchLots from "../../hooks/useFetchLots";
+import { useSelector } from "react-redux";
+import lotApi from "../../config/lotApi";
 
-const auctionSourceApi = "https://67026c37bd7c8c1ccd3ed26b.mockapi.io/Movie";
-
-const createAuction = async (auctionData) => {
+const createAuction = async (auctionData, lotList) => {
   try {
-    const response = await axios.post(auctionSourceApi, auctionData);
+    const response = await lotApi.post("auctions", auctionData);
+    console.log(response.data);
+    console.log(response.data.auctionId);
+    let cnt = 0;
+    let newLotList = lotList.map(
+      (item) =>
+        (item = {
+          auctionId: response.data.auctionId,
+          auctionLotId: item.lotId,
+          orderInAuction: ++cnt,
+          duration: "00:30:00",
+          stepPercent: 5,
+        })
+    );
+
+    console.log(newLotList);
+    const auctionLotRespone = await lotApi.post(
+      "auction-lots/listAuctionLot",
+      newLotList
+    );
+    console.log(auctionLotRespone.data);
     return response;
   } catch (error) {
     console.log(error);
@@ -38,13 +52,11 @@ const createAuction = async (auctionData) => {
   }
 };
 export default function CreateAuctionPage() {
-  const auctionNamePattern = /^#Auc\d{3}$/;
   const [formVariable] = useForm();
-  const { lots, error } = useFetchLots(2); //get lot list
+  const { lots, error, loading } = useFetchLots(2); //get lot list
   const [auctionLotList, setAuctionLotList] = useState([]);
   const [approvedLotSource, setApprovedLotSource] = useState();
-  const [loading, setLoading] = useState(false);
-  const [err, serErr] = useState(error);
+  const { user } = useSelector((store) => store.user);
 
   // console.log(lots);
 
@@ -62,27 +74,21 @@ export default function CreateAuctionPage() {
   const handleSubmit = async (values) => {
     const dateFormat = "YYYY-MM-DD";
     const timeFormat = "YYYY-MM-DD HH:mm:ss";
-    const today = dayjs().format(dateFormat);
+    // const today = dayjs().format(dateFormat);
     const newAuction = {
-      auctionId: "testAuctionId",
-      auctionName: values.auctionName,
-      staffId: "testStaff",
+      staffId: user.UserId,
       hostDate: values.hostDate ? values.hostDate.format(dateFormat) : null,
       startTime: values.startTime.format(timeFormat),
-      createAt: today,
-      updateAt: today,
-      lotList: auctionLotList,
     };
-    // console.log("Data of new auction: " + newAuction);
 
     //Call Api create new auction
     try {
-      const response = await createAuction(newAuction);
+      const response = await createAuction(newAuction, auctionLotList);
       message.success(response.statusText);
       handleReset();
     } catch (error) {
       console.log(error);
-      message.error("Failed to create Auction.");
+      message.error(error.message);
     }
   };
 
@@ -115,23 +121,6 @@ export default function CreateAuctionPage() {
               onFinish={handleSubmit}
               className="form-container"
             >
-              <Form.Item
-                className="form-item-label"
-                name={"auctionName"}
-                label={"Auction Name"}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter name auction",
-                  },
-                  {
-                    pattern: auctionNamePattern,
-                    message: "Auction name must be #Aucxxx",
-                  },
-                ]}
-              >
-                <Input className="form-item-input" />
-              </Form.Item>{" "}
               <Form.Item
                 className="form-item-label"
                 name={"hostDate"}
@@ -170,7 +159,6 @@ export default function CreateAuctionPage() {
               setAuctionLotList={setAuctionLotList}
               operation="Remove"
             />
-
             <LotSection
               title="Approved Lots"
               lotSource={auctionLotList}
@@ -224,6 +212,7 @@ function LotSection({
     </div>
   );
 }
+
 function LotTable({
   getLotSource,
   setGetLotSource,
@@ -231,9 +220,6 @@ function LotTable({
   setGiveLotSource,
   operation,
 }) {
-  // console.log(operation + "Long");
-  console.log(giveLotSource);
-  // return null;
   const columns = [
     {
       // title: "Lot",
@@ -241,19 +227,36 @@ function LotTable({
       key: "lotId",
       render: (_, record) => <LotCardRow lot={record} operation={operation} />,
     },
-    // {
-    //   title: "Operation",
-    //   dataIndex: "Operation",
-    //   render: (_, record) =>
-    //     giveLotSource.length >= 1 ? (
-    //       <Popconfirm
-    //         title="Are you sure?"
-    //         onConfirm={() => handleOperation(record)}
-    //       >
-    //         <a>{operation}</a>
-    //       </Popconfirm>
-    //     ) : null,
-    // },
+    {
+      dataIndex: "Operation",
+      render: (_, record) => {
+        if (giveLotSource.length >= 1) {
+          if (operation == "Add") {
+            return (
+              <Button
+                type="primary"
+                shape="circle"
+                onClick={() => handleOperation(record)}
+              >
+                +
+              </Button>
+            );
+          } else {
+            return (
+              <Popconfirm
+                title="Are you sure?"
+                onConfirm={() => handleOperation(record)}
+              >
+                <Button type="primary" danger shape="circle">
+                  -
+                </Button>
+              </Popconfirm>
+            );
+          }
+        }
+        return null;
+      },
+    },
   ];
 
   const handleOperation = (record) => {
@@ -269,23 +272,10 @@ function LotTable({
   return <Table dataSource={giveLotSource} columns={columns} rowKey="lotId" />;
 }
 
-/* Validation for new auction
-Name auction: #Aucxxx
-Lot list is not empty 
-Host Date is not in the past (Host Date is at least 3 days from today) 
-*/
-//khong throw error
-
-const LotCardRow = ({ lot, operation }) => {
-  let iconContent = "+";
-  let iconColor = "default";
-  if (operation == "Delete") {
-    iconContent = "-";
-    iconColor = "danger";
-  }
+const LotCardRow = ({ lot }) => {
   return (
     <>
-      <Card
+      <div
         title={
           <div style={{ textAlign: "left" }}>
             {`${lot.koiFishDto.variety} #${lot.sku}`}
@@ -333,34 +323,20 @@ const LotCardRow = ({ lot, operation }) => {
             <Text strong>By: </Text>
             <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
           </Col>
-
-          {/* View Button */}
-          <Col
-            xs={4}
-            sm={4}
-            md={4}
-            lg={4}
-            xl={4}
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            {/* Nút Remove với Popconfirm để xác nhận xóa */}
-            <Popconfirm
-              title="Are you sure to delete this item?"
-              // onConfirm={handleLotDelete}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="primary" color={iconColor} shape="circle">
-                {iconContent}
-              </Button>
-            </Popconfirm>
-          </Col>
         </Row>
-      </Card>
+      </div>
     </>
   );
 };
+/*
+1. call api tạo mới 1 auction vào Auction
+
+2. call api thêm các lot trong auction vào AuctionLot
+*/
+
+/* Validation for new auction
+Lot list is not empty 
+Host Date is not in the past (Host Date is at least 3 days from today) 
+*/
+
+//khong throw error lam dung chuong trinh
