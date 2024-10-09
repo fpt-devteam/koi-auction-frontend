@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Upload, Button, message, Form } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import uploadToFirebase from "../../utils/upload";
@@ -8,7 +7,7 @@ import { useState } from "react";
 const MAX_IMAGE_SIZE_MB = 5; // 5MB cho mỗi ảnh
 const MAX_IMAGES = 4; // Tối đa 4 ảnh
 
-const UploadKoiMedia = ({ initData, form }) => {
+const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
   // console.log("koiMedia", koiMedia);
   const [koiMedia, setKoiMedia] = useState(initData || []);
   const fileList = koiMedia.map((file, index) => {
@@ -58,22 +57,30 @@ const UploadKoiMedia = ({ initData, form }) => {
     form.setFieldsValue({ koiMedia: updatedKoiMedia });
     setKoiMedia(updatedKoiMedia);
   };
-
   return (
-    <Form.Item style={{ marginBottom: "24px" }} name="koiMedia">
+    <Form.Item
+      style={{ marginBottom: "24px" }}
+      name="koiMedia"
+      rules={[{ required: true, message: "Please upload at least 1 picture" }]}
+    >
       {/* Khu vực upload ảnh */}
       <Upload
         beforeUpload={handleBeforeUploadImage}
         listType="picture"
         onChange={handleChange} // Xử lý khi file được upload hoặc xóa
         fileList={fileList} // Danh sách file đã upload
+        showUploadList={{ showRemoveIcon: !showOnly }}
       >
-        <Button type="primary" icon={<UploadOutlined />}>
-          Upload Images
-        </Button>
-        <span>
-          (Max {MAX_IMAGES}, each up to {MAX_IMAGE_SIZE_MB}MB)
-        </span>
+        {!showOnly && (
+          <>
+            <Button type="primary" icon={<UploadOutlined />}>
+              Upload Images
+            </Button>
+            <span>
+              (Max {MAX_IMAGES}, each up to {MAX_IMAGE_SIZE_MB}MB)
+            </span>
+          </>
+        )}
       </Upload>
     </Form.Item>
   );

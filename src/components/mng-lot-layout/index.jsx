@@ -1,23 +1,58 @@
-/* eslint-disable react/prop-types */
 import { Row, Col, Button, Form } from "antd";
 import LotInfo from "../lot-info";
 import UploadKoiMedia from "../upload-koi-media";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const LotLayout = ({
   title,
   uploadKoiMediaData,
   lotInfoData,
-  onSave,
-  onCancel,
-  //   isView,
+  onCreate,
+  onUpdate,
+  onApprove,
+  onReject,
+  showLotStatus,
 }) => {
   const [form] = Form.useForm(); // Khởi tạo form
+  const [action, setAction] = useState(""); // Trạng thái để lưu hành động hiện tại (Create, Update)
 
-  // Hàm xử lý khi submit form
-  const handleSubmit = (values) => {
-    onSave(values); // Gọi hàm onSave với giá trị của form
+  const handleSubmit = async (values) => {
+    if (action === "create") {
+      await onCreate(values); // Gọi hàm onCreate với giá trị của form
+    } else if (action === "update") {
+      await onUpdate(values); // Gọi hàm onUpdate với giá trị của form
+    }
   };
 
+  const handleCreate = () => {
+    setAction("create");
+    form.submit(); // Submit form
+  };
+
+  const handleUpdate = () => {
+    setAction("update");
+    form.submit(); // Submit form
+  };
+
+  const handleApprove = async () => {
+    await onApprove();
+  };
+
+  const handleReject = async () => {
+    await onReject();
+  };
+
+  // const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
+
+  const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
+  const statusId = useSelector((state) => state.status.statusId);
+  if (statusId === null || userRoleId === null) {
+    return null;
+  }
+  // console.log("statusId", statusId);
+  // console.log("userRoleId", userRoleId);
+  // console.log("onUpdate", onUpdate);
   return (
     <div
       style={{
@@ -39,14 +74,17 @@ const LotLayout = ({
       >
         <Row gutter={[24, 24]}>
           {/* Info Section */}
-          <Col span={16}>
+          <Col span={14}>
             <h2 style={{ fontWeight: "bold" }}>{title}</h2>
 
             {/* Render lotInfo vào bên trong form */}
-            <LotInfo initData={lotInfoData} showLotStatus={false} form={form} />
+            <LotInfo
+              initData={lotInfoData}
+              showLotStatus={showLotStatus}
+              form={form}
+            />
 
             {/* Save and Cancel*/}
-            {/* {!isView && ( */}
             <div
               style={{
                 display: "flex",
@@ -54,18 +92,41 @@ const LotLayout = ({
                 marginTop: "24px",
               }}
             >
-              <Button danger onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit">
+              {/* <Button type="primary" htmlType="submit">
                 Save
-              </Button>
+              </Button> */}
+              {onCreate != null && (
+                <Button color="primary" variant="solid" onClick={handleCreate}>
+                  Create
+                </Button>
+              )}
+
+              {onUpdate != null && statusId == 1 && userRoleId == 2 && (
+                <Button color="primary" variant="solid" onClick={handleUpdate}>
+                  Update
+                </Button>
+              )}
+
+              {onApprove != null && statusId == 1 && userRoleId > 2 && (
+                <Button color="primary" variant="solid" onClick={handleApprove}>
+                  Approve
+                </Button>
+              )}
+
+              {onReject != null && statusId == 1 && userRoleId > 2 && (
+                <Button color="danger" variant="solid" onClick={handleReject}>
+                  Reject
+                </Button>
+              )}
             </div>
-            {/* )} */}
           </Col>
           {/* Upload Section */}
-          <Col span={8}>
-            <UploadKoiMedia initData={uploadKoiMediaData} form={form} />
+          <Col span={10}>
+            <UploadKoiMedia
+              initData={uploadKoiMediaData}
+              form={form}
+              showOnly={userRoleId > 2 || statusId > 1}
+            ></UploadKoiMedia>
           </Col>
         </Row>
       </Form>

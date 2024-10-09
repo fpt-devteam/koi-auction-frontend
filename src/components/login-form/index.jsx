@@ -4,38 +4,52 @@ import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
-
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   const handleLogin = async (values) => {
     try {
-      const response = await userApi.post('user-service/login', {
-        username: values.username,
-        password: values.password,
-      });
-      console.log(response)
+      const response = await userApi.post(
+        "/login",
+        {
+          username: values.username,
+          password: values.password,
+          rememberMe: values.remember,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
       if (response.status === 200) {
-        console.log(response.data);
-        console.log(response)
         const { user } = response.data;
         
         dispatch(loginSuccess({ user }));
-        message.success('Login successful!');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1000); 
+        message.success("Login successful!");
+        if (user.UserRoleId == 1) {
+          navigate("/");
+        } else navigate("/management");
       }
     } catch (error) {
       if (error.response) {
-        message.error(error.response.data.message || 'Login failed. Please try again.');
-      } 
-      
+        // Server-side error (received a response from the server)
+        message.error(
+          error.response.data.message || "Login failed. Please try again."
+        );
+      } else if (error.request) {
+        // Network error (request was made but no response received)
+        message.error("Network error. Please check your internet connection.");
+      } else {
+        // Other types of errors (coding issues, etc.)
+        message.error("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
@@ -104,7 +118,8 @@ const LoginForm = () => {
             Forgot your password? <a href="/forgot-password">Click here</a>.
           </p>
           <p style={{ textAlign: "center" }}>
-            Don't have an account? <a href="/register">Create an account</a>.
+            Don&apos;t have an account?{" "}
+            <a href="/register">Create an account</a>.
           </p>
         </Form>
       </Card>

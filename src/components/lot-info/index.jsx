@@ -1,5 +1,13 @@
-/* eslint-disable react/prop-types */
-import { Form, Input, InputNumber, Select, Row, Col } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Row,
+  Col,
+  message,
+  Button,
+} from "antd";
 import { useEffect, useMemo, useState } from "react";
 import lotApi from "../../config/lotApi";
 
@@ -11,10 +19,10 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const fetchAuctionMethods = async () => {
     try {
       const response = await lotApi.get("auction-methods");
-      const fetchedAuctionMethods = response.data.$values;
+      const fetchedAuctionMethods = response.data;
       setAuctionMethods(fetchedAuctionMethods);
     } catch (error) {
-      console.log("Failed to fetch auction methods: ", error);
+      message.error(error.message);
     }
   };
 
@@ -25,13 +33,13 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const defaultLot = useMemo(() => {
     return (
       initData || {
-        startingPrice: 0,
+        startingPrice: "",
         createdAt: "N/A",
         koiFishDto: {
           variety: "",
-          sex: false,
-          sizeCm: 0,
-          yearOfBirth: 2000,
+          sex: "",
+          sizeCm: "",
+          yearOfBirth: "",
         },
         lotStatusDto: {
           lotStatusName: "Unknown",
@@ -51,6 +59,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
       variety: defaultLot.koiFishDto.variety,
       sex: defaultLot.koiFishDto.sex,
       sizeCm: defaultLot.koiFishDto.sizeCm,
+      weightKg: defaultLot.koiFishDto.weightKg,
       yearOfBirth: defaultLot.koiFishDto.yearOfBirth,
       auctionMethodId: defaultLot.auctionMethod.auctionMethodId,
       lotStatusName: defaultLot.lotStatusDto.lotStatusName,
@@ -65,11 +74,18 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
 
       {/* Starting Price */}
       <Form.Item
-        label="Starting Price"
+        label="Starting Price (VND)"
         name="startingPrice"
-        rules={[{ required: true, message: "Please enter the starting price" }]}
+        rules={[
+          { required: true, message: "Please enter the starting price" },
+          {
+            type: "number",
+            min: 500000,
+            message: "Starting price must be at least 500,000 VND",
+          },
+        ]}
       >
-        <InputNumber min={51} style={{ width: "100%" }} />
+        <InputNumber style={{ width: "100%" }} />
       </Form.Item>
 
       {/* Variety */}
@@ -87,18 +103,33 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
           <Form.Item
             label="Size (cm)"
             name="sizeCm"
-            rules={[{ required: true, message: "Please enter size" }]}
+            rules={[
+              { required: true, message: "Please enter size" },
+              {
+                type: "number",
+                min: 1,
+                max: 2147483647,
+                message: "Size must be between 1 and 2147483647 cm",
+              },
+            ]}
           >
-            <InputNumber min={1} max={2147483647} style={{ width: "100%" }} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item
             label="Weight (kg)"
             name="weightKg"
-            rules={[{ required: true, message: "Please enter weight" }]}
+            rules={[
+              { required: true, message: "Please enter weight" },
+              {
+                type: "number",
+                min: 0.02,
+                message: "Weight must be at least 0.02 kg",
+              },
+            ]}
           >
-            <InputNumber min={0.02} style={{ width: "100%" }} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
       </Row>
@@ -121,13 +152,17 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
           <Form.Item
             label="Year of Birth"
             name="yearOfBirth"
-            rules={[{ required: true, message: "Please enter year of birth" }]}
+            rules={[
+              { required: true, message: "Please enter year of birth" },
+              {
+                type: "number",
+                min: 1900,
+                max: new Date().getFullYear(),
+                message: `Year of birth must be between 1900 and ${new Date().getFullYear()}`,
+              },
+            ]}
           >
-            <InputNumber
-              min={1900}
-              max={new Date().getFullYear()}
-              style={{ width: "100%" }}
-            />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
       </Row>

@@ -1,43 +1,23 @@
+/* eslint-disable no-unused-vars */
 // src/components LotList.js
+// @ts-ignore
+
 import { Row, Col, Spin, message } from "antd";
 import { useEffect, useState } from "react";
 import "./index.scss";
 import LotCard from "../lot-card";
 import lotApi from "../../config/lotApi";
+import React from "react";
+import useFetchLots from "../../hooks/useFetchLots";
 
-// eslint-disable-next-line react/prop-types
-const LotList = ({ lotStatusId }) => {
-  const [lots, setLots] = useState([]);
-  const [loading, setLoading] = useState(true); // Trạng thái loading
+const LotList = ({ lotStatusId, breederId = null }) => {
+  const { lots, loading, refetch } = useFetchLots(
+    lotStatusId,
+    "UpdatedAt",
+    false,
+    breederId
+  );
 
-  const fetchLots = async () => {
-    try {
-      const response = await lotApi.get(`lots?LotStatusId=${lotStatusId}`);
-      // console.log(response);
-
-      const fetchedLots = response.data.$values;
-      // console.log("Fetched lots with IDs: ", fetchedLots);
-      setLots(fetchedLots);
-      setLoading(false);
-    } catch (error) {
-      // console.log("Failed to fetch lots: ", error);
-      message.error(error.message);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (lotStatusId) {
-      // Chỉ fetch khi lotStatusId được truyền vào
-      fetchLots();
-    }
-  }, [lotStatusId]); // Cập nhật mỗi khi lotStatusId thay đổi
-
-  // Hàm để gọi lại fetchLots sau khi xóa lot
-  const handleLotDelete = async () => {
-    setLoading(true);
-    await fetchLots(); // Gọi lại API để cập nhật danh sách sau khi xóa
-  };
   return loading ? (
     <Spin />
   ) : (
@@ -50,7 +30,7 @@ const LotList = ({ lotStatusId }) => {
       <Row gutter={[16, 16]}>
         {lots.map((lot) => (
           <Col key={lot.lotId} xs={24} sm={24} md={24} lg={24}>
-            <LotCard lot={lot} onLotDelete={handleLotDelete} />
+            <LotCard lot={lot} refetch={refetch} />
           </Col>
         ))}
       </Row>

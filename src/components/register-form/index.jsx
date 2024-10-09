@@ -5,19 +5,20 @@ import {
   PhoneOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
 import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const handleRegister = async (values) => {
     setLoading(true);
     try {
   
       // Submit the form data to the back-end API
-      const response = await userApi.post("user-service/register", {
+      const response = await userApi.post("/register", {
         firstname: values.firstName,
         lastname: values.lastName,
         username: values.username,
@@ -31,7 +32,7 @@ const RegisterForm = () => {
       if (response.status >= 200 && response.status < 300) {
         message.success("Registration successful! Please log in.");
         setTimeout(() => {
-          window.location.href = '/login';
+          navigate("/login");
         }, 1000); 
       }
     } catch (error) {
@@ -56,7 +57,12 @@ const RegisterForm = () => {
         bordered={false}
         style={{
           width: 600,
+          width: 600,
           maxWidth: 700,
+          margin: "0 auto",
+          padding: "20px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
           margin: "0 auto",
           padding: "20px",
           borderRadius: "10px",
@@ -77,6 +83,7 @@ const RegisterForm = () => {
           {/* First Name */}
           <Form.Item
             className="form-item"
+            
             label="First Name"
             name="firstName"
             rules={[
@@ -89,6 +96,7 @@ const RegisterForm = () => {
           {/* Last Name */}
           <Form.Item
             className="form-item"
+            
             label="Last Name"
             name="lastName"
             rules={[
@@ -96,11 +104,13 @@ const RegisterForm = () => {
             ]}
           >
             <Input className="res-input" placeholder="Enter your last name" />
+            <Input className="res-input" placeholder="Enter your last name" />
           </Form.Item>
 
           {/* Username */}
           <Form.Item
             className="form-item"
+           
             label="Username"
             name="username"
             rules={[{ required: true, message: "Please input your username!" }]}
@@ -131,6 +141,11 @@ const RegisterForm = () => {
               prefix={<PhoneOutlined />}
               placeholder="Enter your phone number"
             />
+            <Input
+              className="res-input"
+              prefix={<PhoneOutlined />}
+              placeholder="Enter your phone number"
+            />
           </Form.Item>
           <Form.Item
             className="form-item"
@@ -140,7 +155,9 @@ const RegisterForm = () => {
               {
                 required: true,
                 message: "Please input your email!",
+                message: "Please input your email!",
               },
+              { type: "email", message: "The input is not a valid E-mail!" },
               { type: "email", message: "The input is not a valid E-mail!" },
             ]}
           >
@@ -150,9 +167,11 @@ const RegisterForm = () => {
           {/* Password */}
           <Form.Item
             className="form-item"
+            
             label="Password"
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
+            
             hasFeedback
           >
             <Input.Password
@@ -165,13 +184,16 @@ const RegisterForm = () => {
           {/* Confirm Password */}
           <Form.Item
             className="form-item"
+          
             label="Confirm Password"
             name="confirmPassword"
             dependencies={["password"]}
+          
             hasFeedback
             rules={[
               {
                 required: true,
+                message: "Please confirm your password!",
                 message: "Please confirm your password!",
               },
               ({ getFieldValue }) => ({
