@@ -30,7 +30,7 @@ function Header() {
         />
         <ul className="header__navigation">
           <li onClick={() => handleNavigation("/")}>Home</li>
-          <li onClick={() => handleNavigation("/auction")}>Auction</li>
+          <li onClick={() => handleNavigation("/auction-list")}>Auction</li>
           <li onClick={() => handleNavigation("/about")}>About</li>
         </ul>
       </div>

@@ -7,6 +7,7 @@ import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
 import Login from "./pages/login-page";
 import Register from "./pages/register-page";
+import AuctionList from "./pages/auction-list-page";
 
 function App() {
   const router = createBrowserRouter([
@@ -17,6 +18,7 @@ function App() {
         { path: "", element: <HomePage /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "/auction-list", element: <AuctionList /> },
       ],
     },
     {
