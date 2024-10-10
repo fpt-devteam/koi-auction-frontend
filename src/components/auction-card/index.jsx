@@ -1,7 +1,6 @@
-
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from "prop-types"; // Import PropTypes
 import { Card, Badge, Typography, Statistic } from "antd";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 const { Countdown } = Statistic;
@@ -12,7 +11,10 @@ const AuctionCard = ({ auction, status }) => {
   // Format date and time
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${date.toLocaleDateString()}`;
+    return `${date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })} - ${date.toLocaleDateString()}`;
   };
 
   const renderAuctionStatus = (status) => {
@@ -22,7 +24,7 @@ const AuctionCard = ({ auction, status }) => {
     return <Badge color={color} text={status} />;
   };
 
-  // Render những card layouts khác nhau dựa vào auction status 
+  // Render những card layouts khác nhau dựa vào auction status
   const renderCardContent = () => {
     if (status === "Upcoming") {
       return (
@@ -66,7 +68,9 @@ const AuctionCard = ({ auction, status }) => {
       title={`${auction.auctionName}`}
       bordered={false}
       className="auction-card"
-      onClick={() => navigate(`/auction/${auction.auctionId}`)}
+      onClick={() =>
+        navigate(`/auction-detail?auction-id=${auction.auctionId}`)
+      }
       hoverable
     >
       {renderCardContent()}
@@ -81,7 +85,7 @@ AuctionCard.propTypes = {
     startTime: PropTypes.string.isRequired,
     endTime: PropTypes.string.isRequired,
   }).isRequired,
-  status: PropTypes.oneOf(['Upcoming', 'Ongoing', 'Ended']).isRequired,
+  status: PropTypes.oneOf(["Upcoming", "Ongoing", "Ended"]).isRequired,
 };
 
 export default AuctionCard;
