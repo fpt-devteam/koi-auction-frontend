@@ -34,6 +34,7 @@ const CreateLotPage = () => {
       showLotStatus={false}
       onCreate={onCreate}
       isView={false} // Chế độ Edit nên là false
+      isCreate={true} // Chế độ Create nên là true
     />
   );
 };

@@ -13,6 +13,7 @@ const LotLayout = ({
   onApprove,
   onReject,
   showLotStatus,
+  isCreate = false,
 }) => {
   const [form] = Form.useForm(); // Khởi tạo form
   const [action, setAction] = useState(""); // Trạng thái để lưu hành động hiện tại (Create, Update)
@@ -125,7 +126,7 @@ const LotLayout = ({
             <UploadKoiMedia
               initData={uploadKoiMediaData}
               form={form}
-              showOnly={userRoleId > 2 || statusId > 1}
+              showOnly={(userRoleId > 2 || statusId > 1) && isCreate == false}
             ></UploadKoiMedia>
           </Col>
         </Row>

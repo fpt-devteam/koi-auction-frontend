@@ -14,6 +14,7 @@ import Register from "./pages/register";
 import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import AuctionDetailPage from "./pages/auction-detail-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function App() {
         { path: "", element: <HomePage /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "/auction-detail", element: <AuctionDetailPage /> },
       ],
     },
     {
