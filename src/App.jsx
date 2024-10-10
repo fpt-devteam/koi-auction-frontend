@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import CreateAuctionPage from "./pages/create-auction-page";
 import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
+import AuctionDetailPage from "./pages/auction-detail-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
         { path: "", element: <HomePage /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "/auction-detail", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
       ],
     },
