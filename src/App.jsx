@@ -9,13 +9,13 @@ import MngLayout from "./components/mng-layout";
 import LotManagementPage from "./pages/lot-management-page";
 import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import Register from "./pages/register-page";
 import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import CreateAuctionPage from "./pages/create-auction-page";
 import AuctionList from "./pages/auction-list-page";
+import Login from "./pages/login-page";
 
 function App() {
   const dispatch = useDispatch();

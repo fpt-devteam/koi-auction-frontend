@@ -5,8 +5,10 @@ import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const LoginForm = () => {
+  const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,6 +17,7 @@ const LoginForm = () => {
   };
 
   const handleLogin = async (values) => {
+    setLoading(true);
     try {
       const response = await userApi.post(
         "/login",
@@ -27,17 +30,21 @@ const LoginForm = () => {
           withCredentials: true,
         }
       );
+      setLoading(false);
       console.log(response);
       if (response.status === 200) {
         const { user } = response.data;
         
         dispatch(loginSuccess({ user }));
-        message.success("Login successful!");
+        setTimeout(() => {
+          message.success("Login successful!");
+        }, 1000);
         if (user.UserRoleId == 1) {
           navigate("/");
         } else navigate("/management");
       }
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         // Server-side error (received a response from the server)
         message.error(
@@ -108,7 +115,9 @@ const LoginForm = () => {
 
           {/* Submit Button */}
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" block
+            loading = {isLoading}
+            >
               Log In
             </Button>
           </Form.Item>

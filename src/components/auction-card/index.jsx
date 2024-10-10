@@ -63,7 +63,7 @@ const AuctionCard = ({ auction, status }) => {
 
   return (
     <Card
-      title={`Auction #${auction.auctionId}`}
+      title={`${auction.auctionName}`}
       bordered={false}
       className="auction-card"
       onClick={() => navigate(`/auction/${auction.auctionId}`)}

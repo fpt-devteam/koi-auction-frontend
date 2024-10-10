@@ -13,6 +13,10 @@
         cursor: pointer;    
     }
 
+    &__logo {
+        object-fit: fill;
+    }
+
     &__navigation {
         display: flex;
         justify-content: space-between;

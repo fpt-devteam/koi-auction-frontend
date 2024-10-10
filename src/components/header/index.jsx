@@ -1,11 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
-import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+import { LoginOutlined, UserAddOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/features/userSlice";
+import userApi from "../../config/userApi";
 
 function Header() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((store) => store.user);
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -15,8 +20,18 @@ function Header() {
     navigate("/register");
   };
 
+  const handleLogoutClick = () => {
+    userApi.post("/logout");
+    dispatch(logout());
+    navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   const handleNavigation = (path) => {
-    navigate(path);  // This function will navigate to the specified path
+    navigate(path);
   };
 
   return (
@@ -24,7 +39,7 @@ function Header() {
       <div className="header__left">
         <Logo
           width={55}
-          height={80}
+          height={63}
           className="header__logo"
           onClick={() => handleNavigation("/")}
         />
@@ -35,23 +50,43 @@ function Header() {
         </ul>
       </div>
       <div className="header__right">
-        {/* Monochrome styled Login and Register buttons */}
-        <Button
-          icon={<LoginOutlined />}
-          onClick={handleLoginClick}
-          className="monochrome-button"
-        >
-          Login
-        </Button>
-
-        <Button
-          icon={<UserAddOutlined />}
-          onClick={handleRegisterClick}
-          className="monochrome-button"
-          style={{ marginLeft: "10px" }}
-        >
-          Register
-        </Button>
+        {user == null ? (
+          <>
+            <Button
+              icon={<LoginOutlined />}
+              onClick={handleLoginClick}
+              className="monochrome-button"
+            >
+              Login
+            </Button>
+            <Button
+              icon={<UserAddOutlined />}
+              onClick={handleRegisterClick}
+              className="monochrome-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Register
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              icon={<UserOutlined />}
+              onClick={handleProfileClick}
+              className="monochrome-button"
+            >
+              {user.FirstName}
+            </Button>
+            <Button
+              icon={<LogoutOutlined />}
+              onClick={handleLogoutClick}
+              className="monochrome-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Logout
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
