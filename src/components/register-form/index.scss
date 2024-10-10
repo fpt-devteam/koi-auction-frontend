@@ -6,6 +6,7 @@
   min-height: 90vh;
   background: linear-gradient(135deg, #f0f2f5 40%, #ffffff 100%);
   padding: 20px;
+  
 }
 
 .res-card {
@@ -13,14 +14,16 @@
 }
 
 .res-input,
-.ant-input-affix-wrapper {
+.ant-input-affix-wrapper { 
   height: 45px;
   border-radius: 5px;
 }
 
+
 .form-item {
   margin-bottom: 10px;
 }
+
 
 .res-btn {
   background-color: #1890ff;
@@ -30,13 +33,10 @@
   font-size: 16px;
 }
 
+
 .res-btn:hover {
   background-color: #40a9ff;
 }
-
-// .ant-card-bordered {
-//   border: none;
-// }
 
 .register-form-title {
   font-size: 24px;

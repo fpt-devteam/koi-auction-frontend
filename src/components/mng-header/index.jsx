@@ -1,8 +1,13 @@
 // import { useNavigate } from "react-router-dom";
 import "./index.scss";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import Search from "antd/es/input/Search";
-// import { useSelector } from "react-redux";
+import userApi from "../../config/userApi";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/features/userSlice";
+import { useNavigate } from "react-router-dom";
+ import { useSelector } from "react-redux";
 
 function MngHeader() {
   // const navigate = useNavigate();
@@ -13,6 +18,18 @@ function MngHeader() {
   //     else
   //         navigate("/login");
   // };
+  const {user} = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogoutClick = () => {
+    userApi.post("/logout");
+    dispatch(logout());
+    navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
   return (
     <div className="header">
@@ -33,11 +50,21 @@ function MngHeader() {
         </ul>
       </div>
       <div className="header__right">
-        <div className="header__account">
-          {/* <UserOutlined size={100} className="icon" onClick={handleAccountClick} /> */}
-          <UserOutlined size={100} className="icon" />
-        </div>
-        {/* <div className="header__cart"></div> */}
+            <Button
+              icon={<UserOutlined />}
+              onClick={handleProfileClick}
+              className="monochrome-button"
+            >
+              {user.FirstName}
+            </Button>
+            <Button
+              icon={<LogoutOutlined />}
+              onClick={handleLogoutClick}
+              className="monochrome-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Logout
+            </Button>
       </div>
     </div>
   );
