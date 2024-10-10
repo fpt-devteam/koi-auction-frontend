@@ -1,8 +1,9 @@
-import { Button, Checkbox, Col, Form, Input, Row } from "antd";
-import React from "react";
+
 import "./index.scss"
 import Carousel from "../../components/carousel";
 import LoginForm from "../../components/login-form";
+import { Row, Col } from 'antd';
+
 function Login() {
   return (
     <div>

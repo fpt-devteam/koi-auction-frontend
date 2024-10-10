@@ -1,0 +1,47 @@
+/* index.css */
+
+.auction-list-container {
+    padding: 20px;
+  }
+  
+  .auction-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .auction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 0px rgba(0, 0, 0, 0.2);
+  }
+  
+  .auction-card-content {
+    text-align: left;
+  }
+  
+  
+  .auction-card .ant-card-head-title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .auction-card .ant-statistic-title {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .auction-card .ant-statistic-content {
+    font-size: 18px;
+    color: #fa8c16; /* Orange color for countdown */
+  }
+  
+
+.countdown-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between "Starts in" text and countdown timer */
+  }
+    

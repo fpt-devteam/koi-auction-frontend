@@ -33,6 +33,16 @@ function MngSider() {
       )
     );
   }
+  if (userRoleId > 2) {
+    items.push(
+      getItem(
+        "Create auction ",
+        counter++, // Tăng counter
+        <FormOutlined />,
+        "/management/create-auction-request"
+      )
+    );
+  }
   // const items = [
   //   getItem("Lot management", "1", <HistoryOutlined />),
   //   getItem(
