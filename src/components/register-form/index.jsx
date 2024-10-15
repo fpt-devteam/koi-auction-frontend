@@ -86,7 +86,6 @@ const RegisterForm = () => {
           >
             <Input className="res-input" placeholder="Enter your first name" />
           </Form.Item>
-
           {/* Last Name */}
           <Form.Item
             className="form-item"
@@ -98,7 +97,6 @@ const RegisterForm = () => {
           >
             <Input className="res-input" placeholder="Enter your last name" />
           </Form.Item>
-
           {/* Username */}
           <Form.Item
             className="form-item"
@@ -112,7 +110,6 @@ const RegisterForm = () => {
               placeholder="Enter your username"
             />
           </Form.Item>
-
           {/* Phone */}
           <Form.Item
             className="form-item"
@@ -147,13 +144,19 @@ const RegisterForm = () => {
           >
             <Input prefix={<MailOutlined />} placeholder="Enter your email" />
           </Form.Item>
-
           {/* Password */}
           <Form.Item
             className="form-item"
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                pattern: /^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/,
+                message:
+                  "Password must be at least 8 characters long, contain at least one special character, and must not include spaces.",
+              },
+            ]}
             hasFeedback
           >
             <Input.Password
@@ -162,7 +165,6 @@ const RegisterForm = () => {
               placeholder="Enter your password"
             />
           </Form.Item>
-
           {/* Confirm Password */}
           <Form.Item
             className="form-item"
@@ -193,7 +195,6 @@ const RegisterForm = () => {
               placeholder="Confirm your password"
             />
           </Form.Item>
-
           {/* Checkbox */}
           <Form.Item
             className="form-item"
@@ -202,7 +203,6 @@ const RegisterForm = () => {
           >
             <Checkbox>I agreed with company policies and terms.</Checkbox>
           </Form.Item>
-
           {/* Submit Button */}
           <Form.Item className="form-item">
             <Button
@@ -215,7 +215,6 @@ const RegisterForm = () => {
               Create an account
             </Button>
           </Form.Item>
-
           <p style={{ textAlign: "center" }}>
             Already have an account? <a href="/login">Log in</a>.
           </p>
