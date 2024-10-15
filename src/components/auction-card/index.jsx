@@ -68,9 +68,7 @@ const AuctionCard = ({ auction, status }) => {
       title={`${auction.auctionName}`}
       bordered={false}
       className="auction-card"
-      onClick={() =>
-        navigate(`/auction-detail?auction-id=${auction.auctionId}`)
-      }
+      onClick={() => navigate("/auction-detail", { state: { auction } })}
       hoverable
     >
       {renderCardContent()}

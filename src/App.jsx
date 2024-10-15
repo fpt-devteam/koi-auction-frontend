@@ -17,6 +17,7 @@ import CreateAuctionPage from "./pages/create-auction-page";
 import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
 import AuctionDetailPage from "./pages/auction-detail-page";
+import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
         { path: "/register", element: <Register /> },
         { path: "/auction-detail", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
+        { path: "/auction-lot-detail", element: <AuctionLotDetailPage /> },
       ],
     },
     {

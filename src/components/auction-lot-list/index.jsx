@@ -24,8 +24,7 @@ const AuctionLotList = ({ auctionId }) => {
     <div
       className="auction-lot-list"
       style={{
-        marginBottom: "20px",
-        padding: "80px 80px",
+        margin: "20px 0px",
       }}
     >
       <Row gutter={[16, 16]}>
