@@ -18,7 +18,9 @@ const authMiddleware = (store) => (next) => async (action) => {
         currentPath === "/login" ||
         currentPath === "/register" ||
         currentPath === "/" ||
-        currentPath === "/auction-detail"
+        currentPath === "/auction-detail" ||
+        currentPath === "/auction-list" ||
+        currentPath === "/auction-lot-detail"
       ) {
         // Nếu người dùng đang ở trang login, không cần kiểm tra xác thực
         return next(action);

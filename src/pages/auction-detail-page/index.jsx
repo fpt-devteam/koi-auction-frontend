@@ -1,17 +1,62 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import AuctionLotList from "../../components/auction-lot-list";
+import lotApi from "../../config/lotApi";
+import { useState } from "react";
+import { message } from "antd";
 
-function AuctionDetailPage({ auctionId = 23 }) {
-  //url: auction-detail?auction-id=23
-  // how to get auctionId from url
-  const { search } = useLocation();
-  const query = new URLSearchParams(search);
-  auctionId = query.get("auction-id");
-  console.log(auctionId);
+function AuctionDetailPage() {
+  // const { search } = useLocation();
+  // const query = new URLSearchParams(search);
+  // auctionId = query.get("auction-id");
 
+  // const [auction, setAuction] = useState({});
+
+  // const fetchAuctionById = async () => {
+  //   try {
+  //     const response = await lotApi.get(`auctions/${auctionId}`);
+  //     const fetchedAuction = response.data;
+  //     setAuction(fetchedAuction);
+  //   } catch (error) {
+  //     message.error(error.message);
+  //   }
+  // };
+
+  // useState(() => {
+  //   fetchAuctionById();
+  // }, [auctionId]);
+  const location = useLocation();
+  const { auction } = location.state || {};
+
+  const { auctionId, auctionName, startTime, endTime } = auction;
+
+  const formatTime = (time) => new Date(time).toLocaleString();
+
+  const navigate = useNavigate();
   return (
-    <div>
+    <div
+      style={{
+        marginBottom: "20px",
+        padding: "20px 80px",
+        lineHeight: "2",
+      }}
+    >
+      <h2>{auctionName}</h2>
+      <p>Start time: {formatTime(startTime)}</p>
+      <p>End time: {formatTime(endTime)}</p>
       <AuctionLotList auctionId={auctionId} />
+      <button
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          backgroundColor: "#f0f0f0",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+        onClick={() => navigate(-1)} // Điều hướng về trang trước
+      >
+        Back
+      </button>
     </div>
   );
 }
