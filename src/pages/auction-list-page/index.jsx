@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Tabs, Button, Tag, Space, message } from "antd";
 import axios from "axios";
 import moment from "moment";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 const AuctionList = () => {
@@ -14,22 +14,22 @@ const AuctionList = () => {
 
   useEffect(() => {
     fetchAuctions();
+    // const interval = setInterval(() => {
+    //   setNow(moment());
+    // }, 1000);
 
-    // C
-    const interval = setInterval(() => {
-      setNow(moment());
-    }, 1000);
-
-    return () => clearInterval(interval); //xóa interval khi component unmount tức là khi component bị xóa khỏi DOM
+    // return () => clearInterval(interval); //xóa interval khi component unmount tức là khi component bị xóa khỏi DOM
   }, []);
 
   const fetchAuctions = async () => {
     try {
       const response = await axios.get("http://localhost:3002/api/auctions");
       const data = response.data;
-      const now = moment(); 
-      // Past auction là endtime ko null 
-      const past = data.filter((auction) => auction.endTime && moment(auction.startTime).isBefore(now));
+      const now = moment();
+      // Past auction là endtime ko null
+      const past = data.filter(
+        (auction) => auction.endTime && moment(auction.startTime).isBefore(now)
+      );
 
       // Update states
       setAuctions(data);
@@ -41,18 +41,18 @@ const AuctionList = () => {
       setLoading(false);
     }
   };
-
+  console.log("auctions", auctions);
   // Function to calculate the live countdown (days, hours, minutes, seconds)
   const calculateCountdown = (startTime) => {
     const duration = moment.duration(moment(startTime).diff(now));
     if (duration.asSeconds() <= 0) {
       return (
-      <div className="countdown-0">
-        <span className="third">0d</span>
-        <span className="third">0h</span>
-        <span className="third">0m</span>
-        <span className="third">0s</span>
-      </div>
+        <div className="countdown-0">
+          <span className="third">0d</span>
+          <span className="third">0h</span>
+          <span className="third">0m</span>
+          <span className="third">0s</span>
+        </div>
       ); // If countdown has reached 0, show this
     }
     return (
@@ -74,7 +74,11 @@ const AuctionList = () => {
 
   // Columns for ongoing/upcoming auctions with status
   const columns = [
-    { title: <span className="titleName">Auction Name</span>, dataIndex: "auctionName", key: "auctionName" },
+    {
+      title: <span className="titleName">Auction Name</span>,
+      dataIndex: "auctionName",
+      key: "auctionName",
+    },
     {
       title: <span className="titleName">Start Time</span>,
       dataIndex: "startTime",
@@ -85,7 +89,7 @@ const AuctionList = () => {
       title: <span className="titleName">Before start</span>,
       key: "countdown",
       render: (_, record) => {
-        return <div>{calculateCountdown(record.startTime)}</div>
+        return <div>{calculateCountdown(record.startTime)}</div>;
       },
     },
     {
@@ -113,18 +117,14 @@ const AuctionList = () => {
           {getStatus(record.startTime, record.endTime) === "Ongoing" ? (
             <Button
               className="joinButton"
-              onClick={() =>
-                navigate(`/auction-detail?auction-id=${record.auctionId}`)
-              }
+              onClick={() => navigate("/auction-detail", { state: { auction: record } })}
             >
               Join Auction
             </Button>
           ) : (
             <Button
               className="viewButton"
-              onClick={() =>
-                navigate(`/auction-detail?auction-id=${record.auctionId}`)
-              }
+              onClick={() => navigate("/auction-detail", { state: { auction: record } })}
             >
               View Details
             </Button>
@@ -136,7 +136,11 @@ const AuctionList = () => {
 
   // Columns for past auctions
   const pastColumns = [
-    { title: <span className="titleName">Auction Name</span>, dataIndex: "auctionName", key: "auctionName" },
+    {
+      title: <span className="titleName">Auction Name</span>,
+      dataIndex: "auctionName",
+      key: "auctionName",
+    },
     {
       title: <span className="titleName">Start Time</span>,
       dataIndex: "startTime",
@@ -169,13 +173,14 @@ const AuctionList = () => {
     {
       title: <span className="titleName">Actions</span>,
       key: "actions",
-      render: (_, record) => ( //tại sao lại là (_, record) ? vì record là dữ liệu của mỗi hàng trong bảng, còn _ là dữ liệu của cột
+      render: (
+        _,
+        record //tại sao lại là (_, record) ? vì record là dữ liệu của mỗi hàng trong bảng, còn _ là dữ liệu của cột
+      ) => (
         <Space>
           <Button
             className="viewButton"
-            onClick={() =>
-              navigate(`/auction-detail?auction-id=${record.auctionId}`)
-            }
+            onClick={() => navigate("/auction-detail", { state: { auction: record } })}
           >
             View Details
           </Button>
@@ -183,7 +188,6 @@ const AuctionList = () => {
       ),
     },
   ];
-
 
   const tabItems = [
     {
@@ -193,7 +197,7 @@ const AuctionList = () => {
         <Table
           dataSource={auctions
             .filter((auction) => !auction.endTime)
-            .sort((a, b) => moment(a.startTime).diff(moment(b.startTime)))} 
+            .sort((a, b) => moment(a.startTime).diff(moment(b.startTime)))}
           columns={columns}
           rowKey="auctionId"
           loading={loading}
