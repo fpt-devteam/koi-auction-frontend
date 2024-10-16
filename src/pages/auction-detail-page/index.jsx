@@ -3,6 +3,7 @@ import AuctionLotList from "../../components/auction-lot-list";
 import lotApi from "../../config/lotApi";
 import { useState } from "react";
 import { message } from "antd";
+import BackButton from "../../components/back-button";
 
 function AuctionDetailPage() {
   // const { search } = useLocation();
@@ -27,8 +28,10 @@ function AuctionDetailPage() {
   const location = useLocation();
   const { auction } = location.state || {};
 
+  console.log("auction", auction);
   const { auctionId, auctionName, startTime, endTime } = auction;
 
+  console.log("endTime", endTime);
   const formatTime = (time) => new Date(time).toLocaleString();
 
   const navigate = useNavigate();
@@ -42,21 +45,9 @@ function AuctionDetailPage() {
     >
       <h2>{auctionName}</h2>
       <p>Start time: {formatTime(startTime)}</p>
-      <p>End time: {formatTime(endTime)}</p>
+      {endTime != null && <p>End time: {formatTime(endTime)}</p>}
       <AuctionLotList auctionId={auctionId} />
-      <button
-        style={{
-          marginBottom: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#f0f0f0",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-        onClick={() => navigate(-1)} // Điều hướng về trang trước
-      >
-        Back
-      </button>
+      <BackButton />
     </div>
   );
 }

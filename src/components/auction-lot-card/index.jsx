@@ -41,6 +41,7 @@ const AuctionLotCard = ({ auctionLot }) => {
     },
   } = auctionLot;
 
+  console.log("lot", auctionLot);
   const navigate = useNavigate();
   const handleClick = () => {
     // navigate(`/auction-lot-detail/${auctionLot.lotDto.lotId}`, {
@@ -97,7 +98,7 @@ const AuctionLotCard = ({ auctionLot }) => {
                   alignItems: "center",
                 }}
               >
-                <Text strong>{!endTime ? "Upcoming" : "Ended"}</Text>
+                <Text strong>{endTime === null ? "Upcoming" : "Ended"}</Text>
                 <Text strong style={{ color: "red" }}>
                   {startingPrice.toLocaleString()} VND
                 </Text>

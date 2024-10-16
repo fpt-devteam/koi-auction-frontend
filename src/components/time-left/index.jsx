@@ -20,15 +20,17 @@ const TimeLeft = ({ duration }) => {
   return (
     <>
       <Text strong style={{ fontSize: "1.2rem" }}>
-        Time left
+        Time left:
       </Text>
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center", // Căn giữa theo chiều ngang
-          alignItems: "center", // Căn giữa theo chiều dọc
-          height: "70%", // Đảm bảo chiếm toàn bộ chiều cao container nếu cần
-        }}
+        style={
+          {
+            //   display: "flex",
+            //   justifyContent: "center", // Căn giữa theo chiều ngang
+            //   alignItems: "center", // Căn giữa theo chiều dọc
+            //   height: "70%", // Đảm bảo chiếm toàn bộ chiều cao container nếu cần
+          }
+        }
       >
         <Row gutter={16}>
           <Col span={24}>

@@ -9,10 +9,11 @@ const SuggestLogin = () => {
   return (
     <div
       style={{
-        backgroundColor: "#e5e5e5", // Màu nền xám nhạt
-        padding: "32px 16px", // Giảm kích thước padding
+        backgroundColor: "#f9f9f9", // Màu nền xám nhạt
+        padding: "10px 10px", // Giảm kích thước padding
         textAlign: "center", // Căn giữa nội dung
         borderRadius: "8px", // Bo góc mềm mại
+        marginTop: "10px", // Khoảng cách dưới
       }}
     >
       <Text

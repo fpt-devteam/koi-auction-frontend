@@ -4,10 +4,11 @@ import { useSelector } from "react-redux";
 import KoiMedia from "../../components/koi-media";
 import KoiInfo from "../../components/koi-info";
 import TimeLeft from "../../components/time-left";
-import Bid from "../../components/bid";
+import BidInput from "../../components/bid-input";
 import SuggestLogin from "../../components/suggest-login";
-import BidHistory from "../../components/bid-history";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import BidHistoryTable from "../../components/bid-history-table";
+import BackButton from "../../components/back-button";
 const { Text } = Typography;
 
 //component for description of aution method
@@ -26,6 +27,7 @@ const AuctionMethod = ({ auctionMethod }) => {
 const AuctionLotDetailPage = () => {
   const location = useLocation();
   const { auctionLot } = location.state || {}; // Lấy dữ liệu từ state
+  const navigate = useNavigate();
 
   //get user from redux
   const user = useSelector((state) => state.user);
@@ -64,26 +66,17 @@ const AuctionLotDetailPage = () => {
           <KoiMedia media={auctionLot.lotDto.koiFishDto.koiMedia} />
         </Col>
         <Col span={12}>
-          <div
-            style={{
-              //   display: "flex",
-              //   justifyContent: "space-between",
-              //   alignItems: "center",
-              marginBottom: "20px",
-            }}
-          >
-            <Text strong style={{ fontSize: "1.2rem" }}>
-              Starting price:{" "}
-            </Text>
-            <Text strong style={{ fontSize: "1.2rem", color: "red" }}>
-              {startingPrice.toLocaleString()} VND
-            </Text>
-          </div>
+          <Text strong style={{ fontSize: "1.2rem" }}>
+            Starting price:{" "}
+          </Text>
+          <Text strong style={{ fontSize: "1.2rem", color: "red" }}>
+            {startingPrice.toLocaleString()} VND
+          </Text>
           {user.isAuthenticated ? (
-            <Bid currentBid={currentBid} onBid={handleBid} />
+            <BidInput currentBid={currentBid} onBid={handleBid} />
           ) : (
             <SuggestLogin />
-          )}{" "}
+          )}
         </Col>
         <Col span={4}>
           <TimeLeft duration={duration} />
@@ -93,8 +86,11 @@ const AuctionLotDetailPage = () => {
       <Row gutter={(0, 20)}>
         <Col span={8} style={{ marginTop: "10px" }}>
           <KoiInfo koi={auctionLot.lotDto.koiFishDto} />
+          <BackButton />
         </Col>
-        <Col span={12}>{/* <BidHistory bids={bids} /> */}</Col>
+        <Col span={12}>
+          <BidHistoryTable />{" "}
+        </Col>
       </Row>
     </div>
   );
