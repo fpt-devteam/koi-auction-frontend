@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
 
-const UserList = () => {
+export default function UserList ({number}) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Use React Router's navigate
@@ -19,12 +19,15 @@ const UserList = () => {
     try {
       const response = await userApi.get("manage/profile");
       const users = response.data;
+      
       setUsers(users);
-      console.log(users);
-
+      const members = (users) => {
+        return users.filter((user) => user.UserRoleId === number);
+      }
+      setUsers(members(users));
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch auctions:", error);
+      console.error("Failed to fetch auctions:", error); 
       message.error("Failed to load auction data.");
       setLoading(false);
     }
@@ -79,7 +82,11 @@ const UserList = () => {
           <Button
             className="viewButton"
             onClick={() =>
-              navigate("/auction-detail", { state: { auction: record } })
+              navigate("/admin/management/user-detail?id=" + record.UserId)
+              //get above parameter in UserDetailPage 
+              //const userId = new URLSearchParams(location.search).get("id");
+              //fetchUser(userId);
+
             }
           >
             View Details
@@ -90,7 +97,10 @@ const UserList = () => {
   ];
 
   return (
+    
     <div style={{ padding: "30px" }}>
+      <h1 className="title">User List</h1>
+      <Button>Create New User</Button>
       <Table
         dataSource={users}
         columns={columns}
@@ -103,4 +113,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+

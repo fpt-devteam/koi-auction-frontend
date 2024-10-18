@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined } from "@ant-design/icons";
+import { FormOutlined, HistoryOutlined, TeamOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 
@@ -25,7 +25,7 @@ function MngSider() {
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
   
   // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
-  if (userRoleId === 2) {
+  if (userRoleId > 2) {
     items.push(
       getItem(
         "Create a lot",
@@ -52,26 +52,31 @@ function MngSider() {
       getItem(
         "User Management ",
         counter++, // Tăng counter
-        <FormOutlined />,
-        [
-          getItem(
-            "User List", // Mục con "User List"
-            counter++,
-            <FormOutlined />,
-            null,
-            "/admin/user-management/user-list"
-          ),
-        ],
-        "/admin/user-management"
-      )
+        <UserOutlined />,
+        null,
+        "/admin/management/user-list"
+      ),
+      getItem(
+        "Breeder Management ",
+        counter++, // Tăng counter
+        <UserSwitchOutlined />,
+        null,
+        "/admin/management/breeder-list"
+      ),
+      getItem(
+        "Staff Management ",
+        counter++, // Tăng counter
+        <TeamOutlined />,
+        null,
+        "/admin/management/staff-list"
+      ),
     );
   }
-  console.log(counter);
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {
-    const item = items.find((item) => String(item.key) === keyItem.key); // Convert both to string for comparison
-    item?.url && navigate(item.url);
+    const item = items.find((item) => String(item.key) === keyItem.key); 
+    navigate(item.url);
   };
   
 
