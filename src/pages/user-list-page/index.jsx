@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tabs, Button, Tag, Space, message } from "antd";
+import { Table, Tabs, Button, Tag, Space, message, Form } from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
+import ProfileForm from "../../components/profile-form-modal";
 
 export default function UserList ({number}) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Use React Router's navigate
+  const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -64,16 +67,7 @@ export default function UserList ({number}) {
       dataIndex: "Email",
       key: "UserId",
     },
-    {
-      title: <span className="titleName">User Role</span>,
-      dataIndex: "UserRoleId",
-      key: "UserId",
-    },
-    // {
-    //     title: <span className="titleName">User ID</span>,
-    //     dataIndex: "Active",
-    //     key: "UserId",
-    //   },
+
     {
       title: <span className="titleName">Actions</span>,
       key: "actions",
@@ -83,10 +77,6 @@ export default function UserList ({number}) {
             className="viewButton"
             onClick={() =>
               navigate("/admin/management/user-detail?id=" + record.UserId)
-              //get above parameter in UserDetailPage 
-              //const userId = new URLSearchParams(location.search).get("id");
-              //fetchUser(userId);
-
             }
           >
             View Details
@@ -100,7 +90,7 @@ export default function UserList ({number}) {
     
     <div style={{ padding: "30px" }}>
       <h1 className="title">User List</h1>
-      <Button>Create New User</Button>
+      <Button onClick={() => {setIsModalVisible(true)}}>Create New User</Button>
       <Table
         dataSource={users}
         columns={columns}
@@ -108,6 +98,13 @@ export default function UserList ({number}) {
         loading={loading}
         pagination={false}
         scroll={{ y: 600 }}
+      />
+      <ProfileForm 
+       form={form}
+        initialValues={{}}
+        handleFormSubmit={() => {}}
+        isModalVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
       />
     </div>
   );

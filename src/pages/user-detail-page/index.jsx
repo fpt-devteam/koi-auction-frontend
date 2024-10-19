@@ -9,14 +9,19 @@ import {
   Input,
   Switch,
   message,
+  Spin,
 } from "antd";
 import userApi from "../../config/userApi";
+import UserDetailCard from "../../components/user-detail-card";
+import "./index.css";
+import ProfileForm from "../../components/profile-form-modal";
 
 const UserDetail = () => {
   const [user, setUser] = useState(null);
   const userId = new URLSearchParams(window.location.search).get("id"); // Use window.location
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async (userId) => {
     try {
@@ -32,6 +37,7 @@ const UserDetail = () => {
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
+      setLoading(false);
     } else {
       message.error("No user ID provided in the URL.");
     }
@@ -39,16 +45,16 @@ const UserDetail = () => {
   }, [userId]);
 
   const handleFormSubmit = () => {
-    form
+    form //giải thích: form.validateFields() trả về một promise, nếu thành công thì thực hiện hàm then, nếu thất bại thì thực hiện hàm catch
       .validateFields()
-      .then(async (values) => {
+      .then(async (values) => { //lấy giá trị từ form và gửi lên server
         try {
           // Show loading message
           message.loading({ content: "Updating user...", key: "updatable" });
 
           // Send PUT request to update user
           const response = await userApi.patch(`manage/profile/${userId}`, values);
-
+        
           // Update user state with new data
           setUser(response.data);
 
@@ -77,135 +83,36 @@ const UserDetail = () => {
 
   if (!user) {
     return (
-      <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>
+       <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
+      
     );
   }
 
   return (
     <>
-      <Card
+      <UserDetailCard 
+        data={user}
+        loading={loading}
+        openModal={() => setIsModalVisible(true)}
         title="User Details"
-        style={{ maxWidth: 600, margin: "auto", alignItems: "center" }}
-      >
-        <Descriptions bordered column={1}>
-          <Descriptions.Item label="User ID">{user.UserId}</Descriptions.Item>
-          <Descriptions.Item label="Username">{user.Username}</Descriptions.Item>
-          <Descriptions.Item label="First Name">
-            {user.FirstName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Last Name">
-            {user.LastName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Email">{user.Email}</Descriptions.Item>
-          <Descriptions.Item label="Phone">{user.Phone}</Descriptions.Item>
-          <Descriptions.Item label="Active">
-            <Badge
-              status={user.Active ? "success" : "error"}
-              text={user.Active ? "Active" : "Inactive"}
-            />
-          </Descriptions.Item>
-          <Descriptions.Item label="User Role ID">
-            {user.UserRoleId}
-          </Descriptions.Item>
-          <Descriptions.Item label="Balance">
-            ${user.Balance.toFixed(2)}
-          </Descriptions.Item>
-        </Descriptions>
-          <Button type="primary" className="update-button" onClick={() => setIsModalVisible(true)}>
-            Update
-          </Button>
-      </Card>
+      />
 
-      <Modal
-        width={800}
-        title="Edit User Details"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={handleFormSubmit}
-        okText="Save"
-        cancelText="Cancel"
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{
-            Username: user.Username,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            Email: user.Email,
-            Phone: user.Phone,
-            Active: user.Active,
-            UserRoleId: user.UserRoleId,
-          }}
-        >
-          <Form.Item
-            label="Username"
-            name="Username"
-            rules={[{ required: true, message: "Please input the username!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="First Name"
-            name="FirstName"
-            rules={[
-              { required: true, message: "Please input the first name!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Last Name"
-            name="LastName"
-            rules={[
-              { required: true, message: "Please input the last name!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="Email"
-            rules={[
-              { required: true, message: "Please input the email!" },
-              { type: "email", message: "Please enter a valid email!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Phone"
-            name="Phone"
-            rules={[
-              { required: true, message: "Please input the phone number!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Active" name="Active" valuePropName="checked">
-            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-          </Form.Item>
-          <Form.Item
-            label="User Role ID"
-            name="UserRoleId"
-            rules={[
-              { required: true, message: "Please input the user role ID!" },
-            ]}
-          >
-          <Input type="number" min={1} />
-          </Form.Item>
-          <Form.Item
-            label="Balance"
-            name="Balance"
-            rules={[
-              { required: true, message: "Please input the balance!" },
-              { type: "number", min: 0, message: "Balance cannot be negative!" },
-            ]}
-          >
-            <Input type="number" step="0.01" />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <ProfileForm
+        form={form}
+        initialValues={{
+          Username: user.Username,
+          FirstName: user.FirstName,
+          LastName: user.LastName,
+          Email: user.Email,
+          Phone: user.Phone,
+          Active: user.Active,
+          UserRoleId: user.UserRoleId,
+        }}
+        isModalVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        handleFormSubmit={handleFormSubmit}
+         />
+        
     </>
   );
 };
