@@ -40,13 +40,13 @@ function MngHeader() {
                     height={150}
                     onClick={() => navigate("/")} /> */}
         <ul className="header__navigation">
-          <Search
+          {/* <Search
             placeholder="input search text"
             allowClear
             // enterButton="Search"
             size="large"
             style={{ width: 800, padding: "30px 5px 30px" }}
-          />
+          /> */}
         </ul>
       </div>
       <div className="header__right">

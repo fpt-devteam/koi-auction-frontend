@@ -3,14 +3,16 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined } from "@ant-design/icons";
+import { FormOutlined, HistoryOutlined, TeamOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
-function getItem(label, key, icon, url = "/management") {
+
+function getItem(label, key, icon, children = null, url = "/management") {
   return {
     key,
     icon,
     label,
+    children,
     url,
   };
 }
@@ -21,14 +23,15 @@ function MngSider() {
 
   // Danh sách các items cơ bản, sử dụng biến đếm counter
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
-
+  
   // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
-  if (userRoleId === 2) {
+  if (userRoleId > 2) {
     items.push(
       getItem(
         "Create a lot",
         counter++, // Tăng counter
         <FormOutlined />,
+        null,
         "/management/create-lot-request"
       )
     );
@@ -39,53 +42,61 @@ function MngSider() {
         "Create auction ",
         counter++, // Tăng counter
         <FormOutlined />,
+        null,
         "/management/create-auction-request"
       )
     );
   }
-  // const items = [
-  //   getItem("Lot management", "1", <HistoryOutlined />),
-  //   getItem(
-  //     "Create a lot",
-  //     "2",
-  //     <FormOutlined />,
-  //     "/management/create-lot-request"
-  //   ),
-  //   // getItem("Option 1", "1", <PieChartOutlined />),
-  //   // getItem("Option 2", "2", <DesktopOutlined />),
-  //   // getItem("User", "sub1", <UserOutlined />, [
-  //   //   getItem("Tom", "3"),
-  //   //   getItem("Bill", "4"),
-  //   //   getItem("Alex", "5"),
-  //   // ]),
-  //   // getItem("Team", "sub2", <TeamOutlined />, [
-  //   //   getItem("Team 1", "6"),
-  //   //   getItem("Team 2", "8"),
-  //   // ]),
-  //   // getItem("Files", "9", <FileOutlined />),
-  // ];
+  if (userRoleId === 4) {
+    items.push(
+      getItem(
+        "User Management ",
+        counter++, // Tăng counter
+        <UserOutlined />,
+        null,
+        "/admin/management/user-list"
+      ),
+      getItem(
+        "Breeder Management ",
+        counter++, // Tăng counter
+        <UserSwitchOutlined />,
+        null,
+        "/admin/management/breeder-list"
+      ),
+      getItem(
+        "Staff Management ",
+        counter++, // Tăng counter
+        <TeamOutlined />,
+        null,
+        "/admin/management/staff-list"
+      ),
+    );
+  }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {
-    const item = items.find((item) => item.key == keyItem.key);
+    const item = items.find((item) => String(item.key) === keyItem.key); 
     navigate(item.url);
   };
+  
 
   return (
     <Sider
+      width={260}
       theme="light"
       collapsible
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
     >
       <Logo
-        width={100}
-        height={100}
+        width={60}
+        height={95}
         className="header__logo"
         onClick={() => navigate("/")}
       />
       <Menu
         defaultSelectedKeys={["1"]}
+        // defaultOpenKeys={['User Management ']}
         mode="inline"
         items={items}
         onClick={handleMenuClick}

@@ -18,6 +18,8 @@ import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
 import AuctionDetailPage from "./pages/auction-detail-page";
 import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
+import UserList from "./pages/user-list-page";
+import UserDetail from "./pages/user-detail-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -58,6 +60,20 @@ function App() {
           path: "/management/create-auction-request",
           element: <CreateAuctionPage />,
         },
+      ],
+    },
+    {
+      path: "/admin",
+      element: (
+        <PrivateRoute allowedRoles={[4]}>
+          <MngLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/admin/management/user-list", element: <UserList number={1} /> },
+        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
+        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        { path: "/admin/management/user-detail", element: <UserDetail /> },
       ],
     },
     {
