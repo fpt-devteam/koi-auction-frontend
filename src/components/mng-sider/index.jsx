@@ -36,10 +36,10 @@ function MngSider() {
   if (userRoleId > 2) {
     items.push(
       getItem(
-        "Create auction ",
+        "Auction Management ",
         counter++, // Tăng counter
         <FormOutlined />,
-        "/management/create-auction-request"
+        "/management/auction"
       )
     );
   }

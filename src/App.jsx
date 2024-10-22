@@ -9,12 +9,16 @@ import MngLayout from "./components/mng-layout";
 import LotManagementPage from "./pages/lot-management-page";
 import CreateLotPage from "./pages/create-lot-page";
 import HomePage from "./pages/home-page";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import Register from "./pages/register-page";
 import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import CreateAuctionPage from "./pages/create-auction-page";
+import AuctionList from "./pages/auction-list-page";
+import Login from "./pages/login-page";
+import AuctionDetailPage from "./pages/auction-detail-page";
+import UpdateAuctionPage from "./pages/update-auction-page";
+import AuctionManagementPage from "./pages/auction-management-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +36,8 @@ function App() {
         { path: "", element: <HomePage /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        { path: "/auction-detail", element: <AuctionDetailPage /> },
+        { path: "/auction-list", element: <AuctionList /> },
       ],
     },
     {
@@ -51,6 +57,14 @@ function App() {
         {
           path: "/management/create-auction-request",
           element: <CreateAuctionPage />,
+        },
+        {
+          path: "/management/update-auction-request",
+          element: <UpdateAuctionPage />,
+        },
+        {
+          path: "/management/auction",
+          element: <AuctionManagementPage />,
         },
       ],
     },
