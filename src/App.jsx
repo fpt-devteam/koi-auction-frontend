@@ -17,8 +17,11 @@ import CreateAuctionPage from "./pages/create-auction-page";
 import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
 import AuctionDetailPage from "./pages/auction-detail-page";
-import UpdateAuctionPage from "./pages/update-auction-page";
+import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
+import UserList from "./pages/user-list-page";
+import UserDetail from "./pages/user-detail-page";
 import AuctionManagementPage from "./pages/auction-management-page";
+import UpdateAuctionPage from "./pages/update-auction-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +41,7 @@ function App() {
         { path: "/register", element: <Register /> },
         { path: "/auction-detail", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
+        { path: "/auction-lot-detail", element: <AuctionLotDetailPage /> },
       ],
     },
     {
@@ -66,6 +70,34 @@ function App() {
           path: "/management/auction",
           element: <AuctionManagementPage />,
         },
+      ],
+    },
+    {
+      path: "/admin",
+      element: (
+        <PrivateRoute allowedRoles={[4]}>
+          <MngLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/admin/management/user-list", element: <UserList number={1} /> },
+        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
+        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        { path: "/admin/management/user-detail", element: <UserDetail /> },
+      ],
+    },
+    {
+      path: "/admin",
+      element: (
+        <PrivateRoute allowedRoles={[4]}>
+          <MngLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/admin/management/user-list", element: <UserList number={1} /> },
+        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
+        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        { path: "/admin/management/user-detail", element: <UserDetail /> },
       ],
     },
     {

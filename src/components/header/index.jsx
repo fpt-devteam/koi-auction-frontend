@@ -1,47 +1,95 @@
 import { useNavigate } from "react-router-dom";
-import "./index.scss";
-import { UserOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import { LoginOutlined, UserAddOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Logo from "../logo";
-// import { useSelector } from "react-redux";
+import "./index.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/features/userSlice";
+import userApi from "../../config/userApi";
 
 function Header() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const userSelector = useSelector((state) => state.user);
+  const { user } = useSelector((store) => store.user);
 
-  // const handleAccountClick = () => {
-  //     if (userSelector != null) navigate("/");
-  //     else
-  //         navigate("/login");
-  // };
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+  };
+
+  const handleLogoutClick = () => {
+    userApi.post("/logout");
+    dispatch(logout());
+    navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   return (
     <div className="header">
       <div className="header__left">
-        {/* <img src="./assets/Fishred.svg"
-                    alt="" className="header__logo"
-                    width={150}
-                    height={150}
-                    onClick={() => navigate("/")} /> */}
         <Logo
-          width={100}
-          height={100}
+          width={55}
+          height={63}
           className="header__logo"
-          onClick={() => navigate("/")}
+          onClick={() => handleNavigation("/")}
         />
         <ul className="header__navigation">
-          <li onClick={() => navigate("/")}>Home</li>
-          <li>Auction</li>
-          <li>About</li>
+          <li onClick={() => handleNavigation("/")}>Home</li>
+          <li onClick={() => handleNavigation("/auction-list")}>Auction</li>
+          <li onClick={() => handleNavigation("/about")}>About</li>
         </ul>
       </div>
       <div className="header__right">
-        <div className="header__account">
-          {/* <UserOutlined size={100} className="icon" onClick={handleAccountClick} /> */}
-          <UserOutlined size={100} className="icon" />
-        </div>
-        {/* <div className="header__cart"></div> */}
+        {user == null ? (
+          <>
+            <Button
+              icon={<LoginOutlined />}
+              onClick={handleLoginClick}
+              className="monochrome-button"
+            >
+              Login
+            </Button>
+            <Button
+              icon={<UserAddOutlined />}
+              onClick={handleRegisterClick}
+              className="monochrome-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Register
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              icon={<UserOutlined />}
+              onClick={handleProfileClick}
+              className="monochrome-button"
+            >
+              {user.FirstName}
+            </Button>
+            <Button
+              icon={<LogoutOutlined />}
+              onClick={handleLogoutClick}
+              className="monochrome-button"
+              style={{ marginLeft: "10px" }}
+            >
+              Logout
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
 }
+
 export default Header;

@@ -20,8 +20,8 @@
 
         li {
             list-style: none;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 610;
             text-transform: uppercase;
 
             &::after {
@@ -65,4 +65,8 @@
         border-radius: 50%;
         /* Makes the icon circular */
     }     
+    .monochrome-button {
+        font-weight: 450;
+      }
+      
 }

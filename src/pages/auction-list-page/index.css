@@ -1,47 +1,84 @@
-/* index.css */
+.titleName {
+  font-size: 1rem;
+  font-weight: 580;
+  color: #595959;
+  margin-bottom: 0;
+}
 
-.auction-list-container {
-    padding: 20px;
-  }
-  
-  .auction-card {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 16px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .auction-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 0px rgba(0, 0, 0, 0.2);
-  }
-  
-  .auction-card-content {
-    text-align: left;
-  }
-  
-  
-  .auction-card .ant-card-head-title {
-    font-size: 18px;
-    font-weight: 500;
-  }
-  
-  .auction-card .ant-statistic-title {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .auction-card .ant-statistic-content {
-    font-size: 18px;
-    color: #fa8c16; /* Orange color for countdown */
-  }
-  
+.custom-tab {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px;
+  color: #595959;
+  background-color: #ffffff; /* White background for tabs */
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
 
-.countdown-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between "Starts in" text and countdown timer */
-  }
-    
+.custom-tab.active {
+  color: #ffffff; /* White text color when tab is active */
+  background-color: #007bff; /* Blue background color when tab is active */
+}
+
+/* Style for the countdown timer */
+.countdown {
+  font-weight: bold;
+  color: #fa8c16; /* Ant Design's orange color */
+  font-size: 16px;
+}
+
+.countdown span {
+  padding: 0 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+.countdown-0 {
+  font-weight: bold;
+  color: #606060; /* Ant Design's orange color */
+  font-size: 16px;
+}
+
+.countdown-0 span {
+  padding: 0 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+}  
+
+.countdown span.second {
+  background-color: #faedec;
+}
+.countdown-0 span.third {
+  background-color: #dcdbdb;
+}
+.joinButton {
+  background-color: #fa8c16;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 560;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.joinButton:hover { 
+  background-color: #ebebeb !important; /* Darker shade of orange for hover effect */
+  color: #fa8c16 !important;
+}
+.viewButton {
+  background-color: #fde8d2;
+  color: #fa8c16;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 560;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.viewButton:hover { 
+  background-color: #ebebeb !important; /* Darker shade of orange for hover effect */
+  color: #fa8c16 !important;
+}
+

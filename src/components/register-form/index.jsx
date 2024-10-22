@@ -8,10 +8,14 @@ import {
 import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const RegisterForm = () => {
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const handleRegister = async (values) => {
+    setLoading(true);
     try {
       // Submit the form data to the back-end API
       const response = await userApi.post("/register", {
@@ -23,7 +27,9 @@ const RegisterForm = () => {
         password: values.password,
       });
 
-      if (response.status === 201) {
+      setLoading(false);
+
+      if (response.status >= 200 && response.status < 300) {
         message.success("Registration successful! Please log in.");
         setTimeout(() => {
           navigate("/login");
@@ -31,6 +37,7 @@ const RegisterForm = () => {
       }
     } catch (error) {
       if (error.response) {
+        setLoading(false);
         message.error(
           error.response.data.message || "Register failed. Please try again."
         );
@@ -58,6 +65,7 @@ const RegisterForm = () => {
         }}
       >
         <Form
+          form={form}
           name="register"
           layout="vertical"
           initialValues={{
@@ -78,7 +86,6 @@ const RegisterForm = () => {
           >
             <Input className="res-input" placeholder="Enter your first name" />
           </Form.Item>
-
           {/* Last Name */}
           <Form.Item
             className="form-item"
@@ -90,7 +97,6 @@ const RegisterForm = () => {
           >
             <Input className="res-input" placeholder="Enter your last name" />
           </Form.Item>
-
           {/* Username */}
           <Form.Item
             className="form-item"
@@ -104,7 +110,6 @@ const RegisterForm = () => {
               placeholder="Enter your username"
             />
           </Form.Item>
-
           {/* Phone */}
           <Form.Item
             className="form-item"
@@ -116,10 +121,7 @@ const RegisterForm = () => {
                 message: "Please input your phone number!",
               },
               { pattern: /^[0-9]+$/, message: "Phone number must be numeric!" },
-              {
-                pattern: /^[0-9]{10}/,
-                message: "Phone number must be 10 numbers!",
-              },
+              { len: 10, message: "Phone number must be exactly 10 digits!" },
             ]}
           >
             <Input
@@ -128,8 +130,6 @@ const RegisterForm = () => {
               placeholder="Enter your phone number"
             />
           </Form.Item>
-
-          {/* Email */}
           <Form.Item
             className="form-item"
             label="Email"
@@ -144,13 +144,19 @@ const RegisterForm = () => {
           >
             <Input prefix={<MailOutlined />} placeholder="Enter your email" />
           </Form.Item>
-
           {/* Password */}
           <Form.Item
             className="form-item"
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                pattern: /^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/,
+                message:
+                  "Password must be at least 8 characters long, contain at least one special character, and must not include spaces.",
+              },
+            ]}
             hasFeedback
           >
             <Input.Password
@@ -159,7 +165,6 @@ const RegisterForm = () => {
               placeholder="Enter your password"
             />
           </Form.Item>
-
           {/* Confirm Password */}
           <Form.Item
             className="form-item"
@@ -190,7 +195,6 @@ const RegisterForm = () => {
               placeholder="Confirm your password"
             />
           </Form.Item>
-
           {/* Checkbox */}
           <Form.Item
             className="form-item"
@@ -199,14 +203,18 @@ const RegisterForm = () => {
           >
             <Checkbox>I agreed with company policies and terms.</Checkbox>
           </Form.Item>
-
           {/* Submit Button */}
           <Form.Item className="form-item">
-            <Button className="res-btn" type="primary" htmlType="submit" block>
+            <Button
+              className="res-btn"
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loading}
+            >
               Create an account
             </Button>
           </Form.Item>
-
           <p style={{ textAlign: "center" }}>
             Already have an account? <a href="/login">Log in</a>.
           </p>
