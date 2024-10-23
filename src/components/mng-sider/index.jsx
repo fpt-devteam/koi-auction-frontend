@@ -23,7 +23,7 @@ function MngSider() {
 
   // Danh sách các items cơ bản, sử dụng biến đếm counter
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
-  
+
   // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
   if (userRoleId > 2) {
     items.push(
@@ -42,6 +42,7 @@ function MngSider() {
         "Auction Management ",
         counter++, // Tăng counter
         <FormOutlined />,
+        null,
         "/management/auction"
       )
     );
@@ -74,10 +75,10 @@ function MngSider() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {
-    const item = items.find((item) => String(item.key) === keyItem.key); 
+    const item = items.find((item) => String(item.key) === keyItem.key);
     navigate(item.url);
   };
-  
+
 
   return (
     <Sider

@@ -1,6 +1,5 @@
 import { Form, Input, Modal, Switch } from "antd";
 import React from "react";
-
 function ProfileForm({
   form,
   initialValues,
@@ -8,21 +7,28 @@ function ProfileForm({
   isModalVisible,
   onClose,
 }) {
-  
+
   return (
     <div>
       <Modal
-        width={800}
-        title="Edit User Details"
+        width={500}
+        title={`User Details`}
         okText="Save"
         cancelText="Cancel"
-        open={isModalVisible}  
-        onCancel={onClose}   
-        onOk={handleFormSubmit}           
+        open={isModalVisible}
+        onCancel={onClose}
+        onOk={handleFormSubmit}
       >
         <Form
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
           form={form}
-          layout="vertical"
+          size="middle"
+          layout="horizontal"
           initialValues={initialValues}
         >
           <Form.Item
@@ -31,7 +37,7 @@ function ProfileForm({
             rules={[{ required: true, message: "Please input the username!" }]}
             readOnly={true}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="First Name"
@@ -40,14 +46,14 @@ function ProfileForm({
               { required: true, message: "Please input the first name!" },
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Last Name"
             name="LastName"
             rules={[{ required: true, message: "Please input the last name!" }]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Email"
@@ -57,7 +63,7 @@ function ProfileForm({
               { type: "email", message: "Please enter a valid email!" },
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Phone"
@@ -66,10 +72,10 @@ function ProfileForm({
               { required: true, message: "Please input the phone number!" },
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item label="Active" name="Active" valuePropName="checked">
-            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+            <Switch size="middle" />
           </Form.Item>
           <Form.Item
             label="User Role ID"
@@ -78,13 +84,13 @@ function ProfileForm({
               { required: true, message: "Please input the user role ID!" },
             ]}
           >
-            <Input type="number" min={1} />
+            <Input size="small" type="number" min={1} />
           </Form.Item>
           <Form.Item
             label="Balance"
             name="Balance"
             rules={[
-              { required: true, message: "Please input the balance!" },
+              { required: false, message: "Please input the balance!" },
               {
                 type: "number",
                 min: 0,
@@ -92,11 +98,11 @@ function ProfileForm({
               },
             ]}
           >
-            <Input type="number" step="0.01" />
+            <Input size="small" type="number" step="0.01" disabled />
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </div >
   );
 }
 

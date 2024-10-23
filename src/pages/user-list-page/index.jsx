@@ -7,7 +7,8 @@ import "./index.css";
 import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
 
-export default function UserList ({number}) {
+export default function UserList({ number }) {
+  console.log(number);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Use React Router's navigate
@@ -16,21 +17,22 @@ export default function UserList ({number}) {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [number]);
 
   const fetchUsers = async () => {
     try {
       const response = await userApi.get("manage/profile");
       const users = response.data;
-      
+      console.log(users);
       setUsers(users);
       const members = (users) => {
         return users.filter((user) => user.UserRoleId === number);
       }
+
       setUsers(members(users));
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch auctions:", error); 
+      console.error("Failed to fetch auctions:", error);
       message.error("Failed to load auction data.");
       setLoading(false);
     }
@@ -53,10 +55,10 @@ export default function UserList ({number}) {
       key: "UserId",
     },
     {
-        title: <span className="titleName">Last Name</span>,
-        dataIndex: "LastName",
-        key: "UserId",
-      },
+      title: <span className="titleName">Last Name</span>,
+      dataIndex: "LastName",
+      key: "UserId",
+    },
     {
       title: <span className="titleName">Phone</span>,
       dataIndex: "Phone",
@@ -87,10 +89,20 @@ export default function UserList ({number}) {
   ];
 
   return (
-    
-    <div style={{ padding: "30px" }}>
-      <h1 className="title">User List</h1>
-      <Button onClick={() => {setIsModalVisible(true)}}>Create New User</Button>
+
+    <div  >
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        margin: '0',
+        marginRight: '20px',
+        marginBottom: '20px',
+      }}>
+        <h1 className="title">User List</h1>
+        <Button size="large" type="primary" onClick={() => { setIsModalVisible(true) }}>Create New User</Button>
+
+      </div>
       <Table
         dataSource={users}
         columns={columns}
@@ -99,10 +111,10 @@ export default function UserList ({number}) {
         pagination={false}
         scroll={{ y: 600 }}
       />
-      <ProfileForm 
-       form={form}
+      <ProfileForm
+        form={form}
         initialValues={{}}
-        handleFormSubmit={() => {}}
+        handleFormSubmit={() => { }}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       />

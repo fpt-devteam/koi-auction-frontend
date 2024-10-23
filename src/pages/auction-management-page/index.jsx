@@ -126,7 +126,7 @@ const AuctionList = ({ auctionStatusId, auctionStatusName, refresh }) => {
             dataSource={auctionList}
             renderItem={(auction) => (
                 <List.Item>
-                    <AuctionCard auction={auction} refresh={refresh} />
+                    <AuctionCard auctionStatusId={auctionStatusId} auction={auction} refresh={refresh} />
                 </List.Item>
             )}
             locale={{ emptyText: `No ${auctionStatusName} auctions` }}
@@ -134,7 +134,7 @@ const AuctionList = ({ auctionStatusId, auctionStatusName, refresh }) => {
     );
 };
 
-const AuctionCard = ({ auction, refresh }) => {
+const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
     const navigate = useNavigate();
     const handleDelete = async (auctionId) => {
         try {
@@ -152,11 +152,12 @@ const AuctionCard = ({ auction, refresh }) => {
             title={`${auction.auctionName}`}
             bordered={false}
             className="auction-card"
-            onClick={() =>
-                navigate(`/auction-detail?auction-id=${auction.auctionId}`)
-            }
+            // onClick={() =>
+
+            //     // navigate(`/auction-detail?auction-id=${auction.auctionId}`)
+            // }
             extra={
-                <>
+                auctionStatusId === 1 && ( // Conditional rendering based on auctionStatusId
                     <div
                         className="button-container"
                         style={{
@@ -164,15 +165,16 @@ const AuctionCard = ({ auction, refresh }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                             gap: '10px',
-                            marginTop: '20px'
+                            marginTop: '20px',
                         }}
                     >
-
                         <Button
                             type="primary"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/management/update-auction-request?auction-id=${auction.auctionId}`)
+                                navigate(
+                                    `/management/update-auction-request?auction-id=${auction.auctionId}`
+                                );
                             }}
                         >
                             Update
@@ -181,19 +183,23 @@ const AuctionCard = ({ auction, refresh }) => {
                             title="Are you sure?"
                             onConfirm={(e) => {
                                 e.stopPropagation();
-                                handleDelete(auction.auctionId)
+                                handleDelete(auction.auctionId);
                             }}
                         >
-                            <Button type="primary" danger
+                            <Button
+                                type="primary"
+                                danger
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                }}>
+                                }}
+                            >
                                 Delete
                             </Button>
                         </Popconfirm>
                     </div>
-                </>
+                )
             }
         />
+
     );
 };

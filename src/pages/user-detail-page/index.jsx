@@ -53,10 +53,10 @@ const UserDetail = () => {
           message.loading({ content: "Updating user...", key: "updatable" });
 
           // Send PUT request to update user
-          const response = await userApi.patch(`manage/profile/${userId}`, values);
-        
-          // Update user state with new data
-          setUser(response.data);
+          // const response = await userApi.patch(`manage/profile/${userId}`, values);
+
+          // // Update user state with new data
+          // setUser(response.data);
 
           // Show success message
           message.success({
@@ -83,14 +83,14 @@ const UserDetail = () => {
 
   if (!user) {
     return (
-       <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
-      
+      <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
+
     );
   }
 
   return (
     <>
-      <UserDetailCard 
+      <UserDetailCard
         data={user}
         loading={loading}
         openModal={() => setIsModalVisible(true)}
@@ -111,8 +111,8 @@ const UserDetail = () => {
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         handleFormSubmit={handleFormSubmit}
-         />
-        
+      />
+
     </>
   );
 };
