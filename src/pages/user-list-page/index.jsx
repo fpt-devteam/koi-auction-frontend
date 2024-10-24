@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
+import { render } from "react-dom";
 
 export default function UserList({ number }) {
   console.log(number);
@@ -23,16 +24,25 @@ export default function UserList({ number }) {
   const handleFormSubmit = async () => {
     try {
       let values = await form.validateFields();
+      message.loading({ content: "Creating user...", key: "updatable" });
       console.log(values);
       const response = await userApi.post("manage/profile", values);
-      if (response.status === 200) {
-        message.success("Create user successfully");
+      if (response.status === 201) {
+        message.success({
+          content: "User created successfully!",
+          key: "updatable",
+          duration: 2,
+        });
         setIsModalVisible(false);
         fetchUsers();
       }
     } catch (error) {
       console.error("Failed to create user:", error);
-      message.error("Failed to create user.");
+      message.error({
+        content: error.response.data.message,
+        key: "updatable",
+        duration: 2,
+      })
     }
   }
 
@@ -45,7 +55,6 @@ export default function UserList({ number }) {
       const members = (users) => {
         return users.filter((user) => user.UserRoleId === number);
       }
-
       setUsers(members(users));
       setLoading(false);
     } catch (error) {
@@ -86,7 +95,26 @@ export default function UserList({ number }) {
       dataIndex: "Email",
       key: "UserId",
     },
-
+    {
+      title: <span className="titleName">Active</span>,
+      dataIndex: "Active",
+      key: "UserId",
+      render: (active) => (
+        <Tag color={active ? "green" : "red"} key={active}>
+          {active ? "Active" : "Inactive"}
+        </Tag>
+      ),
+    },
+    {
+      title: <span className="titleName">Role</span>,
+      dataIndex: "UserRoleId",
+      key: "UserId",
+      render: (roleId) => (
+        <Tag color={roleId === 1 ? "blue" : roleId === 2 ? "purple" : "orange"} key={roleId}>
+          {roleId === 3 ? "Staff" : roleId === 2 ? "Breeder" : "User"}
+        </Tag>
+      ),
+    },
     {
       title: <span className="titleName">Actions</span>,
       key: "actions",
@@ -117,8 +145,9 @@ export default function UserList({ number }) {
         marginBottom: '20px',
       }}>
         <h1 className="title">User List</h1>
-        <Button size="large" type="primary" onClick={() => { setIsCreate(true), setIsModalVisible(true) }}>Create New User</Button>
-
+        <Button size="large" type="primary" onClick={() => { setIsCreate(true); setIsModalVisible(true); }}>
+          Create New {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
+        </Button>
       </div>
       <Table
         dataSource={users}

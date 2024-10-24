@@ -40,9 +40,17 @@ function ProfileForm({
             rules={[{ required: true, message: "Please input the username!" }]}
             readOnly={true}
           >
-            {/* {isCreate && <Input disabled />} */}
             <Input size="small" {...(!isCreate && { disabled: true })} />
           </Form.Item>
+          {isCreate && (
+            <Form.Item
+              label="Password"
+              name="Password"
+              rules={[{ required: true, message: "Please input the password!" }]}
+            >
+              <Input.Password size="small" />
+            </Form.Item>
+          )}
           <Form.Item
             label="First Name"
             name="FirstName"
