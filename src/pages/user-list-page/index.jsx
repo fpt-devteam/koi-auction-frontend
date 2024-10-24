@@ -14,10 +14,27 @@ export default function UserList({ number }) {
   const navigate = useNavigate(); // Use React Router's navigate
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
 
   useEffect(() => {
     fetchUsers();
   }, [number]);
+
+  const handleFormSubmit = async () => {
+    try {
+      let values = await form.validateFields();
+      console.log(values);
+      const response = await userApi.post("manage/profile", values);
+      if (response.status === 200) {
+        message.success("Create user successfully");
+        setIsModalVisible(false);
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      message.error("Failed to create user.");
+    }
+  }
 
   const fetchUsers = async () => {
     try {
@@ -100,7 +117,7 @@ export default function UserList({ number }) {
         marginBottom: '20px',
       }}>
         <h1 className="title">User List</h1>
-        <Button size="large" type="primary" onClick={() => { setIsModalVisible(true) }}>Create New User</Button>
+        <Button size="large" type="primary" onClick={() => { setIsCreate(true), setIsModalVisible(true) }}>Create New User</Button>
 
       </div>
       <Table
@@ -113,10 +130,11 @@ export default function UserList({ number }) {
       />
       <ProfileForm
         form={form}
-        initialValues={{}}
-        handleFormSubmit={() => { }}
+        handleFormSubmit={handleFormSubmit}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
+        isBreeder={number === 2}
+        isCreate={isCreate}
       />
     </div>
   );

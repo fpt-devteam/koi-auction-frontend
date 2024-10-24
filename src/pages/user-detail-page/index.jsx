@@ -25,7 +25,7 @@ const UserDetail = () => {
 
   const fetchUser = async (userId) => {
     try {
-      const response = await userApi.get(`manage/profile/${userId}`);
+      const response = await userApi.get(`manage/detail-profile/${userId}`);
       setUser(response.data);
       console.log(response.data);
     } catch (error) {
@@ -45,18 +45,22 @@ const UserDetail = () => {
   }, [userId]);
 
   const handleFormSubmit = () => {
-    form //giải thích: form.validateFields() trả về một promise, nếu thành công thì thực hiện hàm then, nếu thất bại thì thực hiện hàm catch
+    form
       .validateFields()
-      .then(async (values) => { //lấy giá trị từ form và gửi lên server
+      .then(async (values) => {
         try {
+          values.UserId = userId;
+          try {
+            const response = await userApi.patch(`manage/profile/${userId}`, values);
+            console.log(response.data);
+            console.log(values);
+            fetchUser(userId);
+          } catch {
+            message.error("Failed to update user.");
+          }
+
           // Show loading message
           message.loading({ content: "Updating user...", key: "updatable" });
-
-          // Send PUT request to update user
-          // const response = await userApi.patch(`manage/profile/${userId}`, values);
-
-          // // Update user state with new data
-          // setUser(response.data);
 
           // Show success message
           message.success({
@@ -84,7 +88,6 @@ const UserDetail = () => {
   if (!user) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
-
     );
   }
 
@@ -100,6 +103,7 @@ const UserDetail = () => {
       <ProfileForm
         form={form}
         initialValues={{
+          UserId: user.UserId,
           Username: user.Username,
           FirstName: user.FirstName,
           LastName: user.LastName,
@@ -107,12 +111,15 @@ const UserDetail = () => {
           Phone: user.Phone,
           Active: user.Active,
           UserRoleId: user.UserRoleId,
+          FarmName: user.UserRoleId === 2 ? user.FarmName : undefined,
+          Certificate: user.UserRoleId === 2 ? user.Certificate : undefined,
+          About: user.UserRoleId === 2 ? user.About : undefined
         }}
+        isBreeder={user.UserRoleId === 2}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         handleFormSubmit={handleFormSubmit}
       />
-
     </>
   );
 };

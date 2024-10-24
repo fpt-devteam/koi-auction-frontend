@@ -1,13 +1,14 @@
 import { Form, Input, Modal, Switch } from "antd";
 import React from "react";
+
 function ProfileForm({
   form,
   initialValues,
   handleFormSubmit,
   isModalVisible,
   onClose,
+  isBreeder
 }) {
-
   return (
     <div>
       <Modal
@@ -18,6 +19,7 @@ function ProfileForm({
         open={isModalVisible}
         onCancel={onClose}
         onOk={handleFormSubmit}
+        isBreeder={isBreeder}
       >
         <Form
           labelCol={{
@@ -38,6 +40,16 @@ function ProfileForm({
             readOnly={true}
           >
             <Input size="small" />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              { message: "Please input the password!" },
+              { required: true },
+            ]}
+          >
+            <Input.Password size="small" />
           </Form.Item>
           <Form.Item
             label="First Name"
@@ -77,32 +89,43 @@ function ProfileForm({
           <Form.Item label="Active" name="Active" valuePropName="checked">
             <Switch size="middle" />
           </Form.Item>
-          <Form.Item
-            label="User Role ID"
-            name="UserRoleId"
-            rules={[
-              { required: true, message: "Please input the user role ID!" },
-            ]}
-          >
-            <Input size="small" type="number" min={1} />
-          </Form.Item>
-          <Form.Item
-            label="Balance"
-            name="Balance"
-            rules={[
-              { required: false, message: "Please input the balance!" },
-              {
-                type: "number",
-                min: 0,
-                message: "Balance cannot be negative!",
-              },
-            ]}
-          >
-            <Input size="small" type="number" step="0.01" disabled />
-          </Form.Item>
+          {isBreeder && (
+            <>
+              <Form.Item
+                label="Farm Name"
+                name="FarmName"
+                rules={[
+                  { message: "Please input the farm name!" },
+                  { required: true },
+                ]}
+              >
+                <Input size="small" />
+              </Form.Item>
+              <Form.Item
+                label="Certificate"
+                name="Certificate"
+                rules={[
+                  { message: "Please input the certificate!" },
+                  { required: true },
+                ]}
+              >
+                <Input size="small" />
+              </Form.Item>
+              <Form.Item
+                label="About"
+                name="About"
+                rules={[
+                  { message: "Please input the about section!" },
+                  { required: true },
+                ]}
+              >
+                <Input.TextArea size="small" />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
-    </div >
+    </div>
   );
 }
 

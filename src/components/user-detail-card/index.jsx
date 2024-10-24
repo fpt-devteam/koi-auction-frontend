@@ -32,12 +32,13 @@ function UserDetailCard({
             text={data.Active ? "Active" : "Inactive"}
           />
         </Descriptions.Item>
-        <Descriptions.Item label="User Role ID">
-          {data.UserRoleId}
-        </Descriptions.Item>
-        <Descriptions.Item label="Balance">
-          ${data.Balance.toFixed(2)}
-        </Descriptions.Item>
+        {data.UserRoleId === 2 && (
+          <>
+            <Descriptions.Item label="Farm Name">{data.FarmName}</Descriptions.Item>
+            <Descriptions.Item label="Certificate">{data.Certificate}</Descriptions.Item>
+            <Descriptions.Item label="About">{data.About}</Descriptions.Item>
+          </>
+        )}
       </Descriptions>
       <Button type="primary" className="update-button" onClick={openModal} style={{ marginTop: "20px" }}>
         Update
