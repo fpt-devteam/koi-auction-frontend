@@ -7,7 +7,8 @@ function ProfileForm({
   handleFormSubmit,
   isModalVisible,
   onClose,
-  isBreeder
+  isBreeder,
+  isCreate
 }) {
   return (
     <div>
@@ -39,7 +40,8 @@ function ProfileForm({
             rules={[{ required: true, message: "Please input the username!" }]}
             readOnly={true}
           >
-            <Input size="small" disabled />
+            {/* {isCreate && <Input disabled />} */}
+            <Input size="small" {...(!isCreate && { disabled: true })} />
           </Form.Item>
           <Form.Item
             label="First Name"
