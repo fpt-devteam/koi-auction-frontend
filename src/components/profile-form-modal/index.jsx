@@ -39,17 +39,7 @@ function ProfileForm({
             rules={[{ required: true, message: "Please input the username!" }]}
             readOnly={true}
           >
-            <Input size="small" />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              { message: "Please input the password!" },
-              { required: true },
-            ]}
-          >
-            <Input.Password size="small" />
+            <Input size="small" disabled />
           </Form.Item>
           <Form.Item
             label="First Name"
@@ -82,6 +72,10 @@ function ProfileForm({
             name="Phone"
             rules={[
               { required: true, message: "Please input the phone number!" },
+              {
+                pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+                message: "Please enter a valid phone number!",
+              },
             ]}
           >
             <Input size="small" />

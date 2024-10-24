@@ -45,22 +45,18 @@ const UserDetail = () => {
   }, [userId]);
 
   const handleFormSubmit = () => {
+
+    // Show loading message
+    message.loading({ content: "Updating user...", key: "updatable" });
     form
       .validateFields()
       .then(async (values) => {
         try {
           values.UserId = userId;
-          try {
-            const response = await userApi.patch(`manage/profile/${userId}`, values);
-            console.log(response.data);
-            console.log(values);
-            fetchUser(userId);
-          } catch {
-            message.error("Failed to update user.");
-          }
-
-          // Show loading message
-          message.loading({ content: "Updating user...", key: "updatable" });
+          const response = await userApi.patch(`manage/profile/${userId}`, values);
+          console.log(response.data.message);
+          console.log(values);
+          fetchUser(userId);
 
           // Show success message
           message.success({
@@ -74,7 +70,7 @@ const UserDetail = () => {
         } catch (error) {
           console.error("Error updating user:", error);
           message.error({
-            content: "Failed to update user.",
+            content: error.response.data.message || "Failed to update user",
             key: "updatable",
             duration: 2,
           });
