@@ -144,7 +144,7 @@ export default function UserList({ number }) {
         marginRight: '20px',
         marginBottom: '20px',
       }}>
-        <h1 className="title">User List</h1>
+        <h1 className="title">{number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List</h1>
         <Button size="large" type="primary" onClick={() => { setIsCreate(true); setIsModalVisible(true); }}>
           Create New {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
         </Button>
