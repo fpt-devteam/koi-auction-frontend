@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined, TeamOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { FormOutlined, HistoryOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 
@@ -48,29 +48,29 @@ function MngSider() {
     );
   }
   if (userRoleId === 4) {
-    items.push(
-      getItem(
-        "User Management ",
-        counter++, // Tăng counter
-        <UserOutlined />,
-        null,
-        "/admin/management/user-list"
-      ),
-      getItem(
-        "Breeder Management ",
-        counter++, // Tăng counter
-        <UserSwitchOutlined />,
-        null,
-        "/admin/management/breeder-list"
-      ),
-      getItem(
-        "Staff Management ",
-        counter++, // Tăng counter
-        <TeamOutlined />,
-        null,
-        "/admin/management/staff-list"
-      ),
-    );
+    const accountDropdownItems = [
+      {
+        label: "User Management",
+        key: "account-user-management",
+        onClick: () => navigate("/admin/management/user-list"),
+      },
+      {
+        label: "Breeder Management",
+        key: "account-breeder-management",
+        onClick: () => navigate("/admin/management/breeder-list"),
+      },
+      {
+        label: "Staff Management",
+        key: "account-staff-management",
+        onClick: () => navigate("/admin/management/staff-list"),
+      },
+    ];
+    items.push({
+      key: "account-management",
+      icon: <UserOutlined />,
+      label: "Account Management",
+      children: accountDropdownItems,
+    });
   }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();

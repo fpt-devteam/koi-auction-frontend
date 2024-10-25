@@ -22,12 +22,12 @@ const UserDetail = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
-
   const fetchUser = async (userId) => {
     try {
-      const response = await userApi.get(`manage/detail-profile/${userId}`);
+      const response = await (userApi.get(`manage/detail-profile/${userId}`))
       setUser(response.data);
       console.log(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
       message.error("Failed to fetch user data.");
@@ -37,7 +37,6 @@ const UserDetail = () => {
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
-      setLoading(false);
     } else {
       message.error("No user ID provided in the URL.");
     }
@@ -48,9 +47,9 @@ const UserDetail = () => {
 
     // Show loading message
     form
-    .validateFields()
-    .then(async (values) => {
-      try {
+      .validateFields()
+      .then(async (values) => {
+        try {
           message.loading({ content: "Updating user...", key: "updatable" });
           values.UserId = userId;
           const response = await userApi.patch(`manage/profile/${userId}`, values);
@@ -81,19 +80,13 @@ const UserDetail = () => {
       });
   };
 
-  if (!user) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
-    );
-  }
-
-  return (
+  return loading ? (<Spin />) : (
     <>
       <UserDetailCard
         data={user}
         loading={loading}
         openModal={() => setIsModalVisible(true)}
-        title="User Details"
+        title={`Information Details`}
       />
 
       <ProfileForm

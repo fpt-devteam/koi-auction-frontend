@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tabs, Button, Tag, Space, message, Form } from "antd";
-import axios from "axios";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
-import { render } from "react-dom";
 
 export default function UserList({ number }) {
   console.log(number);
