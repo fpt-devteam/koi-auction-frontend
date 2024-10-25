@@ -47,11 +47,11 @@ const UserDetail = () => {
   const handleFormSubmit = () => {
 
     // Show loading message
-    message.loading({ content: "Updating user...", key: "updatable" });
     form
-      .validateFields()
-      .then(async (values) => {
-        try {
+    .validateFields()
+    .then(async (values) => {
+      try {
+          message.loading({ content: "Updating user...", key: "updatable" });
           values.UserId = userId;
           const response = await userApi.patch(`manage/profile/${userId}`, values);
           console.log(response.data.message);

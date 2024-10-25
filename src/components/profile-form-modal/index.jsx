@@ -10,6 +10,9 @@ function ProfileForm({
   isBreeder,
   isCreate
 }) {
+  const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
+  const noLeadingTrailingSpacesRule = { pattern: /^\S.*\S$|^\S$/, message: "No leading or trailing spaces are allowed!" };
+
   return (
     <div>
       <Modal
@@ -37,7 +40,10 @@ function ProfileForm({
           <Form.Item
             label="Username"
             name="Username"
-            rules={[{ required: true, message: "Please input the username!" }]}
+            rules={[
+              { required: true, message: "Please input the username!" },
+              noSpacesRule
+            ]}
             readOnly={true}
           >
             <Input size="small" {...(!isCreate && { disabled: true })} />
@@ -46,7 +52,10 @@ function ProfileForm({
             <Form.Item
               label="Password"
               name="Password"
-              rules={[{ required: true, message: "Please input the password!" }]}
+              rules={[
+                { required: true, message: "Please input the password!" },
+                noSpacesRule
+              ]}
             >
               <Input.Password size="small" />
             </Form.Item>
@@ -56,6 +65,7 @@ function ProfileForm({
             name="FirstName"
             rules={[
               { required: true, message: "Please input the first name!" },
+              noLeadingTrailingSpacesRule
             ]}
           >
             <Input size="small" />
@@ -63,7 +73,10 @@ function ProfileForm({
           <Form.Item
             label="Last Name"
             name="LastName"
-            rules={[{ required: true, message: "Please input the last name!" }]}
+            rules={[
+              { required: true, message: "Please input the last name!" },
+              noLeadingTrailingSpacesRule
+            ]}
           >
             <Input size="small" />
           </Form.Item>
@@ -73,6 +86,7 @@ function ProfileForm({
             rules={[
               { required: true, message: "Please input the email!" },
               { type: "email", message: "Please enter a valid email!" },
+              noSpacesRule
             ]}
           >
             <Input size="small" />
@@ -86,6 +100,7 @@ function ProfileForm({
                 pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
                 message: "Please enter a valid phone number!",
               },
+              noSpacesRule
             ]}
           >
             <Input size="small" />
@@ -101,6 +116,7 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the farm name!" },
                   { required: true },
+                  noLeadingTrailingSpacesRule
                 ]}
               >
                 <Input size="small" />
@@ -111,6 +127,7 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the certificate!" },
                   { required: true },
+                  noLeadingTrailingSpacesRule
                 ]}
               >
                 <Input size="small" />
@@ -121,6 +138,7 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the about section!" },
                   { required: true },
+                  noLeadingTrailingSpacesRule
                 ]}
               >
                 <Input.TextArea size="small" />
