@@ -1,0 +1,19 @@
+.title {
+    font-size: large;
+    margin-bottom: 16px;
+}
+
+.form-item {
+    margin-bottom: 20px;
+}
+
+.card {
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    /* background-color: red; */
+}
+
+.image-avatar {
+    border-radius: 20px;
+}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import moment from 'moment';
 import { useForm } from "antd/es/form/Form";
 import {
     TimePicker,
