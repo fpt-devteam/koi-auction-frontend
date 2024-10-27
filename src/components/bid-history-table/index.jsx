@@ -6,51 +6,25 @@ const { Title, Text } = Typography;
 
 const BidHistoryTable = ({ data }) => {
   //gimme some data
-  const data1 = [
-    {
-      key: "1",
-      bid: 1000,
-      username: "John Brown",
-      date: "2021-09-01T10:00:00Z",
-    },
-    {
-      key: "2",
-      bid: 1001,
-      username: "Jim Green",
-      date: "2021-09-01T10:01:00Z",
-    },
-    {
-      key: "3",
-      bid: 1002,
-      username: "Joe Black",
-      date: "2021-09-01T10:02:00Z",
-    },
-    {
-      key: "4",
-      bid: 1003,
-      username: "Jim Red",
-      date: "2021-09-01T10:03:00Z",
-    },
-  ];
   const columns = [
     {
-      title: "Bid",
-      dataIndex: "bid",
-      key: "bid",
+      title: "Bid Amount",
+      dataIndex: "bidAmount",
+      key: "bidAmount",
       render: (text) => (
         <Text>{text ? `$${text.toLocaleString()}` : "Auction started"}</Text>
       ),
     },
     {
       title: "Bidder",
-      dataIndex: "username",
-      key: "username",
+      dataIndex: "bidderId",
+      key: "bidderId",
       render: (text) => <Text>{text || "N/A"}</Text>,
     },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: "Bid Time",
+      dataIndex: "bidTime",
+      key: "bidTime",
       render: (text) => <Text>{new Date(text).toLocaleString()}</Text>,
     },
   ];
@@ -71,7 +45,7 @@ const BidHistoryTable = ({ data }) => {
       {/* Bảng lịch sử đấu giá */}
       <Table
         columns={columns}
-        dataSource={data1}
+        dataSource={data}
         pagination={false}
         bordered
         rowKey="date"
