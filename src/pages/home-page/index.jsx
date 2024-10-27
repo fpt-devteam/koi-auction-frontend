@@ -1,5 +1,13 @@
+import { Button } from "antd";
+import BidMethodInfo from "../../components/bid-method-info";
+
 function HomePage() {
-  return <div>This is HomePage</div>;
+  return <div>
+    <Button>
+      hI
+    </Button>
+    <BidMethodInfo bidMethodInfo={1} size="small"/>
+    </div>;
 }
 
 export default HomePage;
