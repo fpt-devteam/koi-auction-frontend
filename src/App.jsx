@@ -3,7 +3,6 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import "./App.css";
 import AppLayout from "./components/app-layout";
 import MngLayout from "./components/mng-layout";
 import LotManagementPage from "./pages/lot-management-page";
@@ -35,9 +34,12 @@ function App() {
         { path: "", element: <HomePage /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
-        { path: "/auction-detail", element: <AuctionDetailPage /> },
+        { path: "/auction-detail/:auctionId", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
-        { path: "/auction-lot-detail", element: <AuctionLotDetailPage /> },
+        {
+          path: "/auction-lot-detail/:auctionLotId",
+          element: <AuctionLotDetailPage />,
+        },
       ],
     },
     {

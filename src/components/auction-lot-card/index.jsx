@@ -27,6 +27,7 @@ import {
   CalendarOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import StatusTag from "../status-tag";
 
 const { Text, Title } = Typography;
 const { Meta } = Card;
@@ -37,19 +38,31 @@ const AuctionLotCard = ({ auctionLot }) => {
     lotDto: {
       startingPrice,
       koiFishDto: { variety, sex, sizeCm, yearOfBirth, koiMedia },
-      breederDetailDto: { farmName },
+      breederDetailDto,
     },
+    auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName },
   } = auctionLot;
 
-  console.log("lot", auctionLot);
+  const farmName = breederDetailDto ? breederDetailDto.farmName : "Unknown";
+
+  // console.log("lot", auctionLot);
   const navigate = useNavigate();
   const handleClick = () => {
-    // navigate(`/auction-lot-detail/${auctionLot.lotDto.lotId}`, {
-    //   state: { auctionLot }, // Truyền toàn bộ auctionLot qua state
-    // });
-    navigate("/auction-lot-detail", {
-      state: { auctionLot }, // Truyền toàn bộ auctionLot qua state
-    });
+    navigate(`/auction-lot-detail/${auctionLot.lotDto.lotId}`);
+  };
+
+  // Function to determine background color based on status name
+  const getBackgroundColor = () => {
+    switch (auctionLotStatusName) {
+      case "Ongoing":
+        return "#f8d7da"; // Light red for ongoing auctions
+      case "Upcoming":
+        return "#fafafa"; // Light blue for upcoming auctions
+      case "Ended":
+        return "#d3d3d3"; // Light gray for ended auctions
+      default:
+        return "#fafafa"; // Default to white if no matching status
+    }
   };
   return (
     <Card
@@ -62,6 +75,7 @@ const AuctionLotCard = ({ auctionLot }) => {
         justifyContent: "space-between",
         borderRadius: "8px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        // backgroundColor: getBackgroundColor(),
       }}
       cover={
         <img
@@ -89,7 +103,9 @@ const AuctionLotCard = ({ auctionLot }) => {
           </div>
         }
         description={
-          <div style={{ textAlign: "left", lineHeight: "1.6" }}>
+          <div
+            style={{ textAlign: "left", lineHeight: "1.6", minHeight: "200px" }}
+          >
             <Space direction="vertical" size="small" style={{ width: "100%" }}>
               <div
                 style={{
@@ -98,7 +114,9 @@ const AuctionLotCard = ({ auctionLot }) => {
                   alignItems: "center",
                 }}
               >
-                <Text strong>{endTime === null ? "Upcoming" : "Ended"}</Text>
+                <Text strong>
+                  <StatusTag statusName={auctionLotStatusName} />{" "}
+                </Text>
                 <Text strong style={{ color: "red" }}>
                   {startingPrice.toLocaleString()} VND
                 </Text>
@@ -111,7 +129,9 @@ const AuctionLotCard = ({ auctionLot }) => {
                   <Text>
                     <GlobalOutlined style={{ marginRight: 4 }} /> Breeder:
                     <br />
-                    <strong style={{ marginLeft: 22 }}>{farmName}</strong>
+                    <strong style={{ marginLeft: 22 }}>
+                      {farmName == null ? "Unknown" : farmName}
+                    </strong>
                   </Text>
                 </Col>
                 <Col span={12}>

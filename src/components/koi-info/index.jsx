@@ -1,51 +1,60 @@
-import { Descriptions } from "antd";
+import React from "react";
+import { Typography } from "antd";
+const { Text } = Typography;
 
 const KoiInfoText = ({ koi, breederDetailDto }) => {
   const { variety, sex, sizeCm, yearOfBirth } = koi;
 
+  // Define styles
+  const labelStyle = { fontWeight: "bold", fontSize: "1rem" };
+  const valueStyle = { fontSize: "1rem" };
+
   return (
-    <Descriptions
-      bordered
-      column={1} // Số cột
-      size="small" // Kích thước bảng nhỏ
-    >
-      <Descriptions.Item
-        label="Variety"
-        labelStyle={{ width: "100px" }} // Điều chỉnh độ rộng của nhãn
-      >
-        <span style={{ color: "red" }}>{variety || "N/A"}</span>
-      </Descriptions.Item>
+    <div>
+      <div style={{ marginBottom: "8px" }}>
+        <Text strong style={labelStyle}>
+          Variety:{" "}
+        </Text>
+        <Text style={{ ...valueStyle, color: variety ? "red" : "grey" }}>
+          {variety || "N/A"}
+        </Text>
+      </div>
 
-      <Descriptions.Item
-        label="Breeder(s)"
-        labelStyle={{ width: "100px" }} // Điều chỉnh độ rộng của nhãn
-      >
-        <span style={{ color: "red" }}>
+      <div style={{ marginBottom: "8px" }}>
+        <Text strong style={labelStyle}>
+          Breeder(s):{" "}
+        </Text>
+        <Text
+          style={{
+            ...valueStyle,
+            color: breederDetailDto?.farmName ? "red" : "grey",
+          }}
+        >
           {breederDetailDto?.farmName || "N/A"}
-        </span>
-      </Descriptions.Item>
+        </Text>
+      </div>
 
-      <Descriptions.Item
-        label="Sex"
-        labelStyle={{ width: "100px" }} // Điều chỉnh độ rộng của nhãn
-      >
-        {sex === "Male" ? "Male" : "Female"}
-      </Descriptions.Item>
+      <div style={{ marginBottom: "8px" }}>
+        <Text strong style={labelStyle}>
+          Sex:{" "}
+        </Text>
+        <Text style={valueStyle}>{sex || "Unknown"}</Text>
+      </div>
 
-      <Descriptions.Item
-        label="Born in"
-        labelStyle={{ width: "100px" }} // Điều chỉnh độ rộng của nhãn
-      >
-        {yearOfBirth}
-      </Descriptions.Item>
+      <div style={{ marginBottom: "8px" }}>
+        <Text strong style={labelStyle}>
+          Born in:{" "}
+        </Text>
+        <Text style={valueStyle}>{yearOfBirth || "Unknown"}</Text>
+      </div>
 
-      <Descriptions.Item
-        label="Size"
-        labelStyle={{ width: "100px" }} // Điều chỉnh độ rộng của nhãn
-      >
-        {sizeCm} cm
-      </Descriptions.Item>
-    </Descriptions>
+      <div style={{ marginBottom: "8px" }}>
+        <Text strong style={labelStyle}>
+          Size:{" "}
+        </Text>
+        <Text style={valueStyle}>{sizeCm ? `${sizeCm} cm` : "N/A"}</Text>
+      </div>
+    </div>
   );
 };
 

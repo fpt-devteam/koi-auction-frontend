@@ -61,7 +61,7 @@ const BidHistoryTable = ({ data }) => {
         backgroundColor: "#f9f9f9",
         padding: "20px",
         borderRadius: "10px",
-        marginTop: "-18%",
+        marginTop: "20px",
       }}
     >
       <Title level={4} style={{ textAlign: "left", marginBottom: "20px" }}>

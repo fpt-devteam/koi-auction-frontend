@@ -10,20 +10,24 @@
   font-weight: bold;
   padding: 12px;
   color: #595959;
-  background-color: #ffffff; /* White background for tabs */
+  background-color: #ffffff;
+  /* White background for tabs */
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .custom-tab.active {
-  color: #ffffff; /* White text color when tab is active */
-  background-color: #007bff; /* Blue background color when tab is active */
+  color: #ffffff;
+  /* White text color when tab is active */
+  background-color: #007bff;
+  /* Blue background color when tab is active */
 }
 
 /* Style for the countdown timer */
 .countdown {
   font-weight: bold;
-  color: #fa8c16; /* Ant Design's orange color */
+  color: #fa8c16;
+  /* Ant Design's orange color */
   font-size: 16px;
 }
 
@@ -32,9 +36,11 @@
   border-radius: 4px;
   margin: 0 2px;
 }
+
 .countdown-0 {
   font-weight: bold;
-  color: #606060; /* Ant Design's orange color */
+  color: #606060;
+  /* Ant Design's orange color */
   font-size: 16px;
 }
 
@@ -42,14 +48,16 @@
   padding: 0 4px;
   border-radius: 4px;
   margin: 0 2px;
-}  
+}
 
 .countdown span.second {
   background-color: #faedec;
 }
+
 .countdown-0 span.third {
   background-color: #dcdbdb;
 }
+
 .joinButton {
   background-color: #fa8c16;
   color: #ffffff;
@@ -62,10 +70,12 @@
   transition: all 0.3s ease;
 }
 
-.joinButton:hover { 
-  background-color: #ebebeb !important; /* Darker shade of orange for hover effect */
+.joinButton:hover {
+  background-color: #ebebeb !important;
+  /* Darker shade of orange for hover effect */
   color: #fa8c16 !important;
 }
+
 .viewButton {
   background-color: #fde8d2;
   color: #fa8c16;
@@ -77,8 +87,9 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.viewButton:hover { 
-  background-color: #ebebeb !important; /* Darker shade of orange for hover effect */
+
+.viewButton:hover {
+  background-color: #ebebeb !important;
+  /* Darker shade of orange for hover effect */
   color: #fa8c16 !important;
 }
-

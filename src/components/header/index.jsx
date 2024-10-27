@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
-import { LoginOutlined, UserAddOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  LoginOutlined,
+  UserAddOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +50,7 @@ function Header() {
         />
         <ul className="header__navigation">
           <li onClick={() => handleNavigation("/")}>Home</li>
-          <li onClick={() => handleNavigation("/auction-list")}>Auction</li>
+          <li onClick={() => handleNavigation("/auction-list")}>Auctions</li>
           <li onClick={() => handleNavigation("/about")}>About</li>
         </ul>
       </div>

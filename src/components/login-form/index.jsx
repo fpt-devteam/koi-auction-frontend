@@ -34,13 +34,13 @@ const LoginForm = () => {
       console.log(response);
       if (response.status === 200) {
         const { user } = response.data;
-        
+
         dispatch(loginSuccess({ user }));
         setTimeout(() => {
           message.success("Login successful!");
         }, 1000);
         if (user.UserRoleId == 1) {
-          navigate("/");
+          //chuyển về trang liền trước
         } else navigate("/management");
       }
     } catch (error) {
@@ -115,9 +115,7 @@ const LoginForm = () => {
 
           {/* Submit Button */}
           <Form.Item>
-            <Button type="primary" htmlType="submit" block
-            loading = {isLoading}
-            >
+            <Button type="primary" htmlType="submit" block loading={isLoading}>
               Log In
             </Button>
           </Form.Item>
