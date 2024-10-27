@@ -1,40 +1,43 @@
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import AuctionLotList from "../../components/auction-lot-list";
 import lotApi from "../../config/lotApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { message } from "antd";
 import BackButton from "../../components/back-button";
+import StatusTag from "../../components/status-tag";
 
 function AuctionDetailPage() {
-  // const { search } = useLocation();
-  // const query = new URLSearchParams(search);
-  // auctionId = query.get("auction-id");
-
-  // const [auction, setAuction] = useState({});
-
-  // const fetchAuctionById = async () => {
-  //   try {
-  //     const response = await lotApi.get(`auctions/${auctionId}`);
-  //     const fetchedAuction = response.data;
-  //     setAuction(fetchedAuction);
-  //   } catch (error) {
-  //     message.error(error.message);
-  //   }
-  // };
-
-  // useState(() => {
-  //   fetchAuctionById();
-  // }, [auctionId]);
+  const { auctionId } = useParams();
   const location = useLocation();
-  const { auction } = location.state || {};
+  const { auction: auctionFromState } = location.state || {};
+  const [auction, setAuction] = useState(auctionFromState || null);
 
-  console.log("auction", auction);
-  const { auctionId, auctionName, startTime, endTime } = auction;
+  const fetchAuctionById = async () => {
+    try {
+      const response = await lotApi.get(`auctions/${auctionId}`);
+      const fetchedAuction = response.data;
+      setAuction(fetchedAuction);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
 
-  console.log("endTime", endTime);
+  useEffect(() => {
+    if (!auctionFromState) {
+      fetchAuctionById();
+    }
+  }, [auctionId, auctionFromState]); // Dependencies: auctionId and auctionFromState
+
+  if (!auction) {
+    return null;
+  }
+  const {
+    auctionName,
+    startTime,
+    endTime,
+    auctionStatus: { auctionStatusName },
+  } = auction;
   const formatTime = (time) => new Date(time).toLocaleString();
-
-  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -44,6 +47,7 @@ function AuctionDetailPage() {
       }}
     >
       <h2>{auctionName}</h2>
+      <StatusTag statusName={auctionStatusName} />
       <p>Start time: {formatTime(startTime)}</p>
       {endTime != null && <p>End time: {formatTime(endTime)}</p>}
       <AuctionLotList auctionId={auctionId} />

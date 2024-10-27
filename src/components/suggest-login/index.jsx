@@ -9,17 +9,17 @@ const SuggestLogin = () => {
   return (
     <div
       style={{
-        backgroundColor: "#f9f9f9", // Màu nền xám nhạt
-        padding: "10px 10px", // Giảm kích thước padding
+        backgroundColor: "#fafafa",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        padding: "15px", // Giảm kích thước padding
         textAlign: "center", // Căn giữa nội dung
         borderRadius: "8px", // Bo góc mềm mại
-        marginTop: "10px", // Khoảng cách dưới
       }}
     >
       <Text
         strong
         style={{
-          fontSize: "14.4px", // Giảm font-size 20% so với 18px
+          fontSize: "1.5rem", // Giảm font-size 20% so với 18px
           display: "block",
           marginBottom: "16px",
         }}

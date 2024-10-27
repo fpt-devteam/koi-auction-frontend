@@ -6,7 +6,7 @@ const KoiMedia = ({ media }) => {
       src={media[0]?.filePath || "default-image-url"}
       alt="Koi Fish"
       width={"100%"}
-      style={{ borderRadius: "8px" }}
+      style={{ borderRadius: "8px", minHeight: "400px", marginBottom: "20px" }}
     />
   );
 };

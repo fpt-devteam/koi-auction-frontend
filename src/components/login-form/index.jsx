@@ -10,17 +10,17 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const handleGoogleLoginSuccess = async (response) => {
   try {
-    console.log('Google login response:', response);
+    console.log("Google login response:", response);
     const { credential } = response;
-    const res = await userApi.post('/auth/google', { token: credential });
-    console.log('Login successful:', res.data);
+    const res = await userApi.post("/auth/google", { token: credential });
+    console.log("Login successful:", res.data);
   } catch (error) {
-    console.error('Login failed:', error);
+    console.error("Login failed:", error);
   }
 };
 
 const handleGoogleLoginFailure = (response) => {
-  console.error('Google login failed:', response);
+  console.error("Google login failed:", response);
 };
 
 const LoginForm = () => {
@@ -56,7 +56,8 @@ const LoginForm = () => {
           message.success("Login successful!");
         }, 1000);
         if (user.UserRoleId == 1) {
-          navigate("/");
+          //chuyển về trang liền trước
+          navigate(-1);
         } else navigate("/management");
       }
     } catch (error) {
@@ -77,7 +78,6 @@ const LoginForm = () => {
   };
 
   return (
-
     <div className="login-form-container">
       <Card
         title="Log In"
@@ -132,9 +132,7 @@ const LoginForm = () => {
 
           {/* Submit Button */}
           <Form.Item>
-            <Button type="primary" htmlType="submit" block
-              loading={isLoading}
-            >
+            <Button type="primary" htmlType="submit" block loading={isLoading}>
               Log In
             </Button>
           </Form.Item>
