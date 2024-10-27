@@ -22,12 +22,12 @@ const UserDetail = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
-
   const fetchUser = async (userId) => {
     try {
-      const response = await userApi.get(`manage/profile/${userId}`);
+      const response = await (userApi.get(`manage/detail-profile/${userId}`))
       setUser(response.data);
       console.log(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
       message.error("Failed to fetch user data.");
@@ -37,7 +37,6 @@ const UserDetail = () => {
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
-      setLoading(false);
     } else {
       message.error("No user ID provided in the URL.");
     }
@@ -45,18 +44,18 @@ const UserDetail = () => {
   }, [userId]);
 
   const handleFormSubmit = () => {
-    form //giải thích: form.validateFields() trả về một promise, nếu thành công thì thực hiện hàm then, nếu thất bại thì thực hiện hàm catch
-      .validateFields()
-      .then(async (values) => { //lấy giá trị từ form và gửi lên server
-        try {
-          // Show loading message
-          message.loading({ content: "Updating user...", key: "updatable" });
 
-          // Send PUT request to update user
+    // Show loading message
+    form
+      .validateFields()
+      .then(async (values) => {
+        try {
+          message.loading({ content: "Updating user...", key: "updatable" });
+          values.UserId = userId;
           const response = await userApi.patch(`manage/profile/${userId}`, values);
-        
-          // Update user state with new data
-          setUser(response.data);
+          console.log(response.data.message);
+          console.log(values);
+          fetchUser(userId);
 
           // Show success message
           message.success({
@@ -70,7 +69,7 @@ const UserDetail = () => {
         } catch (error) {
           console.error("Error updating user:", error);
           message.error({
-            content: "Failed to update user.",
+            content: error.response.data.message || "Failed to update user",
             key: "updatable",
             duration: 2,
           });
@@ -81,25 +80,19 @@ const UserDetail = () => {
       });
   };
 
-  if (!user) {
-    return (
-       <div style={{ textAlign: "center", marginTop: "50px" }}><span><Spin />  </span>Loading...</div>
-      
-    );
-  }
-
-  return (
+  return loading ? (<Spin />) : (
     <>
-      <UserDetailCard 
+      <UserDetailCard
         data={user}
         loading={loading}
         openModal={() => setIsModalVisible(true)}
-        title="User Details"
+        title={`Information Details`}
       />
 
       <ProfileForm
         form={form}
         initialValues={{
+          UserId: user.UserId,
           Username: user.Username,
           FirstName: user.FirstName,
           LastName: user.LastName,
@@ -107,12 +100,15 @@ const UserDetail = () => {
           Phone: user.Phone,
           Active: user.Active,
           UserRoleId: user.UserRoleId,
+          FarmName: user.UserRoleId === 2 ? user.FarmName : undefined,
+          Certificate: user.UserRoleId === 2 ? user.Certificate : undefined,
+          About: user.UserRoleId === 2 ? user.About : undefined
         }}
+        isBreeder={user.UserRoleId === 2}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         handleFormSubmit={handleFormSubmit}
-         />
-        
+      />
     </>
   );
 };

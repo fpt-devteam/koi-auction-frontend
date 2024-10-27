@@ -20,6 +20,9 @@ import AuctionDetailPage from "./pages/auction-detail-page";
 import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
 import UserList from "./pages/user-list-page";
 import UserDetail from "./pages/user-detail-page";
+import AuctionManagementPage from "./pages/auction-management-page";
+import UpdateAuctionPage from "./pages/update-auction-page";
+import ProfileFormPage from "./pages/profile-form-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +43,7 @@ function App() {
         { path: "/auction-detail", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
         { path: "/auction-lot-detail", element: <AuctionLotDetailPage /> },
+        { path: "/profile", element: <ProfileFormPage /> },
       ],
     },
     {
@@ -60,6 +64,28 @@ function App() {
           path: "/management/create-auction-request",
           element: <CreateAuctionPage />,
         },
+        {
+          path: "/management/update-auction-request",
+          element: <UpdateAuctionPage />,
+        },
+        {
+          path: "/management/auction",
+          element: <AuctionManagementPage />,
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      element: (
+        <PrivateRoute allowedRoles={[4]}>
+          <MngLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/admin/management/user-list", element: <UserList number={1} /> },
+        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
+        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        { path: "/admin/management/user-detail", element: <UserDetail /> },
       ],
     },
     {

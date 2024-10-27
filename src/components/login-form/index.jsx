@@ -6,6 +6,22 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+
+const handleGoogleLoginSuccess = async (response) => {
+  try {
+    console.log('Google login response:', response);
+    const { credential } = response;
+    const res = await userApi.post('/auth/google', { token: credential });
+    console.log('Login successful:', res.data);
+  } catch (error) {
+    console.error('Login failed:', error);
+  }
+};
+
+const handleGoogleLoginFailure = (response) => {
+  console.error('Google login failed:', response);
+};
 
 const LoginForm = () => {
   const [isLoading, setLoading] = useState(false);
@@ -22,9 +38,9 @@ const LoginForm = () => {
       const response = await userApi.post(
         "/login",
         {
-          username: values.username,
-          password: values.password,
-          rememberMe: values.remember,
+          Username: values.username,
+          Password: values.password,
+          RememberMe: values.remember,
         },
         {
           withCredentials: true,
@@ -34,7 +50,7 @@ const LoginForm = () => {
       console.log(response);
       if (response.status === 200) {
         const { user } = response.data;
-        
+
         dispatch(loginSuccess({ user }));
         setTimeout(() => {
           message.success("Login successful!");
@@ -61,6 +77,7 @@ const LoginForm = () => {
   };
 
   return (
+
     <div className="login-form-container">
       <Card
         title="Log In"
@@ -116,11 +133,19 @@ const LoginForm = () => {
           {/* Submit Button */}
           <Form.Item>
             <Button type="primary" htmlType="submit" block
-            loading = {isLoading}
+              loading={isLoading}
             >
               Log In
             </Button>
           </Form.Item>
+
+          {/* Google Login */}
+          <GoogleOAuthProvider clientId="896701632794-fsdbrdh9i80qnid08gj9dv01pst91bbr.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onFailure={handleGoogleLoginFailure}
+            />
+          </GoogleOAuthProvider>
 
           {/* Forgot Password and Register Link */}
           <p style={{ textAlign: "center" }}>

@@ -7,47 +7,78 @@ function ProfileForm({
   handleFormSubmit,
   isModalVisible,
   onClose,
+  isBreeder,
+  isCreate
 }) {
-  
+  const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
+  const noLeadingTrailingSpacesRule = { pattern: /^\S.*\S$|^\S$/, message: "No leading or trailing spaces are allowed!" };
+
   return (
     <div>
       <Modal
-        width={800}
-        title="Edit User Details"
+        width={500}
+        title={`User Details`}
         okText="Save"
         cancelText="Cancel"
-        open={isModalVisible}  
-        onCancel={onClose}   
-        onOk={handleFormSubmit}           
+        open={isModalVisible}
+        onCancel={onClose}
+        onOk={handleFormSubmit}
+        isBreeder={isBreeder}
       >
         <Form
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
           form={form}
-          layout="vertical"
+          size="middle"
+          layout="horizontal"
           initialValues={initialValues}
         >
           <Form.Item
             label="Username"
             name="Username"
-            rules={[{ required: true, message: "Please input the username!" }]}
+            rules={[
+              { required: true, message: "Please input the username!" },
+              noSpacesRule
+            ]}
             readOnly={true}
           >
-            <Input />
+            <Input size="small" {...(!isCreate && { disabled: true })} />
           </Form.Item>
+          {isCreate && (
+            <Form.Item
+              label="Password"
+              name="Password"
+              rules={[
+                { required: true, message: "Please input the password!" },
+                noSpacesRule
+              ]}
+            >
+              <Input.Password size="small" />
+            </Form.Item>
+          )}
           <Form.Item
             label="First Name"
             name="FirstName"
             rules={[
               { required: true, message: "Please input the first name!" },
+              noLeadingTrailingSpacesRule
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Last Name"
             name="LastName"
-            rules={[{ required: true, message: "Please input the last name!" }]}
+            rules={[
+              { required: true, message: "Please input the last name!" },
+              noLeadingTrailingSpacesRule
+            ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Email"
@@ -55,45 +86,65 @@ function ProfileForm({
             rules={[
               { required: true, message: "Please input the email!" },
               { type: "email", message: "Please enter a valid email!" },
+              noSpacesRule
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item
             label="Phone"
             name="Phone"
             rules={[
               { required: true, message: "Please input the phone number!" },
+              {
+                pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+                message: "Please enter a valid phone number!",
+              },
+              noSpacesRule
             ]}
           >
-            <Input />
+            <Input size="small" />
           </Form.Item>
           <Form.Item label="Active" name="Active" valuePropName="checked">
-            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+            <Switch size="middle" />
           </Form.Item>
-          <Form.Item
-            label="User Role ID"
-            name="UserRoleId"
-            rules={[
-              { required: true, message: "Please input the user role ID!" },
-            ]}
-          >
-            <Input type="number" min={1} />
-          </Form.Item>
-          <Form.Item
-            label="Balance"
-            name="Balance"
-            rules={[
-              { required: true, message: "Please input the balance!" },
-              {
-                type: "number",
-                min: 0,
-                message: "Balance cannot be negative!",
-              },
-            ]}
-          >
-            <Input type="number" step="0.01" />
-          </Form.Item>
+          {isBreeder && (
+            <>
+              <Form.Item
+                label="Farm Name"
+                name="FarmName"
+                rules={[
+                  { message: "Please input the farm name!" },
+                  { required: true },
+                  noLeadingTrailingSpacesRule
+                ]}
+              >
+                <Input size="small" />
+              </Form.Item>
+              <Form.Item
+                label="Certificate"
+                name="Certificate"
+                rules={[
+                  { message: "Please input the certificate!" },
+                  { required: true },
+                  noLeadingTrailingSpacesRule
+                ]}
+              >
+                <Input size="small" />
+              </Form.Item>
+              <Form.Item
+                label="About"
+                name="About"
+                rules={[
+                  { message: "Please input the about section!" },
+                  { required: true },
+                  noLeadingTrailingSpacesRule
+                ]}
+              >
+                <Input.TextArea size="small" />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     </div>

@@ -1,28 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tabs, Button, Tag, Space, message, Form } from "antd";
-import axios from "axios";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
 
-export default function UserList ({number}) {
+export default function UserList({ number }) {
+  console.log(number);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Use React Router's navigate
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [number]);
+
+  const handleFormSubmit = async () => {
+    try {
+      let values = await form.validateFields();
+      message.loading({ content: "Creating user...", key: "updatable" });
+      console.log(values);
+      const response = await userApi.post("manage/profile", values);
+      if (response.status === 201) {
+        message.success({
+          content: "User created successfully!",
+          key: "updatable",
+          duration: 2,
+        });
+        setIsModalVisible(false);
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      message.error({
+        content: error.response.data.message,
+        key: "updatable",
+        duration: 2,
+      })
+    }
+  }
 
   const fetchUsers = async () => {
     try {
       const response = await userApi.get("manage/profile");
       const users = response.data;
-      
+      console.log(users);
       setUsers(users);
       const members = (users) => {
         return users.filter((user) => user.UserRoleId === number);
@@ -30,7 +55,7 @@ export default function UserList ({number}) {
       setUsers(members(users));
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch auctions:", error); 
+      console.error("Failed to fetch auctions:", error);
       message.error("Failed to load auction data.");
       setLoading(false);
     }
@@ -53,10 +78,10 @@ export default function UserList ({number}) {
       key: "UserId",
     },
     {
-        title: <span className="titleName">Last Name</span>,
-        dataIndex: "LastName",
-        key: "UserId",
-      },
+      title: <span className="titleName">Last Name</span>,
+      dataIndex: "LastName",
+      key: "UserId",
+    },
     {
       title: <span className="titleName">Phone</span>,
       dataIndex: "Phone",
@@ -67,7 +92,26 @@ export default function UserList ({number}) {
       dataIndex: "Email",
       key: "UserId",
     },
-
+    {
+      title: <span className="titleName">Active</span>,
+      dataIndex: "Active",
+      key: "UserId",
+      render: (active) => (
+        <Tag color={active ? "green" : "red"} key={active}>
+          {active ? "Active" : "Inactive"}
+        </Tag>
+      ),
+    },
+    {
+      title: <span className="titleName">Role</span>,
+      dataIndex: "UserRoleId",
+      key: "UserId",
+      render: (roleId) => (
+        <Tag color={roleId === 1 ? "blue" : roleId === 2 ? "purple" : "orange"} key={roleId}>
+          {roleId === 3 ? "Staff" : roleId === 2 ? "Breeder" : "User"}
+        </Tag>
+      ),
+    },
     {
       title: <span className="titleName">Actions</span>,
       key: "actions",
@@ -87,10 +131,21 @@ export default function UserList ({number}) {
   ];
 
   return (
-    
-    <div style={{ padding: "30px" }}>
-      <h1 className="title">User List</h1>
-      <Button onClick={() => {setIsModalVisible(true)}}>Create New User</Button>
+
+    <div  >
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        margin: '0',
+        marginRight: '20px',
+        marginBottom: '20px',
+      }}>
+        <h1 className="title">{number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List</h1>
+        <Button size="large" type="primary" onClick={() => { setIsCreate(true); setIsModalVisible(true); }}>
+          Create New {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
+        </Button>
+      </div>
       <Table
         dataSource={users}
         columns={columns}
@@ -99,12 +154,13 @@ export default function UserList ({number}) {
         pagination={false}
         scroll={{ y: 600 }}
       />
-      <ProfileForm 
-       form={form}
-        initialValues={{}}
-        handleFormSubmit={() => {}}
+      <ProfileForm
+        form={form}
+        handleFormSubmit={handleFormSubmit}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
+        isBreeder={number === 2}
+        isCreate={isCreate}
       />
     </div>
   );
