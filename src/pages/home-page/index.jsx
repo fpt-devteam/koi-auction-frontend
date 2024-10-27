@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import BidMethodInfo from "../../components/bid-method-info";
+import BidMethodInfo from "../../components/bid-method-info-button";
 
 function HomePage() {
   return <div>

@@ -1,13 +1,13 @@
 // import { useNavigate } from "react-router-dom";
 import "./index.scss";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { UserOutlined, LogoutOutlined, ProfileOutlined, WalletOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Space } from "antd";
 import Search from "antd/es/input/Search";
 import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
- import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function MngHeader() {
   // const navigate = useNavigate();
@@ -18,7 +18,28 @@ function MngHeader() {
   //     else
   //         navigate("/login");
   // };
-  const {user} = useSelector((store) => store.user);
+  const items = [
+    {
+      key: "1",
+      icon: <UserOutlined />,
+      label: "My Account",
+      disabled: true,
+    },
+    {
+      key: "2",
+      icon: <ProfileOutlined />,
+      label: "Profile",
+      extra: "⌘P",
+    },
+    {
+      key: "3",
+      icon: <WalletOutlined />,
+      label: "Wallet",
+      extra: "⌘B",
+    },
+  ];
+
+  const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogoutClick = () => {
@@ -26,10 +47,10 @@ function MngHeader() {
     dispatch(logout());
     navigate("/");
   };
-
-  const handleProfileClick = () => {
-    navigate("/profile");
+  const handleNavigation = (path) => {
+    navigate(path);
   };
+
 
   return (
     <div className="header">
@@ -50,21 +71,41 @@ function MngHeader() {
         </ul>
       </div>
       <div className="header__right">
-            <Button
-              icon={<UserOutlined />}
-              onClick={handleProfileClick}
-              className="monochrome-button"
-            >
-              {user.FirstName}
-            </Button>
-            <Button
-              icon={<LogoutOutlined />}
-              onClick={handleLogoutClick}
-              className="monochrome-button"
-              style={{ marginLeft: "10px" }}
-            >
-              Logout
-            </Button>
+        <Dropdown
+          menu={{
+            items,
+            onClick: ({ key }) => {
+              if (key === "2") {
+                handleNavigation("/profile");
+              } else if (key === "3") {
+                handleNavigation("/wallet");
+              }
+            },
+          }}
+          dropdownRender={(menu) => (
+            <div style={{ minWidth: "200px" }}>{menu}</div>
+          )}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              <Button
+                icon={<UserOutlined />}
+                onClick={handleNavigation("/profile")}
+                className="monochrome-button"
+              >
+                {user.FirstName}
+              </Button>
+            </Space>
+          </a>
+        </Dropdown>
+        <Button
+          icon={<LogoutOutlined />}
+          onClick={handleLogoutClick}
+          className="monochrome-button"
+          style={{ marginLeft: "10px" }}
+        >
+          Logout
+        </Button>
       </div>
     </div>
   );

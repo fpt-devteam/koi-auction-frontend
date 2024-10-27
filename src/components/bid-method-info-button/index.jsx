@@ -4,7 +4,7 @@ import { Button, Modal, Typography } from 'antd';
 
 const { Title, Paragraph, Text } = Typography;
 
-function BidMethodInfo({bidMethodInfo, size}) {
+function BidMethodInfoButton({bidMethodInfo, size}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => setIsModalVisible(true);
@@ -102,4 +102,4 @@ function BidMethodInfo({bidMethodInfo, size}) {
   );
 }
 
-export default BidMethodInfo;
+export default BidMethodInfoButton;
