@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import lotApi from "../../config/lotApi";
 
 const DATE_FORMAT = "YYYY-MM-DD", TIME_FORMAT = "HH:mm";
-const MIN_DURATION_MINUTES = 30;
+const MIN_DURATION_MINUTES = 1;
 const MAX_DURATION_MINUTES = 500;
 const MIN_STEP_PRECENT = 1;
 const MAX_STEP_PRECENT = 100;
@@ -60,8 +60,8 @@ export default function AuctionForm({ auctionId, auctionLots, approvedLots, onSu
                 ...item,
                 auctionLotId: item.lotId,
                 orderInAuction: 0,
-                duration: 0,
-                stepPercent: 0,
+                duration: MIN_DURATION_MINUTES,
+                stepPercent: MIN_STEP_PRECENT,
             }));
             setApprovedLotSource(list);
         }
@@ -319,7 +319,7 @@ const LotTable = ({
         }
         setGiveLotSource((newGiveLotSource) =>
             newGiveLotSource.filter(
-                (giveLotSource) => giveLotSource.lotId >= record.lotId
+                (giveLotSource) => giveLotSource.lotId != record.lotId
             )
         );
     };

@@ -1,0 +1,37 @@
+.payment-result-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.payment-result-title {
+    color: #333;
+    margin-bottom: 1.5rem;
+
+}
+
+.order-details {
+    background-color: #f8f8f8;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.order-details p {
+    margin: 0.5rem 0;
+    color: #555;
+}
+
+.success-message {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #dc3545;
+    font-weight: bold;
+}

@@ -68,23 +68,6 @@
     text-decoration: underline;
 }
 
-/* Buttons */
-.ant-btn {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.ant-btn-primary {
-    background-color: #e74c3c;
-    border-color: #e74c3c;
-}
-
-.ant-btn-primary:hover {
-    background-color: #c0392b;
-    border-color: #c0392b;
-}
 
 /* Carousel */
 .ant-carousel {
