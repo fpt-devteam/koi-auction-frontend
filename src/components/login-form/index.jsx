@@ -6,6 +6,22 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+
+const handleGoogleLoginSuccess = async (response) => {
+  try {
+    console.log("Google login response:", response);
+    const { credential } = response;
+    const res = await userApi.post("/auth/google", { token: credential });
+    console.log("Login successful:", res.data);
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+};
+
+const handleGoogleLoginFailure = (response) => {
+  console.error("Google login failed:", response);
+};
 
 const LoginForm = () => {
   const [isLoading, setLoading] = useState(false);
@@ -22,9 +38,9 @@ const LoginForm = () => {
       const response = await userApi.post(
         "/login",
         {
-          username: values.username,
-          password: values.password,
-          rememberMe: values.remember,
+          Username: values.username,
+          Password: values.password,
+          RememberMe: values.remember,
         },
         {
           withCredentials: true,
@@ -41,6 +57,7 @@ const LoginForm = () => {
         }, 1000);
         if (user.UserRoleId == 1) {
           //chuyển về trang liền trước
+          navigate(-1);
         } else navigate("/management");
       }
     } catch (error) {
@@ -119,6 +136,14 @@ const LoginForm = () => {
               Log In
             </Button>
           </Form.Item>
+
+          {/* Google Login */}
+          <GoogleOAuthProvider clientId="896701632794-fsdbrdh9i80qnid08gj9dv01pst91bbr.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onFailure={handleGoogleLoginFailure}
+            />
+          </GoogleOAuthProvider>
 
           {/* Forgot Password and Register Link */}
           <p style={{ textAlign: "center" }}>

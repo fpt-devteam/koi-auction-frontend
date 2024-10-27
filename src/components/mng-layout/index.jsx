@@ -7,9 +7,7 @@ import MngSider from "../mng-sider";
 const { Content } = Layout;
 
 const MngLayout = () => {
-  // const {
-  //   token: { colorBgContainer, borderRadiusLG },
-  // } = theme.useToken();
+
   return (
     <Layout
       style={{
@@ -24,14 +22,6 @@ const MngLayout = () => {
             margin: "10px 16px",
           }}
         >
-          {/* <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
           <Outlet />
         </Content>
         <Footer />
