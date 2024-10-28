@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "antd";
 const { Text } = Typography;
 
-const KoiInfoText = ({ koi, breederDetailDto }) => {
+const KoiInfo = ({ koi, breederDetailDto }) => {
   const { variety, sex, sizeCm, yearOfBirth } = koi;
 
   // Define styles
@@ -27,7 +27,7 @@ const KoiInfoText = ({ koi, breederDetailDto }) => {
         <Text
           style={{
             ...valueStyle,
-            color: breederDetailDto?.farmName ? "red" : "grey",
+            // color: "grey",
           }}
         >
           {breederDetailDto?.farmName || "N/A"}
@@ -38,7 +38,7 @@ const KoiInfoText = ({ koi, breederDetailDto }) => {
         <Text strong style={labelStyle}>
           Sex:{" "}
         </Text>
-        <Text style={valueStyle}>{sex || "Unknown"}</Text>
+        <Text style={valueStyle}>{(sex ? "Male" : "Female") || "Unknown"}</Text>
       </div>
 
       <div style={{ marginBottom: "8px" }}>
@@ -58,4 +58,4 @@ const KoiInfoText = ({ koi, breederDetailDto }) => {
   );
 };
 
-export default KoiInfoText;
+export default KoiInfo;

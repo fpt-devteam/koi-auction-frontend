@@ -15,12 +15,14 @@ const CurrentBid = ({ currentBid }) => {
         marginTop: "auto",
       }}
     >
-      <Text strong style={{ fontSize: "1.5rem" }}>
-        Current Bid:
-      </Text>
-      <Text strong style={{ fontSize: "1.5rem", color: "red" }}>
-        {currentBid ? `  ${currentBid.toLocaleString()} VND` : "No Bids Yet"}
-      </Text>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Text strong style={{ fontSize: "1.5rem" }}>
+          Current Bid:{" "}
+        </Text>
+        <Text strong style={{ fontSize: "1.5rem", color: "red" }}>
+          {currentBid ? `${currentBid.toLocaleString()} VND` : "No Bids Yet"}
+        </Text>
+      </div>
     </Card>
   );
 };
