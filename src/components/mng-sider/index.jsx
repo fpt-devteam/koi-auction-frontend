@@ -76,7 +76,9 @@ function MngSider() {
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {
     const item = items.find((item) => String(item.key) === keyItem.key);
-    navigate(item.url);
+    if (item?.url) {
+      navigate(item.url);
+    }
   };
 
 
