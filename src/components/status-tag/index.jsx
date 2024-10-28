@@ -19,7 +19,8 @@ const sizeMap = {
 function StatusTag({ statusName, size = "medium" }) {
   const status = statusMap[statusName];
   const sizeStyle = sizeMap[size];
-
+  console.log(statusName);
+  console.log(status);
   if (!status) return null;
 
   return (

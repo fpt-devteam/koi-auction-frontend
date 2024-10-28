@@ -96,21 +96,16 @@ const AuctionLotDetailPage = () => {
 
         newConnection.on(RECEIVE_START_AUCTION_LOT, function () {
           console.log("Start auction lot");
-          fetchAuctionLotById();
           // alert for start auction
-          message.success("The auction lot has started!", 5);
+          message.success("The auction lot has started!", 10);
+          fetchAuctionLotById();
         });
 
         newConnection.on(RECEIVE_END_AUCTION_LOT, function () {
           console.log("End auction lot");
-          fetchAuctionLotById();
           // alert for end auction
-          message.success("The auction lot has ended!", 5);
-        });
-
-        newConnection.on(RECEIVE_CURRENT_BID, function (bid) {
-          console.log("Receive joinAuctionLotErrorMessage", bid);
-          setCurrentBid(bid.bidAmount);
+          message.success("The auction lot has ended!", 10);
+          fetchAuctionLotById();
         });
 
         newConnection.on(
@@ -122,6 +117,7 @@ const AuctionLotDetailPage = () => {
 
         newConnection.on(RECEIVE_CURRENT_BID, function (currentBid) {
           if (currentBid == null) return;
+          console.log("Receive current bid: ", currentBid);
           setCurrentBid(currentBid);
         });
       })
