@@ -90,7 +90,7 @@ function MngHeader() {
             <Space>
               <Button
                 icon={<UserOutlined />}
-                onClick={handleNavigation("/profile")}
+                onClick={() => handleNavigation("/profile")}
                 className="monochrome-button"
               >
                 {user.FirstName}
