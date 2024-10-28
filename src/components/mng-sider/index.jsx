@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { FormOutlined, HistoryOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
-
 function getItem(label, key, icon, children = null, url = "/management") {
   return {
     key,
@@ -78,7 +77,6 @@ function MngSider() {
     const item = items.find((item) => String(item.key) === keyItem.key);
     navigate(item.url);
   };
-
 
   return (
     <Sider

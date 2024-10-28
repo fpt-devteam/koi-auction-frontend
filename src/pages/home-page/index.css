@@ -1,0 +1,89 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Homepage title */
+.homepage-title {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #e74c3c;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.homepage-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background-color: #e74c3c;
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+/* Card container */
+.card-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.title {
+    /* color: #e74c3c; */
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+}
+
+
+.custom-paragraph {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+/* Lists */
+.aligned-list {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.aligned-list li {
+    margin-bottom: 10px;
+}
+
+.custom-link {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.custom-link:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+
+/* Carousel */
+.ant-carousel {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.reason-card h3 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.custom-paragraph {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}

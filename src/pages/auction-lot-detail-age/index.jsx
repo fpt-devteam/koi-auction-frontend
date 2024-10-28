@@ -9,6 +9,7 @@ import BidHistoryTable from "../../components/bid-history-table";
 import BackButton from "../../components/back-button";
 import { useEffect, useState } from "react";
 import lotApi from "../../config/lotApi";
+import biddingApi from "../../config/biddingApi";
 import StatusTag from "../../components/status-tag";
 import AuctionMethod from "../../components/auction-method";
 const { Text } = Typography;
@@ -16,11 +17,19 @@ import * as signalR from "@microsoft/signalr";
 import PriceDisplayComponent from "../../components/price-display";
 import BidForm from "../../components/bid-form";
 import CurrentBid from "../../components/current-bid";
+import PriceBuy from "../../components/price-buy";
 
 const AuctionLotDetailPage = () => {
   const { auctionLotId } = useParams();
   const [auctionLot, setAuctionLot] = useState();
   const [connection, setConnection] = useState(null);
+  const [currentBid, setCurrentBid] = useState(null);
+
+  const JOIN_AUCTION_LOT = "JoinAuctionLot";
+  const RECEIVE_START_AUCTION_LOT = "ReceiveStartAuctionLot";
+  const RECEIVE_END_AUCTION_LOT = "ReceiveEndAuctionLot";
+  const RECEIVE_EXCEPTION_MESSAGE = "ReceiveExceptionMessage";
+  const RECEIVE_CURRENT_BID = "ReceiveCurrentBid";
 
   const fetchAuctionLotById = async () => {
     try {
@@ -30,6 +39,29 @@ const AuctionLotDetailPage = () => {
     } catch (error) {
       message.error(error.message);
     }
+  };
+
+  const fetchBigLog = async () => {
+    try {
+      const response = await biddingApi.get("bid-log");
+      const fetchedBidLogs = response.data;
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const handleBid = (bidAmount) => {
+    const createBidLogDto = {
+      BidderId: parseInt(userId),
+      AuctionLotId: parseInt(auctionLotId),
+      BidAmount: parseFloat(parseFloat(bidAmount).toFixed(2)),
+    };
+    console.log("clg: createBidLogDto", createBidLogDto);
+    connection.invoke("PlaceBid", createBidLogDto);
+  };
+
+  const handleBuy = (price) => {
+    console.log("Buy: ", price);
   };
 
   const { user } = useSelector((state) => state.user);
@@ -55,31 +87,43 @@ const AuctionLotDetailPage = () => {
         console.log("Connected to SignalR");
         // Gọi hàm JoinAuctionLot từ server bằng invoke
         newConnection
-          .invoke("JoinAuctionLot", {
+          .invoke(JOIN_AUCTION_LOT, {
             UserId: userId ?? parseInt(userId),
             AuctionLotId: parseInt(auctionLotId),
-          }) // Đảm bảo đúng tên hàm và tham số
+          })
           .then(() => console.log("CLG: Joined auction lot" + auctionLotId))
           .catch((err) => console.error("Error invoking JoinAuctionLot:", err));
 
-        newConnection.on("ReceiveStartAuctionLot", function (startAuctionLot) {
+        newConnection.on(RECEIVE_START_AUCTION_LOT, function () {
+          console.log("Start auction lot");
           fetchAuctionLotById();
-          console.log("Receive startAuctionLot", startAuctionLot);
-          message.open("Auction Session has started", 5);
+          // alert for start auction
+          message.success("The auction lot has started!", 5);
         });
 
-        newConnection.on("ReceiveEndAuctionLot", function () {
+        newConnection.on(RECEIVE_END_AUCTION_LOT, function () {
+          console.log("End auction lot");
           fetchAuctionLotById();
-          console.log("Receive endAuctionLot");
-          message.loading("Auction Session has ended", 5);
+          // alert for end auction
+          message.success("The auction lot has ended!", 5);
+        });
+
+        newConnection.on(RECEIVE_CURRENT_BID, function (bid) {
+          console.log("Receive joinAuctionLotErrorMessage", bid);
+          setCurrentBid(bid.bidAmount);
         });
 
         newConnection.on(
-          "ReceiveJoinAuctionLotErrorMessage",
-          function (errorMessage) {
-            console.log("Receive joinAuctionLotErrorMessage", errorMessage);
+          RECEIVE_EXCEPTION_MESSAGE,
+          function (exceptionMessage) {
+            message.error(exceptionMessage);
           }
         );
+
+        newConnection.on(RECEIVE_CURRENT_BID, function (currentBid) {
+          if (currentBid == null) return;
+          setCurrentBid(currentBid);
+        });
       })
       .catch((err) => console.log("Error while starting connection: ", err));
 
@@ -98,8 +142,13 @@ const AuctionLotDetailPage = () => {
     };
   }, [auctionLotId, userId]); // Dependencies: auctionLotId, userId
 
-  if (!auctionLot) return null;
+  // Fetch bid logs
+  useEffect(() => {
+    if (auctionLotId == null) return;
+    fetchBigLog();
+  }, [auctionLotId]); // Dependencies: auctionLotId
 
+  if (!auctionLot) return null;
   const {
     duration,
     startTime,
@@ -120,13 +169,6 @@ const AuctionLotDetailPage = () => {
     stepPercent != null
       ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100
       : stepPercent;
-
-  const currentBid = 100000;
-  const handleBid = (bidAmount) => {
-    console.log("Bid placed:", bidAmount);
-    // Thực hiện logic đặt giá thầu
-  };
-
   return (
     <div style={{ padding: "20px 120px" }}>
       {/* Auction Lot Detail */}
@@ -138,8 +180,14 @@ const AuctionLotDetailPage = () => {
 
         <Col span={13}>
           {/* Auction Lot Name */}{" "}
-          {/* <StatusTag statusName={auctionLotStatusName} /> */}
-          <div style={{ marginBottom: "10px" }}>
+          <div
+            style={{
+              marginBottom: "10px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <StatusTag statusName={auctionLotStatusName} size="large" />
             <Text strong style={{ fontSize: "2rem" }}>
               {variety + " #" + sku}
             </Text>
@@ -147,15 +195,20 @@ const AuctionLotDetailPage = () => {
           <Row gutter={(0, 20)}>
             <Col span={8}>
               {/* Koi Info */}
-              <KoiInfo koi={auctionLot.lotDto.koiFishDto} />
+              <KoiInfo
+                koi={auctionLot.lotDto.koiFishDto}
+                breederDetailDto={breederDetailDto}
+              />
             </Col>
             <Col span={16}>
               {/* Starting price*/}
-              <PriceDisplayComponent
-                text="Starting price"
-                value={startingPrice}
-                size="small"
-              />
+              {auctionMethodId != 2 && (
+                <PriceDisplayComponent
+                  text="Starting price"
+                  value={startingPrice}
+                  size="small"
+                />
+              )}
               {/* Step price */}
               {auctionMethodId > 2 && (
                 <PriceDisplayComponent
@@ -169,8 +222,9 @@ const AuctionLotDetailPage = () => {
             </Col>
           </Row>
           <Row gutter={(0, 20)}>
+            {/* Current Bid */}
             <Col span={24}>
-              <CurrentBid currentBid={currentBid} />
+              {auctionMethodId == 3 && <CurrentBid currentBid={currentBid} />}
             </Col>
           </Row>
         </Col>
@@ -186,8 +240,13 @@ const AuctionLotDetailPage = () => {
           />
         </Col>
         <Col span={13}>
-          {userId && auctionLotStatusName == "Ongoing" && (
+          {/* Bid Form */}
+          {userId && (auctionMethodId == 3 || auctionMethodId == 2) && (
             <BidForm currentBid={currentBid} onBidSubmit={handleBid} />
+          )}
+
+          {userId && (auctionMethodId == 1 || auctionMethodId == 4) && (
+            <PriceBuy price={startingPrice} onBuySubmit={handleBuy} />
           )}
 
           {/* Suggest Login */}
@@ -197,7 +256,9 @@ const AuctionLotDetailPage = () => {
 
       <Row gutter={(0, 20)}>
         <Col span={24}>
-          <BidHistoryTable />
+          {(auctionMethodId == 1 || auctionMethodId == 3) && (
+            <BidHistoryTable />
+          )}
           <BackButton />
         </Col>
       </Row>
