@@ -49,7 +49,6 @@ function YourWallet({ balance }) {
     }
     setDepositModal(false);
     //navigate to the payment call back
-    navigate(response.data.callback_url);
   };
   const handleWithdrawalSubmit = () => {
     console.log("Withdrawing amount:", withdrawalAmount);

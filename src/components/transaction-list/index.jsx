@@ -6,26 +6,31 @@ const { Text } = Typography;
 const TransactionList = ({ transactions }) => {
   const columns = [
     {
+      title: 'ID',
+      dataIndex: 'transId',
+      key: 'transId',
+    },
+    {
       title: 'STATUS',
       dataIndex: 'status',
       key: 'status',
-      render: (text, record) => (
-        <Space>
-          <Text>{text}</Text>
-          <Text>{record.icon}</Text>
-        </Space>
+    },
+    {
+      title: 'AMOUNT',
+      dataIndex: 'amount',
+      key: 'amount',
+      align: 'right',
+      render: (amount) => (
+        <Text strong>{amount.toLocaleString()} VND</Text>
       ),
     },
     {
-      title: 'TOTAL',
-      dataIndex: 'total',
-      key: 'total',
+      title: 'BALANCE AFTER',
+      dataIndex: 'balanceAfter',
+      key: 'balanceAfter',
       align: 'right',
-      render: (text, record) => (
-        <Space direction="vertical" size={0} style={{ textAlign: 'right' }}>
-          <Text strong>{text}</Text>
-          <Text type="secondary" style={{ fontSize: '12px' }}>{record.currency}</Text>
-        </Space>
+      render: (balance) => (
+        <Text strong>{balance.toLocaleString()} VND</Text>
       ),
     },
   ];
@@ -41,4 +46,3 @@ const TransactionList = ({ transactions }) => {
 };
 
 export default TransactionList;
-
