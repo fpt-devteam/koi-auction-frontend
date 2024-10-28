@@ -3,8 +3,6 @@ import { Col, Row, Card, Form, Input, Select, Button, message, DatePicker, Image
 import { useForm } from "antd/es/form/Form";
 const { Option } = Select;
 import "./index.css"
-import UploadKoiMedia from "../upload-koi-media";
-import UploadAvatar from "../upload-avatar";
 const DATE_FORMAT = "YYYY-MM-DD", TIME_FORMAT = "HH:mm";
 const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
 const provinceData = [
