@@ -4,39 +4,46 @@ import "./index.scss"; // Custom CSS for styling
 import userApi from "../../config/userApi";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/features/userSlice";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { redirect, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
-const handleGoogleLoginSuccess = async (response) => {
-  try {
-    console.log("Google login response:", response);
-    const { credential } = response;
-    const res = await userApi.post("/auth/google", { token: credential });
-    console.log("Login successful:", res.data);
-    if (res.status === 200) {
-      const { user } = res.data;
-
-      dispatch(loginSuccess({ user }));
-      setTimeout(() => {
-        message.success("Login successful!");
-      }, 1000);
-      if (user.UserRoleId == 1) {
-        //chuyển về trang liền trước
-        navigate(-1);
-      } else navigate("/management");
-    }
-  } catch (error) {
-    console.error("Login failed:", error);
-  }
-};
-
-const handleGoogleLoginFailure = (response) => {
-  console.error("Google login failed:", response);
-};
-
 const LoginForm = () => {
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      const userInfo = await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        { headers: { Authorization: `Bearer ${response.access_token}` } },
+      );
+      console.log(userInfo.data);
+      const { email, family_name, given_name, sub } = userInfo.data;
+      const loginResponse = await userApi.post('/auth/google', {
+        Email: email,
+        FirstName: given_name,
+        LastName: family_name,
+        GoogleId: sub,
+      },
+        { withCredentials: true }
+      );
+      console.log(loginResponse.data);
+      setLoading(false);
+      if (loginResponse.status === 200) {
+        const { user } = loginResponse.data;
+
+        dispatch(loginSuccess({ user }));
+        setTimeout(() => {
+          message.success("Login successful!");
+        }, 1000);
+        if (user.UserRoleId == 1) {
+          navigate("/");
+        } else navigate("/management");
+      }
+    },
+    onError: error => { console.log(error) },
+  });
+
   const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -161,14 +168,16 @@ const LoginForm = () => {
               Log In
             </Button>
           </Form.Item>
-          {/* Google Login */}
-          <GoogleOAuthProvider clientId="896701632794-fsdbrdh9i80qnid08gj9dv01pst91bbr.apps.googleusercontent.com">
-            <GoogleLogin
-              onSuccess={handleGoogleLoginSuccess}
-              onFailure={handleGoogleLoginFailure}
-            />
-          </GoogleOAuthProvider>
 
+          {          /* Google Login */}
+            <GoogleLogin
+              buttonText="Login with Google"
+              onSuccess={() => googleLogin()}
+              onFailure={() => googleLogin()}
+              width={400}
+              size="large"
+            />
+          
           {/* Forgot Password and Register Link */}
           <p style={{ textAlign: "center", marginTop: "10px" }}>
             Forgot your password? <a href="/forgot-password">Click here</a>.
