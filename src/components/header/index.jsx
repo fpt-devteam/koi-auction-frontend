@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "antd";
+import { Button, Dropdown, Space } from "antd";
 import {
   LoginOutlined,
   UserAddOutlined,
   UserOutlined,
   LogoutOutlined,
+  ProfileOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
@@ -38,6 +40,27 @@ function Header() {
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+  const items = [
+    {
+      key: "1",
+      icon: <UserOutlined />,
+      label: "My Account",
+      disabled: true,
+    },
+    {
+      key: "2",
+      icon: <ProfileOutlined />,
+      label: "Profile",
+      extra: "⌘P",
+    },
+    {
+      key: "3",
+      icon: <WalletOutlined />,
+      label: "Wallet",
+      extra: "⌘B",
+    },
+  ];
 
   return (
     <div className="header">
@@ -75,13 +98,36 @@ function Header() {
           </>
         ) : (
           <>
-            <Button
-              icon={<UserOutlined />}
-              onClick={handleProfileClick}
-              className="monochrome-button"
+            <Dropdown
+              menu={{
+                items,
+                onClick: ({ key }) => {
+                  if (key === '2') {
+                    handleNavigation('/profile');
+                  } else if (key === '3') {
+                    handleNavigation('/wallet');
+                  }
+                }
+              }}
+              dropdownRender={(menu) => (
+                <div style={{ minWidth: '200px' }}>
+                  {menu}
+                </div>
+              )}
             >
-              {user.FirstName}
-            </Button>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Button
+                    icon={<UserOutlined />}
+                    onClick={handleProfileClick}
+                    className="monochrome-button"
+                  >
+                    {user.FirstName}
+                  </Button>
+                </Space>
+              </a>
+            </Dropdown>
+
             <Button
               icon={<LogoutOutlined />}
               onClick={handleLogoutClick}

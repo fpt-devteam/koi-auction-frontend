@@ -13,17 +13,23 @@ export default function UserList({ number }) {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
+  const [seed, setSeed] = useState(0);
+
+  const handleReset = () => {
+    setSeed(seed + 1);
+  };
 
   useEffect(() => {
     fetchUsers();
-  }, [number]);
+  }, [number, seed]);
 
   const handleFormSubmit = async () => {
     try {
       let values = await form.validateFields();
+      let newUser = { ...values, UserRoleId: number };
       message.loading({ content: "Creating user...", key: "updatable" });
-      console.log(values);
-      const response = await userApi.post("manage/profile", values);
+      console.log(newUser);
+      const response = await userApi.post("manage/profile", newUser);
       if (response.status === 201) {
         message.success({
           content: "User created successfully!",
@@ -31,7 +37,8 @@ export default function UserList({ number }) {
           duration: 2,
         });
         setIsModalVisible(false);
-        fetchUsers();
+        handleReset();
+        // setUsers([...users, response.data]);
       }
     } catch (error) {
       console.error("Failed to create user:", error);
@@ -39,9 +46,9 @@ export default function UserList({ number }) {
         content: error.response.data.message,
         key: "updatable",
         duration: 2,
-      })
+      });
     }
-  }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -51,7 +58,7 @@ export default function UserList({ number }) {
       setUsers(users);
       const members = (users) => {
         return users.filter((user) => user.UserRoleId === number);
-      }
+      };
       setUsers(members(users));
       setLoading(false);
     } catch (error) {
@@ -70,32 +77,32 @@ export default function UserList({ number }) {
     {
       title: <span className="titleName">Username</span>,
       dataIndex: "Username",
-      key: "UserId",
+      key: "Username",
     },
     {
       title: <span className="titleName">First Name</span>,
       dataIndex: "FirstName",
-      key: "UserId",
+      key: "FirstName",
     },
     {
       title: <span className="titleName">Last Name</span>,
       dataIndex: "LastName",
-      key: "UserId",
+      key: "LastName",
     },
     {
       title: <span className="titleName">Phone</span>,
       dataIndex: "Phone",
-      key: "UserId",
+      key: "Phone",
     },
     {
       title: <span className="titleName">Email</span>,
       dataIndex: "Email",
-      key: "UserId",
+      key: "Email",
     },
     {
       title: <span className="titleName">Active</span>,
       dataIndex: "Active",
-      key: "UserId",
+      key: "Active",
       render: (active) => (
         <Tag color={active ? "green" : "red"} key={active}>
           {active ? "Active" : "Inactive"}
@@ -105,9 +112,12 @@ export default function UserList({ number }) {
     {
       title: <span className="titleName">Role</span>,
       dataIndex: "UserRoleId",
-      key: "UserId",
+      key: "UserRoleId",
       render: (roleId) => (
-        <Tag color={roleId === 1 ? "blue" : roleId === 2 ? "purple" : "orange"} key={roleId}>
+        <Tag
+          color={roleId === 1 ? "blue" : roleId === 2 ? "purple" : "orange"}
+          key={roleId}
+        >
           {roleId === 3 ? "Staff" : roleId === 2 ? "Breeder" : "User"}
         </Tag>
       ),
@@ -131,25 +141,36 @@ export default function UserList({ number }) {
   ];
 
   return (
-
-    <div  >
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        margin: '0',
-        marginRight: '20px',
-        marginBottom: '20px',
-      }}>
-        <h1 className="title">{number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List</h1>
-        <Button size="large" type="primary" onClick={() => { setIsCreate(true); setIsModalVisible(true); }}>
-          Create New {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
+    <div key={seed}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          margin: "0",
+          marginRight: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        <h1 className="title">
+          {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List
+        </h1>
+        <Button
+          size="large"
+          type="primary"
+          onClick={() => {
+            setIsCreate(true);
+            setIsModalVisible(true);
+          }}
+        >
+          Create New{" "}
+          {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
         </Button>
       </div>
       <Table
         dataSource={users}
         columns={columns}
-        rowKey="auctionId" //rowKey để xác định mỗi hàng trong bảng
+        rowKey="UserId" //rowKey để xác định mỗi hàng trong bảng
         loading={loading}
         pagination={false}
         scroll={{ y: 600 }}
@@ -164,6 +185,4 @@ export default function UserList({ number }) {
       />
     </div>
   );
-};
-
-
+}

@@ -14,6 +14,18 @@ const handleGoogleLoginSuccess = async (response) => {
     const { credential } = response;
     const res = await userApi.post("/auth/google", { token: credential });
     console.log("Login successful:", res.data);
+    if (res.status === 200) {
+      const { user } = res.data;
+
+      dispatch(loginSuccess({ user }));
+      setTimeout(() => {
+        message.success("Login successful!");
+      }, 1000);
+      if (user.UserRoleId == 1) {
+        //chuyển về trang liền trước
+        navigate(-1);
+      } else navigate("/management");
+    }
   } catch (error) {
     console.error("Login failed:", error);
   }
@@ -80,7 +92,7 @@ const LoginForm = () => {
   return (
     <div className="login-form-container">
       <Card
-        title="Log In"
+        title={<span style={{fontWeight: '550', fontSize: '24px'}}>Log In</span>}
         bordered={false}
         style={{
           maxWidth: 500,
@@ -88,11 +100,15 @@ const LoginForm = () => {
           padding: "20px",
           borderRadius: "10px",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
         <Form
           name="login"
           layout="vertical"
+          style={{width: '27rem'}}
           initialValues={{
             remember: true,
           }}
@@ -132,11 +148,10 @@ const LoginForm = () => {
 
           {/* Submit Button */}
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={isLoading}>
+            <Button type="primary" htmlType="submit" block loading={isLoading} style={{fontWeight: '500', height: '40px'}}>
               Log In
             </Button>
           </Form.Item>
-
           {/* Google Login */}
           <GoogleOAuthProvider clientId="896701632794-fsdbrdh9i80qnid08gj9dv01pst91bbr.apps.googleusercontent.com">
             <GoogleLogin
@@ -146,7 +161,7 @@ const LoginForm = () => {
           </GoogleOAuthProvider>
 
           {/* Forgot Password and Register Link */}
-          <p style={{ textAlign: "center" }}>
+          <p style={{ textAlign: "center", marginTop: '10px' }}>
             Forgot your password? <a href="/forgot-password">Click here</a>.
           </p>
           <p style={{ textAlign: "center" }}>

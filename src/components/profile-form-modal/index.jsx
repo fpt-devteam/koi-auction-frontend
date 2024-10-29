@@ -8,7 +8,8 @@ function ProfileForm({
   isModalVisible,
   onClose,
   isBreeder,
-  isCreate
+  isCreate,
+  roleId
 }) {
   const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
   const noLeadingTrailingSpacesRule = { pattern: /^\S.*\S$|^\S$/, message: "No leading or trailing spaces are allowed!" };
