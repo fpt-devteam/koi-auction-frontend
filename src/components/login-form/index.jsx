@@ -37,7 +37,7 @@ const LoginForm = () => {
           message.success("Login successful!");
         }, 1000);
         if (user.UserRoleId == 1) {
-          navigate("/");
+          navigate(-1);
         } else navigate("/management");
       }
     },
