@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Card, Form, Input, Select, Button, message, DatePicker, Image, Dropdown } from "antd";
+import { Col, Row, Card, Form, Input, Select, Button, message, Image, Upload, Spin, } from "antd";
 import { useForm } from "antd/es/form/Form";
+import uploadToFirebase from "../../utils/upload";
+import { UploadOutlined } from "@ant-design/icons";
 const { Option } = Select;
 import "./index.css"
-const DATE_FORMAT = "YYYY-MM-DD", TIME_FORMAT = "HH:mm";
+import axios from "axios";
+import vnAdressApi from "../../config/vnAdressApi";
 const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
 const provinceData = [
     {
@@ -55,101 +58,152 @@ const provinceData = [
         ]
     }
 ];
-export default function GeneralInfoForm({ user, refresh }) {
+const MAX_IMAGE_SIZE_MB = 5; // 5MB 
+
+export default function GeneralInfoForm({ user, refresh, showOnly = false }) {
     const [formVariable] = useForm();
-    const [provinceList] = useState(provinceData); // Don't need to set this state
-    const [cityList, setCityList] = useState([]);
+    const [provinceList, setProvinceList] = useState([]);
+    const [districtList, setDistrictList] = useState([]);
     const [wardList, setWardList] = useState([]);
     const [avatarUrl, setAvatarUrl] = useState(imageExample);
-
+    const [loading, setLoading] = useState(true);
+    const [provinceId, setProvinceId] = useState(null);
+    const [districtId, setDistrictId] = useState(null);
+    const [wardId, setWardId] = useState(null);
+    // Mock user data
+    user = {
+        ...user,
+        provinceId: 92,
+        districtId: 925,
+        wardId: 31261,
+    }
     const onFinish = (values) => {
-        message.success("Form submitted successfully!");
         console.log(values);
-        handleSubmit(values);
+        message.success("Form submitted successfully!");
     };
 
-    //call Api get 
-    //
     useEffect(() => {
-        if (user) {
-            formVariable.setFieldsValue({
-                firstName: user.FirstName,
-                lastName: user.LastName,
-                email: user.Email,
-                phone: user.Phone,
-                // ward: user.Ward, 
-                // city: user.City,
-                // province: user.Province,
-            });
-        }
+        const getProvince = async () => {
+            try {
+                const provinceSource = await axios.get("https://vapi.vnappmob.com/api/province/");
+                const provinces = provinceSource.data.results;
+                setProvinceList(provinces);
+                console.log(provinces)
+            } catch (error) {
+                console.error("Error fetching provinces:", error);
+                message.error("Failed to load provinces");
+            }
+        };
+        getProvince();
+        setLoading(false);
+    }, []);
+
+    useEffect(() => {
+        const initializeAddressData = async () => {
+            if (user) {
+                if (user.provinceId) {
+                    setProvinceId(user.provinceId);
+                    if (user.districtId) {
+                        setDistrictId(user.districtId);
+                        if (user.wardId) {
+                            setWardId(user.wardId);
+                        }
+                    }
+                }
+                // Set basic user info
+                formVariable.setFieldsValue({
+                    firstName: user.FirstName,
+                    lastName: user.LastName,
+                    email: user.Email,
+                    phone: user.Phone,
+                });
+
+
+            }
+        };
+
+        initializeAddressData();
     }, [user, formVariable]);
+
     useEffect(() => {
-        console.log(cityList)
-    }, [cityList])
+        const getDistrict = async () => {
+            try {
+                const districtSource = await axios.get(`https://vapi.vnappmob.com/api/province/district/${provinceId}`);
+                const districts = districtSource.data.results;
+                setDistrictList(districts);
+                console.log(districts)
+            } catch (error) {
+                console.error("Error fetching districts:", error);
+                message.error("Failed to load districts");
+            }
+        };
+        if (provinceId) {
+            getDistrict();
+        }
+        console.log(districtList)
+    }, [provinceId])
     useEffect(() => {
+        const getWard = async () => {
+            try {
+                const wardSource = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${districtId}`);
+                const wards = wardSource.data.results;
+                setWardList(wards);
+                console.log(wards)
+            } catch (error) {
+                console.error("Error fetching wards:", error);
+                message.error("Failed to load wards");
+            }
+        };
+        if (districtId) {
+            getWard();
+        }
         console.log(wardList)
-    }, [wardList])
+    }, [districtId])
     const handleSubmit = (values) => {
         console.log("Submitting form with values:", values);
         // Add your API call here
+        // formVariable.submit();
     };
 
     const handleSelectProvince = (value) => {
-        const selectedProvince = provinceList.find(province => province.id === value);
-        setCityList(selectedProvince.cities);
-        setWardList([]);
-        formVariable.setFieldsValue({ city: undefined, ward: undefined });
+        formVariable.setFieldsValue({ district: undefined, ward: undefined });
+        setProvinceId(value);
     };
 
-    const handleSelectCity = (value) => {
-        const selectedCity = cityList.find(city => city.id === value);
-        setWardList(selectedCity.wards);
+    const handleSelectDistrict = (value) => {
+        setDistrictId(value);
         formVariable.setFieldsValue({ ward: undefined });
     };
-    const handleChangeAvatar = (file) => {
-        // Check if file exists and is an image
-        if (!file) return;
-        const isImage = file.type.startsWith('image/');
-        if (!isImage) {
-            message.error('You can only upload image files!');
-            return;
-        }
-        // Check file size (limit to 5MB)
-        const isLt5M = file.size / 1024 / 1024 < 5;
-        if (!isLt5M) {
-            message.error('Image must be smaller than 5MB!');
-            return;
-        }
+    // const handleBeforeUploadImage = (file) => {
+    //     if (!file.type.startsWith("image/")) {
+    //         message.error("You can only upload image files!");
+    //         return false;
+    //     }
+    //     if (file.size / 1024 / 1024 > MAX_IMAGE_SIZE_MB) {
+    //         message.error(`Image size must be smaller than ${MAX_IMAGE_SIZE_MB}MB!`);
+    //         return false;
+    //     }
+    //     return false;
+    // }
+    // const handleChangeAvatar = async (file) => {
+    //     const updatedAvatar = await Promise.all(
+    //         file.map(async (file) => {
+    //             if (file.originFileObj) {
+    //                 // Upload file từ local lên Firebase
+    //                 const firebaseUrl = await uploadToFirebase(file.originFileObj);
+    //                 return {
+    //                     filePath: firebaseUrl, // Lưu lại URL từ Firebase sau khi upload
+    //                 };
+    //             }
+    //             return {
+    //                 filePath: file.url, // Giữ nguyên file đã có sẵn từ Firebase
+    //             }; // Giữ nguyên file đã có sẵn từ Firebase
+    //         })
+    //     );
+    //     setAvatarUrl(updatedAvatar[0].filePath);
+    // };
 
-        // Create FormData for API upload
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        // Here you would typically make an API call to upload the image
-        // For now, we'll just create a temporary URL to display the image
-        const imageUrl = URL.createObjectURL(file);
-        setAvatarUrl(imageUrl);
-
-        // Example API call (uncomment and modify as needed):
-        /*
-        try {
-            const response = await fetch('your-api-endpoint/upload-avatar', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            if (data.success) {
-                setAvatarUrl(data.imageUrl);
-                message.success('Avatar uploaded successfully!');
-            }
-        } catch (error) {
-            message.error('Failed to upload avatar');
-            console.error('Upload error:', error);
-        }
-        */
-    };
-
-    return (
+    return loading ? <Spin /> : (
         <>
             <div className="image-input">
                 <Image
@@ -161,7 +215,20 @@ export default function GeneralInfoForm({ user, refresh }) {
                 />
                 <br />
                 <br />
-                <Button type="primary" onClick={() => { handleChangeAvatar() }}>Change</Button>
+                {/* <Upload
+                    beforeUpload={handleBeforeUploadImage}
+                    listType="picture"
+                    onChange={handleChangeAvatar}
+                    showUploadList={{ showRemoveIcon: !showOnly }}
+                >
+                    {!showOnly && (
+                        <>
+                            <Button type="primary" icon={<UploadOutlined />}>
+                                Change Avatar
+                            </Button>
+                        </>
+                    )}
+                </Upload> */}
             </div>
             <Card
                 size="small"
@@ -170,7 +237,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                 style={{ width: 700 }}
             >
 
-                <Form form={formVariable} layout="vertical" onFinish={onFinish}>
+                <Form form={formVariable} layout="vertical" onFinish={handleSubmit}>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
@@ -234,7 +301,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                                     }
                                 ]}
                             >
-                                <Input placeholder="+84-345 678 910" />
+                                <Input placeholder="+84 - 345 678 910" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -266,11 +333,10 @@ export default function GeneralInfoForm({ user, refresh }) {
                             >
                                 <Select
                                     placeholder="Select ward"
-                                    disabled={!wardList.length}
                                 >
                                     {wardList.map(ward => (
-                                        <Option key={ward.id} value={ward.id}>
-                                            {ward.name}
+                                        <Option key={ward.ward_id} value={ward.ward_name}>
+                                            {ward.ward_name}
                                         </Option>
                                     ))}
                                 </Select>
@@ -278,22 +344,22 @@ export default function GeneralInfoForm({ user, refresh }) {
                         </Col>
                         <Col span={6}>
                             <Form.Item
-                                label="City"
-                                name="city"
+                                label="District"
+                                name="district"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter your city"
+                                        message: "Please enter your district"
                                     }
                                 ]}
                             >
                                 <Select
-                                    placeholder="Select city"
-                                    onChange={handleSelectCity}
+                                    placeholder="Select district"
+                                    onChange={handleSelectDistrict}
                                 >
-                                    {cityList.map(city => (
-                                        <Option key={city.id} value={city.id}>
-                                            {city.name}
+                                    {districtList.map(district => (
+                                        <Option key={district.district_id} value={district.district_name}>
+                                            {district.district_name}
                                         </Option>
                                     ))}
                                 </Select>
@@ -315,8 +381,8 @@ export default function GeneralInfoForm({ user, refresh }) {
                                     onChange={handleSelectProvince}
                                 >
                                     {provinceList.map(province => (
-                                        <Option key={province.id} value={province.id}>
-                                            {province.name}
+                                        <Option key={province.province_id} value={province.province_name}>
+                                            {province.province_name}
                                         </Option>
                                     ))}
                                 </Select>
