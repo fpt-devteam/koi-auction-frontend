@@ -5,6 +5,7 @@ import {
 } from "antd";
 import GeneralInfoForm from "../../components/profile-form";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 export default function ProfileFormPage() {
     const { user } = useSelector((store) => store.user);
@@ -20,6 +21,7 @@ export default function ProfileFormPage() {
             console.log(1)
         }
     }, [user]);
+
     return loading ? <Spin /> : (
         <>
             <div key={seed}>
