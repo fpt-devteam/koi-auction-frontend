@@ -2,7 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 import AuctionLotList from "../../components/auction-lot-list";
 import lotApi from "../../config/lotApi";
 import { useEffect, useState } from "react";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import BackButton from "../../components/back-button";
 import StatusTag from "../../components/status-tag";
 
@@ -26,7 +26,7 @@ function AuctionDetailPage() {
   }, [auctionId]); // Dependencies: auctionId and auctionFromState
 
   if (!auction) {
-    return null;
+    return <Spin />;
   }
   const {
     auctionName,

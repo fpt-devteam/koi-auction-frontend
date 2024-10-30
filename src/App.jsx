@@ -23,6 +23,7 @@ import AuctionManagementPage from "./pages/auction-management-page";
 import UpdateAuctionPage from "./pages/update-auction-page";
 import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
+import WalletPage from "./pages/wallet-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ function App() {
         { path: "/auction-detail/:auctionId", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
         { path: "/profile", element: <ProfileFormPage /> },
+        { path: "/wallet", element: <WalletPage /> },
         {
           path: "/auction-lot-detail/:auctionLotId",
           element: <AuctionLotDetailPage />,

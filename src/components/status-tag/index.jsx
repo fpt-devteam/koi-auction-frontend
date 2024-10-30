@@ -4,7 +4,7 @@ import { Tag } from "antd";
 // Bản đồ trạng thái với màu sắc và nhãn
 const statusMap = {
   Upcoming: { color: "blue", label: "Upcoming" },
-  "Before Start": { color: "orange", label: "Before Start" },
+  Scheduled: { color: "orange", label: "Before Start" },
   Ongoing: { color: "green", label: "Ongoing" },
   Ended: { color: "red", label: "Ended" },
 };

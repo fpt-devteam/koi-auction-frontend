@@ -12,7 +12,6 @@ export default function ProfileFormPage() {
     const [loading, setLoading] = useState(!user);
     console.log(user);
     const handleReset = () => {
-        // console.log("click reset");
         setSeed(Math.random());
     }
     useEffect(() => {
