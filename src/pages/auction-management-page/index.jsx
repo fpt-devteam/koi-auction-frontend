@@ -64,9 +64,6 @@ export default function AuctionManagementPage() {
             />
         ),
     }));
-    const handleClickCreate = () => {
-        navigate(`/management/create-auction-request`)
-    }
     return loading ? (
         <Spin />
     ) : (
@@ -80,7 +77,6 @@ export default function AuctionManagementPage() {
                     marginRight: '20px',
                 }}>
                     <h1>Auction Management</h1>
-                    <Button type="primary" size="large" onClick={handleClickCreate}>Create auction</Button>
                 </div>
                 <Tabs defaultActiveKey={activeTab} onChange={handleTabChange} items={items} />
             </div >

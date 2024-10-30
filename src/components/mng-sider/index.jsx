@@ -45,6 +45,15 @@ function MngSider() {
         "/management/auction"
       )
     );
+    items.push(
+      getItem(
+        "Create Auction",
+        counter++, // Tăng counter
+        <FormOutlined />,
+        null,
+        "/management/create-auction-request"
+      )
+    );
   }
   if (userRoleId === 4) {
     const accountDropdownItems = [
