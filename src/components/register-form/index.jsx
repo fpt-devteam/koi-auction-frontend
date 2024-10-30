@@ -19,12 +19,12 @@ const RegisterForm = () => {
     try {
       // Submit the form data to the back-end API
       const response = await userApi.post("/register", {
-        firstname: values.firstName,
-        lastname: values.lastName,
-        username: values.username,
-        phone: values.phone,
-        email: values.email,
-        password: values.password,
+        Firstname: values.firstName,
+        Lastname: values.lastName,
+        Username: values.username,
+        Phone: values.phone,
+        Email: values.email,
+        Password: values.password,
       });
 
       setLoading(false);
