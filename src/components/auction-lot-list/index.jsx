@@ -8,7 +8,9 @@ const AuctionLotList = ({ auctionId }) => {
   const [auctionLots, setAuctionLots] = useState([]);
   const fetchAuctionLots = async () => {
     try {
-      const response = await lotApi.get(`auction-lots?AuctionId=${auctionId}`);
+      const response = await lotApi.get(
+        `auction-lots?AuctionId=${auctionId}&SortBy=1`
+      );
       const fetchedAuctionLots = response.data;
       setAuctionLots(fetchedAuctionLots);
     } catch (error) {

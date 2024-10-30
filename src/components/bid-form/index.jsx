@@ -1,5 +1,6 @@
 import React from "react";
 import { Input, Button, Row, Col, Card } from "antd";
+import { Modal } from "antd";
 
 const BidForm = ({ onBidSubmit }) => {
   const [bidAmount, setBidAmount] = React.useState("");
@@ -9,6 +10,18 @@ const BidForm = ({ onBidSubmit }) => {
   };
 
   const handleBidSubmit = () => {
+    //modal are you sure you want to place this bid?
+    Modal.confirm({
+      title: "Confirm Bid",
+      content: "Are you sure you want to place this bid?",
+      onOk() {
+        onBidSubmit(bidAmount);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+
     onBidSubmit(bidAmount);
   };
 

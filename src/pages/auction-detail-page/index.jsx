@@ -2,15 +2,14 @@ import { useLocation, useParams } from "react-router-dom";
 import AuctionLotList from "../../components/auction-lot-list";
 import lotApi from "../../config/lotApi";
 import { useEffect, useState } from "react";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import BackButton from "../../components/back-button";
 import StatusTag from "../../components/status-tag";
 
 function AuctionDetailPage() {
   const { auctionId } = useParams();
   const location = useLocation();
-  const { auction: auctionFromState } = location.state || {};
-  const [auction, setAuction] = useState(auctionFromState || null);
+  const [auction, setAuction] = useState(null);
 
   const fetchAuctionById = async () => {
     try {
@@ -23,13 +22,11 @@ function AuctionDetailPage() {
   };
 
   useEffect(() => {
-    if (!auctionFromState) {
-      fetchAuctionById();
-    }
-  }, [auctionId, auctionFromState]); // Dependencies: auctionId and auctionFromState
+    fetchAuctionById();
+  }, [auctionId]); // Dependencies: auctionId and auctionFromState
 
   if (!auction) {
-    return null;
+    return <Spin />;
   }
   const {
     auctionName,
