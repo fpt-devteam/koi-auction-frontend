@@ -335,7 +335,7 @@ export default function GeneralInfoForm({ user, refresh, showOnly = false }) {
                                     placeholder="Select ward"
                                 >
                                     {wardList.map(ward => (
-                                        <Option key={ward.ward_id} value={ward.ward_name}>
+                                        <Option key={ward.ward_name} value={ward.ward_name}>
                                             {ward.ward_name}
                                         </Option>
                                     ))}
@@ -358,7 +358,7 @@ export default function GeneralInfoForm({ user, refresh, showOnly = false }) {
                                     onChange={handleSelectDistrict}
                                 >
                                     {districtList.map(district => (
-                                        <Option key={district.district_id} value={district.district_name}>
+                                        <Option key={district.district_name} value={district.district_name}>
                                             {district.district_name}
                                         </Option>
                                     ))}
@@ -381,7 +381,7 @@ export default function GeneralInfoForm({ user, refresh, showOnly = false }) {
                                     onChange={handleSelectProvince}
                                 >
                                     {provinceList.map(province => (
-                                        <Option key={province.province_id} value={province.province_name}>
+                                        <Option key={province.province_name} value={province.province_name}>
                                             {province.province_name}
                                         </Option>
                                     ))}
