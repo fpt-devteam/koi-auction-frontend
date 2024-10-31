@@ -4,20 +4,20 @@ import "./index.css";
 const imageList = [
   { image: "src/assets/login/koibanner.jpg", title: "FIND YOUR PERFECT KOI FROM TOP BREEDERS" },
   { image: "src/assets/login/koibanner2.jpg", title: "BID ON RARE AND BEAUTIFUL KOI VARIETIES" },
-  { image: "src/assets/login/koibanner.jpg", title: "DISCOVER THE ART OF KOI COLLECTING" },
-  { image: "src/assets/login/koibanner.jpg", title: "JOIN THE VIBRANT KOI AUCTION COMMUNITY" }
+  { image: "src/assets/login/koibanner3.jpg", title: "DISCOVER THE ART OF KOI COLLECTING" },
+  { image: "src/assets/login/koibanner4.jpg", title: "JOIN THE VIBRANT KOI AUCTION COMMUNITY" }
 ]
 function HomePage() {
   return (
     <>
-      <div style={{ width: "100vw", borderRadius: "20px", overflow: "hidden" }}>
+      <div style={{ width: "100vw" }}>
         <Image
+          preview={false}
           src="src/assets/wallpaper/koi3.jpg"
           style={{
             width: "100%",
             height: "auto",
             aspectRatio: "3.5",
-            borderRadius: "20px",
             objectFit: "cover",
           }}
         />
@@ -56,7 +56,7 @@ function HomePage() {
               <Carousel autoplay style={{ borderRadius: "20px", overflow: "hidden", height: "300px", backgroundColor: "black" }}>
                 {imageList.map((item, index) => (
                   <div key={index}>
-                    <Image height={300} width="100%" src={item.image} alt={item.title} />
+                    <Image preview={false} height={300} width="100%" src={item.image} alt={item.title} />
                   </div>
                 ))}
               </Carousel>
