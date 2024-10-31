@@ -24,6 +24,7 @@ import UpdateAuctionPage from "./pages/update-auction-page";
 import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
 import WalletPage from "./pages/wallet-page";
+import OrderStatusPage from "./pages/order-status-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -77,6 +78,10 @@ function App() {
         {
           path: "/management/auction",
           element: <AuctionManagementPage />,
+        },
+        {
+          path: "/management/order",
+          element: <OrderStatusPage />,
         },
       ],
     },

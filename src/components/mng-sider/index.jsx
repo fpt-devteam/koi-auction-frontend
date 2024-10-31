@@ -22,7 +22,17 @@ function MngSider() {
 
   // Danh sách các items cơ bản, sử dụng biến đếm counter
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
-
+  if (userRoleId == 1) {
+    items.push(
+      getItem(
+        "Order Management",
+        counter++, // Tăng counter
+        <FormOutlined />,
+        null,
+        "/management/order"
+      )
+    );
+  }
   // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
   if (userRoleId == 2) {
     items.push(
@@ -32,6 +42,15 @@ function MngSider() {
         <FormOutlined />,
         null,
         "/management/create-lot-request"
+      )
+    );
+    items.push(
+      getItem(
+        "Order Management",
+        counter++, // Tăng counter
+        <FormOutlined />,
+        null,
+        "/management/order"
       )
     );
   }

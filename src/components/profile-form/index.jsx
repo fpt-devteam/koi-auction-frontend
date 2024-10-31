@@ -228,118 +228,123 @@ export default function GeneralInfoForm({ user, refresh }) {
             </Col>
           </Row>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                className="form-item"
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    type: "email",
-                    message: "Please enter a valid email",
-                  },
-                ]}
-              >
-                <Input placeholder="example@gmail.com" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                className="form-item"
-                label="Phone"
-                name="phone"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your phone number",
-                  },
-                ]}
-              >
-                <Input placeholder="+84-345 678 910" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={6}>
-              <Form.Item
-                label="Address"
-                name="address"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your address",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter your home address" />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item
-                label="Ward"
-                name="ward"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please choose your ward",
-                  },
-                ]}
-              >
-                <Select placeholder="Select ward" disabled={!wardList.length}>
-                  {wardList.map((ward) => (
-                    <Option key={ward.id} value={ward.id}>
-                      {ward.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item
-                label="City"
-                name="city"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your city",
-                  },
-                ]}
-              >
-                <Select placeholder="Select city" onChange={handleSelectCity}>
-                  {cityList.map((city) => (
-                    <Option key={city.id} value={city.id}>
-                      {city.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item
-                label="Province"
-                name="province"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your province",
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select province"
-                  onChange={handleSelectProvince}
-                >
-                  {provinceList.map((province) => (
-                    <Option key={province.id} value={province.id}>
-                      {province.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                className="form-item"
+                                label="Email"
+                                name="email"
+                                rules={[
+                                    {
+                                        required: true,
+                                        type: "email",
+                                        message: "Please enter a valid email"
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="example@gmail.com" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                className="form-item"
+                                label="Phone"
+                                name="phone"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your phone number"
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="+84 - 345 678 910" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Form.Item
+                                label="Address"
+                                name="address"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your address"
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Enter your home address" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item
+                                label="Ward"
+                                name="ward"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please choose your ward"
+                                    }
+                                ]}
+                            >
+                                <Select
+                                    placeholder="Select ward"
+                                >
+                                    {wardList.map(ward => (
+                                        <Option key={ward.ward_name} value={ward.ward_name}>
+                                            {ward.ward_name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item
+                                label="District"
+                                name="district"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your district"
+                                    }
+                                ]}
+                            >
+                                <Select
+                                    placeholder="Select district"
+                                    onChange={handleSelectDistrict}
+                                >
+                                    {districtList.map(district => (
+                                        <Option key={district.district_name} value={district.district_name}>
+                                            {district.district_name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item
+                                label="Province"
+                                name="province"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your province"
+                                    }
+                                ]}
+                            >
+                                <Select
+                                    placeholder="Select province"
+                                    onChange={handleSelectProvince}
+                                >
+                                    {provinceList.map(province => (
+                                        <Option key={province.province_name} value={province.province_name}>
+                                            {province.province_name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
           <Row gutter={16}>
             <Col span={12}>
