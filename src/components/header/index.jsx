@@ -65,12 +65,10 @@ function Header() {
   return (
     <div className="header">
       <div className="header__left">
-        <Logo
-          width={55}
-          height={63}
-          className="header__logo"
-          onClick={() => handleNavigation("/")}
-        />
+        <div onClick={() => handleNavigation("/")}>
+          {/* {" "} */}
+          <Logo width={55} height={63} className="header__logo" />
+        </div>
         <ul className="header__navigation">
           <li onClick={() => handleNavigation("/")}>Home</li>
           <li onClick={() => handleNavigation("/auction-list")}>Auctions</li>
@@ -102,17 +100,15 @@ function Header() {
               menu={{
                 items,
                 onClick: ({ key }) => {
-                  if (key === '2') {
-                    handleNavigation('/profile');
-                  } else if (key === '3') {
-                    handleNavigation('/wallet');
+                  if (key === "2") {
+                    handleNavigation("/profile");
+                  } else if (key === "3") {
+                    handleNavigation("/wallet");
                   }
-                }
+                },
               }}
               dropdownRender={(menu) => (
-                <div style={{ minWidth: '200px' }}>
-                  {menu}
-                </div>
+                <div style={{ minWidth: "200px" }}>{menu}</div>
               )}
             >
               <a onClick={(e) => e.preventDefault()}>

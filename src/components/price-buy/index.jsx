@@ -1,9 +1,19 @@
-import React from "react";
-import { Input, Button, Row, Col, Card } from "antd";
-
+import React, { useState } from "react";
+import { Input, Button, Row, Col, Card, Modal } from "antd";
 const PriceBuy = ({ onBuySubmit, price }) => {
   const handleBuySubmit = (price) => () => {
-    onBuySubmit(price);
+    //are you sure you want to buy this product?
+    Modal.confirm({
+      title: "Are you sure you want to buy this item?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Buy",
+      cancelText: "Cancel",
+      onOk() {
+        // Perform the buying action here, e.g., call an API or update state
+        onBuySubmit(price);
+      },
+      onCancel() {},
+    });
   };
 
   return (

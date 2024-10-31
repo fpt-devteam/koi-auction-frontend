@@ -12,7 +12,7 @@ const BidHistoryTable = ({ data }) => {
       dataIndex: "bidAmount",
       key: "bidAmount",
       render: (text) => (
-        <Text>{text ? `$${text.toLocaleString()}` : "Auction started"}</Text>
+        <Text>{text ? `${text.toLocaleString()} VND` : "Auction started"}</Text>
       ),
     },
     {
@@ -48,7 +48,7 @@ const BidHistoryTable = ({ data }) => {
         dataSource={data}
         pagination={false}
         bordered
-        rowKey="date"
+        rowKey="bidTime"
         style={{ backgroundColor: "#fff", borderRadius: "8px" }}
         scroll={{ y: 180 }} // Thiết lập chiều cao tối đa là 200px, nếu vượt quá sẽ có thanh cuộn
       />
