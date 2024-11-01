@@ -3,10 +3,6 @@ import { useEffect, useState } from "react";
 const { Text } = Typography;
 
 const Countdown = ({ startTime, endTime, predictEndTime, statusName }) => {
-  const [endTimeState, setEndTimeState] = useState(predictEndTime);
-  useEffect(() => {
-    setEndTimeState(predictEndTime);
-  }, [predictEndTime]);
   return (
     <div
       style={{
@@ -46,7 +42,7 @@ const Countdown = ({ startTime, endTime, predictEndTime, statusName }) => {
 
       {(statusName === "Scheduled" || statusName === "Ongoing") && (
         <Statistic.Countdown
-          value={statusName === "Scheduled" ? startTime : endTimeState}
+          value={statusName === "Scheduled" ? startTime : predictEndTime}
           format="HH:mm:ss"
           valueStyle={{
             fontSize: "2.5rem",

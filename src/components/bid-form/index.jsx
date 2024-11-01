@@ -4,9 +4,21 @@ import { Modal } from "antd";
 
 const BidForm = ({ onBidSubmit }) => {
   const [bidAmount, setBidAmount] = React.useState("");
+  const [bidAmountInput, setBidAmountInput] = React.useState("");
 
   const handleBidChange = (e) => {
-    setBidAmount(e.target.value);
+    const value = e.target.value;
+
+    // Remove non-numeric characters
+    const numericValue = value.replace(/\D/g, "");
+
+    // Format as Vietnamese currency
+    const formattedValue = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(numericValue);
+    setBidAmountInput(formattedValue);
+    setBidAmount(numericValue);
   };
 
   const handleBidSubmit = () => {
@@ -21,8 +33,6 @@ const BidForm = ({ onBidSubmit }) => {
         console.log("Cancel");
       },
     });
-
-    onBidSubmit(bidAmount);
   };
 
   return (
@@ -40,9 +50,10 @@ const BidForm = ({ onBidSubmit }) => {
           <Input
             size="large"
             placeholder="Enter your bid"
-            value={bidAmount}
+            value={bidAmountInput}
             onChange={handleBidChange}
             style={{ borderRadius: "5px", fontSize: "1.2rem" }}
+            required
           />
         </Col>
 

@@ -21,7 +21,8 @@ const WinnerPrice = ({ auctionLotId, refetch }) => {
         setWinner(fetchedSoldLot.winnerId);
       }
     } catch (error) {
-      message.error(error.message);
+      // message.error(error.message);
+      // return;
     }
   };
 
@@ -38,6 +39,7 @@ const WinnerPrice = ({ auctionLotId, refetch }) => {
         padding: "5px", // Giảm kích thước padding
         borderRadius: "8px", // Bo góc mềm mại
         marginTop: "auto",
+        minHeight: "100px",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
