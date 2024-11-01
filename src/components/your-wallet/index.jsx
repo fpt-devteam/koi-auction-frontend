@@ -76,7 +76,7 @@ function YourWallet({ balance }) {
           </Button>
         </Space>
         <Title level={1} style={{ margin: 0 }}>
-          {balance} VND
+          {balance.toLocaleString()} VND
         </Title>
       </Space>
 
@@ -126,7 +126,7 @@ function YourWallet({ balance }) {
         ]}
       >
         <InputNumber
-          placeholder="Enter  "
+          placeholder="Enter amount"
           style={{ width: "100%" }}
           max={balance}
           min={0}

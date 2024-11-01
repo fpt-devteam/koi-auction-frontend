@@ -1,4 +1,4 @@
-import { Row, Col, Spin, message } from "antd";
+import { Row, Col, message } from "antd";
 import { useEffect, useState } from "react";
 import lotApi from "../../config/lotApi";
 import AuctionLotCard from "../auction-lot-card";
@@ -9,7 +9,7 @@ const AuctionLotList = ({ auctionId }) => {
   const fetchAuctionLots = async () => {
     try {
       const response = await lotApi.get(
-        `auction-lots?AuctionId=${auctionId}&SortBy=1`
+        `auction-lots?AuctionId=${auctionId}&SortBy=orderinauction`
       );
       const fetchedAuctionLots = response.data;
       setAuctionLots(fetchedAuctionLots);
