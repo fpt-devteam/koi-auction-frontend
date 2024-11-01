@@ -23,6 +23,11 @@ export default function UserList({ number }) {
     fetchUsers();
   }, [number, seed]);
 
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+  };
+
   const handleFormSubmit = async () => {
     try {
       let values = await form.validateFields();
@@ -37,6 +42,7 @@ export default function UserList({ number }) {
           duration: 2,
         });
         setIsModalVisible(false);
+        form.resetFields();
         handleReset();
         // setUsers([...users, response.data]);
       }
@@ -179,7 +185,7 @@ export default function UserList({ number }) {
         form={form}
         handleFormSubmit={handleFormSubmit}
         isModalVisible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        onClose={handleCloseModal}
         isBreeder={number === 2}
         isCreate={isCreate}
       />
