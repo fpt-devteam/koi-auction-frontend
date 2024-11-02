@@ -22,7 +22,8 @@ const WalletPage = () => {
       const response = await paymentApi.get("/get-transaction-history");
       const formattedTransactions = response.data.map(trans => ({
         key: trans.TransId,
-        status: trans.StatusId === 1 ? "Pending" : "Completed",
+        transType: trans.TransTypeId,
+        status: trans.StatusId,
         transId: trans.TransId,
         balanceAfter: trans.BalanceAfter,
         amount: trans.Amount,
