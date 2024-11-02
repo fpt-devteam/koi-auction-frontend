@@ -25,6 +25,7 @@ import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
 import WalletPage from "./pages/wallet-page";
 import OrderStatusPage from "./pages/order-status-page";
+import AboutPage from "./pages/about-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ function App() {
           element: <AuctionLotDetailPage />,
         },
         { path: "/payment-callback", element: <PaymentCallBackPage /> },
+        { path: "/about", element: <AboutPage /> },
       ],
     },
     {

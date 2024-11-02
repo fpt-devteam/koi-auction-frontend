@@ -7,6 +7,9 @@ import {
   LogoutOutlined,
   ProfileOutlined,
   WalletOutlined,
+  HomeOutlined,
+  ShoppingOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
@@ -70,9 +73,15 @@ function Header() {
           <Logo width={55} height={63} className="header__logo" />
         </div>
         <ul className="header__navigation">
-          <li onClick={() => handleNavigation("/")}>Home</li>
-          <li onClick={() => handleNavigation("/auction-list")}>Auctions</li>
-          <li onClick={() => handleNavigation("/about")}>About</li>
+          <li onClick={() => handleNavigation("/")}>
+            <HomeOutlined className="nav-icon"/> Home
+          </li>
+          <li onClick={() => handleNavigation("/auction-list")}>
+            <ShoppingOutlined className="nav-icon"/> Auctions
+          </li>
+          <li onClick={() => handleNavigation("/about")}>
+            <InfoCircleOutlined className="nav-icon"/> About
+          </li>
         </ul>
       </div>
       <div className="header__right">

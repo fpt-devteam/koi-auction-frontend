@@ -1,79 +1,160 @@
 /* src/Footer.css */
 .footer {
-    background-color: #e4e4e4; /* Màu xám nhạt */
-    color: #333333; /* Màu chữ tối hơn để tương phản với nền xám */
-    padding: 40px 0;
+    background-color: #f5f5f5;
+    padding: 60px 0 20px;
 }
 
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 40px;
 }
 
-.footer-section {
-    margin-bottom: 30px;
-}
-
+/* Logo Section */
 .footer-logo {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 20px;
 }
 
 .footer-logo h1 {
-    color: #333333;
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-}
-
-.footer-section h3 {
-    color: #333333;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 600;
-    margin-bottom: 10px;
-    text-transform: uppercase;
+    margin: 0;
+    white-space: nowrap;
+    color: #333;
 }
 
+/* Section Headers */
+.footer-section h3 {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 24px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 2px;
+    background-color: #ff4d4f;
+}
+
+/* Description Text */
+.footer-section p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+    max-width: 280px;
+}
+
+/* Navigation Lists */
 .footer-section ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.footer-section li {
-    color: #666666;
-    margin-bottom: 10px;
-    transition: color 0.3s ease;
+.footer-section ul li {
+    margin-bottom: 12px;
 }
 
-.footer-section li:hover {
-    color: #000000;
-    cursor: pointer;
+.footer-section ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
 }
 
-.footer p {
-    color: #666666;
-    margin: 0;
-    line-height: 1.6;
+.footer-section ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #ff4d4f;
+    transition: width 0.3s ease;
 }
 
+.footer-section ul li a:hover {
+    color: #ff4d4f;
+}
+
+.footer-section ul li a:hover::after {
+    width: 100%;
+}
+
+/* Contact Info Section */
+.footer-section.contact-info ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-section.contact-info .icon {
+    font-size: 16px;
+    color: #ff4d4f;
+    min-width: 20px;
+}
+
+.footer-section.contact-info a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Footer Bottom */
 .footer-bottom {
-    border-top: 1px solid #dddddd;
-    padding-top: 10px;
-    margin-top: 10px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: #666666;
 }
 
+.footer-bottom p {
+    color: #666;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .footer {
-        padding: 40px 0;
+        padding: 40px 0 20px;
+    }
+    
+    .footer-content {
+        padding: 0 20px;
     }
     
     .footer-logo h1 {
-        font-size: 24px;
+        font-size: 20px;
+    }
+    
+    .footer-section {
+        margin-bottom: 30px;
+    }
+}
+
+/* Animation for hover effects */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
