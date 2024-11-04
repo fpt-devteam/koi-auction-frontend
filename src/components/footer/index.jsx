@@ -2,8 +2,10 @@
 import { Row, Col } from "antd";
 import "./index.css";
 import Logo from "../logo";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="footer">
       <div className="footer-content">
@@ -20,8 +22,8 @@ const Footer = () => {
             <ul>
               <li>About Us</li>
               <li>Legal Information</li>
-              <li>Contact Us</li>
-              <li>Careers</li>
+              <li onClick={() => navigate("/term")}>Terms</li>
+              <li onClick={() => navigate("/policy")}>Policy</li>
             </ul>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} className="footer-section">
@@ -31,6 +33,7 @@ const Footer = () => {
               <li>FAQs</li>
               <li>Buyer's Guide</li>
               <li>Seller's Guide</li>
+
             </ul>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} className="footer-section">

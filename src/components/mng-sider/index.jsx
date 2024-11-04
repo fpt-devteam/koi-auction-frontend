@@ -29,7 +29,7 @@ function MngSider() {
         counter++, // Tăng counter
         <FormOutlined />,
         null,
-        "/management/order"
+        "/order"
       )
     );
   }
@@ -42,15 +42,6 @@ function MngSider() {
         <FormOutlined />,
         null,
         "/management/create-lot-request"
-      )
-    );
-    items.push(
-      getItem(
-        "Order Management",
-        counter++, // Tăng counter
-        <FormOutlined />,
-        null,
-        "/management/order"
       )
     );
   }

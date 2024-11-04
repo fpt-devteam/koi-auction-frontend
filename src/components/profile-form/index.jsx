@@ -1,409 +1,250 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Card, Form, Input, Select, Button, message, Image, Upload, Spin, } from "antd";
+import { Col, Row, Card, Form, Input, Select, Button, message, Image, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
-import uploadToFirebase from "../../utils/upload";
-import { UploadOutlined } from "@ant-design/icons";
-const { Option } = Select;
-import "./index.css"
-import axios from "axios";
-import vnAdressApi from "../../config/vnAdressApi";
-const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-const provinceData = [
-    {
-        id: 1,
-        name: "Hanoi",
-        cities: [
-            {
-                id: 101,
-                name: "Ba Dinh",
-                wards: [
-                    { id: 1001, name: "Phuc Xa" },
-                    { id: 1002, name: "Truc Bach" },
-                    { id: 1003, name: "Vinh Phuc" }
-                ]
-            },
-            {
-                id: 102,
-                name: "Hoan Kiem",
-                wards: [
-                    { id: 1004, name: "Hang Buom" },
-                    { id: 1005, name: "Hang Dao" },
-                    { id: 1006, name: "Dong Xuan" }
-                ]
-            }
-        ]
-    },
-    {
-        id: 2,
-        name: "Ho Chi Minh City",
-        cities: [
-            {
-                id: 201,
-                name: "District 1",
-                wards: [
-                    { id: 2001, name: "Ben Nghe" },
-                    { id: 2002, name: "Ben Thanh" },
-                    { id: 2003, name: "Da Kao" }
-                ]
-            },
-            {
-                id: 202,
-                name: "District 2",
-                wards: [
-                    { id: 2004, name: "Thao Dien" },
-                    { id: 2005, name: "An Phu" },
-                    { id: 2006, name: "Binh An" }
-                ]
-            }
-        ]
-    }
-];
-const MAX_IMAGE_SIZE_MB = 5; // 5MB 
+import addressApi from "../../config/addressApi";
+import userApi from "../../config/userApi";
+import "./index.css";
 
-export default function GeneralInfoForm({ user, refresh, showOnly = false }) {
-    const [formVariable] = useForm();
+const { Option } = Select;
+const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+
+export default function GeneralInfoForm({ user, refresh }) {
+    const [form] = useForm();
+    const [loading, setLoading] = useState(true);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [provinceList, setProvinceList] = useState([]);
     const [districtList, setDistrictList] = useState([]);
     const [wardList, setWardList] = useState([]);
-    const [avatarUrl, setAvatarUrl] = useState(imageExample);
-    const [loading, setLoading] = useState(true);
     const [provinceId, setProvinceId] = useState(null);
     const [districtId, setDistrictId] = useState(null);
-    const [wardId, setWardId] = useState(null);
-    // Mock user data
-    user = {
-        ...user,
-        provinceId: 92,
-        districtId: 925,
-        wardId: 31261,
-    }
-    const onFinish = (values) => {
-        console.log(values);
-        message.success("Form submitted successfully!");
+    useEffect(() => {
+        if (user) {
+            initializeFormData();
+        }
+    }, [user]);
+    useEffect(() => {
+        if (provinceId) {
+            fetchDistricts(provinceId);
+        }
+    }, [provinceId]);
+
+    useEffect(() => {
+        if (districtId) {
+            fetchWards(districtId);
+        }
+    }, [districtId]);
+
+    const initializeFormData = async () => {
+        try {
+            const [provinces, districts, wards] = await Promise.all([
+                fetchProvinces(),
+                fetchDistricts(user.ProvinceCode),
+                fetchWards(user.DistrictCode),
+            ]);
+
+            setProvinceList(provinces);
+            setDistrictList(districts);
+            setWardList(wards);
+            setInitialLoading(false);
+        } catch (error) {
+            console.error("Error initializing form data:", error);
+            message.error("Failed to load initial data");
+        }
     };
 
     useEffect(() => {
-        const getProvince = async () => {
+        if (!initialLoading && user) {
+            form.setFieldsValue({
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                Email: user.Email,
+                Phone: user.Phone,
+                Address: user.Address,
+                ProvinceCode: user.ProvinceCode,
+                DistrictCode: user.DistrictCode,
+                WardCode: user.WardCode,
+            });
+            setLoading(false);
+            form.validateFields(['DistrictCode']);
+        }
+    }, [initialLoading, user]);
+
+    const fetchProvinces = async () => {
+        try {
+            const response = await addressApi.get("province");
+            setProvinceList(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching provinces:", error);
+            message.error("Failed to load provinces");
+        }
+    };
+
+    const fetchDistricts = async (provinceCode) => {
+        if (provinceCode) {
             try {
-                const provinceSource = await axios.get("https://vapi.vnappmob.com/api/province/");
-                const provinces = provinceSource.data.results;
-                setProvinceList(provinces);
-                console.log(provinces)
-            } catch (error) {
-                console.error("Error fetching provinces:", error);
-                message.error("Failed to load provinces");
-            }
-        };
-        getProvince();
-        setLoading(false);
-    }, []);
-
-    useEffect(() => {
-        const initializeAddressData = async () => {
-            if (user) {
-                if (user.provinceId) {
-                    setProvinceId(user.provinceId);
-                    if (user.districtId) {
-                        setDistrictId(user.districtId);
-                        if (user.wardId) {
-                            setWardId(user.wardId);
-                        }
-                    }
-                }
-                // Set basic user info
-                formVariable.setFieldsValue({
-                    firstName: user.FirstName,
-                    lastName: user.LastName,
-                    email: user.Email,
-                    phone: user.Phone,
-                });
-
-
-            }
-        };
-
-        initializeAddressData();
-    }, [user, formVariable]);
-
-    useEffect(() => {
-        const getDistrict = async () => {
-            try {
-                const districtSource = await axios.get(`https://vapi.vnappmob.com/api/province/district/${provinceId}`);
-                const districts = districtSource.data.results;
-                setDistrictList(districts);
-                console.log(districts)
+                const response = await addressApi.get(`district/${provinceCode}`);
+                setDistrictList(response.data);
+                return response.data;
             } catch (error) {
                 console.error("Error fetching districts:", error);
                 message.error("Failed to load districts");
             }
-        };
-        if (provinceId) {
-            getDistrict();
         }
-        console.log(districtList)
-    }, [provinceId])
-    useEffect(() => {
-        const getWard = async () => {
+    };
+
+    const fetchWards = async (districtCode) => {
+        if (districtCode) {
             try {
-                const wardSource = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${districtId}`);
-                const wards = wardSource.data.results;
-                setWardList(wards);
-                console.log(wards)
+                const response = await addressApi.get(`ward/${districtCode}`);
+                setWardList(response.data);
+                return response.data;
             } catch (error) {
                 console.error("Error fetching wards:", error);
                 message.error("Failed to load wards");
             }
-        };
-        if (districtId) {
-            getWard();
         }
-        console.log(wardList)
-    }, [districtId])
-    const handleSubmit = (values) => {
-        console.log("Submitting form with values:", values);
-        // Add your API call here
-        // formVariable.submit();
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+            console.log("Form data to submit:", values);
+            const response = await userApi.patch(`update-profile`, values);
+            console.log("Response:", response);
+            refresh();
+            message.success("Form submitted successfully!");
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            message.error("Failed to submit form");
+        }
     };
 
     const handleSelectProvince = (value) => {
-        formVariable.setFieldsValue({ district: undefined, ward: undefined });
+        form.setFieldsValue({ DistrictCode: undefined, WardCode: undefined });
         setProvinceId(value);
     };
 
     const handleSelectDistrict = (value) => {
+        form.setFieldsValue({ WardCode: undefined });
         setDistrictId(value);
-        formVariable.setFieldsValue({ ward: undefined });
     };
-    // const handleBeforeUploadImage = (file) => {
-    //     if (!file.type.startsWith("image/")) {
-    //         message.error("You can only upload image files!");
-    //         return false;
-    //     }
-    //     if (file.size / 1024 / 1024 > MAX_IMAGE_SIZE_MB) {
-    //         message.error(`Image size must be smaller than ${MAX_IMAGE_SIZE_MB}MB!`);
-    //         return false;
-    //     }
-    //     return false;
-    // }
-    // const handleChangeAvatar = async (file) => {
-    //     const updatedAvatar = await Promise.all(
-    //         file.map(async (file) => {
-    //             if (file.originFileObj) {
-    //                 // Upload file từ local lên Firebase
-    //                 const firebaseUrl = await uploadToFirebase(file.originFileObj);
-    //                 return {
-    //                     filePath: firebaseUrl, // Lưu lại URL từ Firebase sau khi upload
-    //                 };
-    //             }
-    //             return {
-    //                 filePath: file.url, // Giữ nguyên file đã có sẵn từ Firebase
-    //             }; // Giữ nguyên file đã có sẵn từ Firebase
-    //         })
-    //     );
-    //     setAvatarUrl(updatedAvatar[0].filePath);
-    // };
 
-    return loading ? <Spin /> : (
+    return loading ? (
+        <Spin />
+    ) : (
         <>
             <div className="image-input">
                 <Image
                     className="image-avatar"
-                    alt="Cyber Kitty"
+                    alt="Avatar"
                     width={300}
                     height={300}
-                    src={avatarUrl}
+                    preview={false}
+                    src={imageExample}
                 />
                 <br />
-                <br />
-                {/* <Upload
-                    beforeUpload={handleBeforeUploadImage}
-                    listType="picture"
-                    onChange={handleChangeAvatar}
-                    showUploadList={{ showRemoveIcon: !showOnly }}
-                >
-                    {!showOnly && (
-                        <>
-                            <Button type="primary" icon={<UploadOutlined />}>
-                                Change Avatar
-                            </Button>
-                        </>
-                    )}
-                </Upload> */}
             </div>
-            <Card
-                size="small"
-                className="card"
-                bordered={false}
-                style={{ width: 700 }}
-            >
-
-                <Form form={formVariable} layout="vertical" onFinish={handleSubmit}>
+            <Card size="small" className="card" bordered={false} style={{ width: 700 }}>
+                <Form form={form} layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                className="form-item"
                                 label="First Name"
-                                name="firstName"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your first name"
-                                    }
-                                ]}
+                                name="FirstName"
+                                rules={[{ required: true, message: "Please enter your first name" }]}
                             >
                                 <Input placeholder="Enter your first name" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                className="form-item"
                                 label="Last Name"
-                                name="lastName"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your last name"
-                                    }
-                                ]}
+                                name="LastName"
+                                rules={[{ required: true, message: "Please enter your last name" }]}
                             >
                                 <Input placeholder="Enter your last name" />
                             </Form.Item>
                         </Col>
                     </Row>
 
-
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                className="form-item"
                                 label="Email"
-                                name="email"
-                                rules={[
-                                    {
-                                        required: true,
-                                        type: "email",
-                                        message: "Please enter a valid email"
-                                    }
-                                ]}
+                                name="Email"
+                                rules={[{ required: true, type: "email", message: "Please enter a valid email" }]}
                             >
                                 <Input placeholder="example@gmail.com" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                className="form-item"
                                 label="Phone"
-                                name="phone"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your phone number"
-                                    }
-                                ]}
+                                name="Phone"
+                                rules={[{ required: true, message: "Please enter your phone number" }]}
                             >
                                 <Input placeholder="+84 - 345 678 910" />
                             </Form.Item>
                         </Col>
                     </Row>
+
                     <Row gutter={16}>
                         <Col span={6}>
-                            <Form.Item
-                                label="Address"
-                                name="address"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your address"
-                                    }
-                                ]}
-                            >
+                            <Form.Item label="Address" name="Address">
                                 <Input placeholder="Enter your home address" />
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item
-                                label="Ward"
-                                name="ward"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please choose your ward"
-                                    }
-                                ]}
-                            >
-                                <Select
-                                    placeholder="Select ward"
-                                >
-                                    {wardList.map(ward => (
-                                        <Option key={ward.ward_name} value={ward.ward_name}>
-                                            {ward.ward_name}
+                            <Form.Item label="Province" name="ProvinceCode">
+                                <Select placeholder="Select province" onChange={handleSelectProvince}>
+                                    {provinceList?.map((province) => (
+                                        <Option key={province.code} value={province.code}>
+                                            {province.name}
                                         </Option>
                                     ))}
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item
-                                label="District"
-                                name="district"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your district"
-                                    }
-                                ]}
-                            >
-                                <Select
-                                    placeholder="Select district"
-                                    onChange={handleSelectDistrict}
-                                >
-                                    {districtList.map(district => (
-                                        <Option key={district.district_name} value={district.district_name}>
-                                            {district.district_name}
+                            <Form.Item label="District" name="DistrictCode">
+                                <Select placeholder="Select district" onChange={handleSelectDistrict}>
+                                    {districtList?.map((district) => (
+                                        <Option key={district.code} value={district.code}>
+                                            {district.name}
                                         </Option>
                                     ))}
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item
-                                label="Province"
-                                name="province"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter your province"
-                                    }
-                                ]}
-                            >
-                                <Select
-                                    placeholder="Select province"
-                                    onChange={handleSelectProvince}
-                                >
-                                    {provinceList.map(province => (
-                                        <Option key={province.province_name} value={province.province_name}>
-                                            {province.province_name}
+                            <Form.Item label="Ward" name="WardCode">
+                                <Select placeholder="Select ward">
+                                    {wardList?.map((ward) => (
+                                        <Option key={ward.code} value={ward.code}>
+                                            {ward.name}
                                         </Option>
                                     ))}
                                 </Select>
                             </Form.Item>
                         </Col>
+
                     </Row>
 
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" onClick={handleSubmit}>
                                 Save All
                             </Button>
                         </Col>
                         <Col span={12}>
-                            <Button type="primary" onClick={refresh} >
+                            <Button type="primary" onClick={refresh}>
                                 Reset
                             </Button>
                         </Col>
                     </Row>
                 </Form>
-            </Card >
+            </Card>
         </>
     );
 }
