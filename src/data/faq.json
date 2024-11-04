@@ -1,0 +1,40 @@
+{
+  "faqs": [
+    {
+      "id": "1",
+      "icon": "🇯🇵",
+      "title": "How do Breeder/Japan auctions work?",
+      "content": "Explanation for how Breeder/Japan auctions work."
+    },
+    {
+      "id": "2",
+      "icon": "🇺🇸",
+      "title": "How do In-House/USA auctions work?",
+      "content": "Explanation for how In-House/USA auctions work."
+    },
+    {
+      "id": "3",
+      "icon": "📦",
+      "title": "How does shipping work and how much does it cost?",
+      "content": "Explanation for how shipping works and its costs."
+    },
+    {
+      "id": "4",
+      "icon": "💔",
+      "title": "What happens if my Koi passes away in transit?",
+      "content": "Details on policies regarding Koi passing away during transit."
+    },
+    {
+      "id": "5",
+      "icon": "💸",
+      "title": "When are payments due after an auction?",
+      "content": "Information on payment deadlines after an auction."
+    },
+    {
+      "id": "6",
+      "icon": "⏳",
+      "title": "How long can I expect to wait before my Koi is shipped?",
+      "content": "Expected waiting time before shipment of Koi."
+    }
+  ]
+} 

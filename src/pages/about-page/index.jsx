@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Collapse, Typography } from "antd";
+import faqData from '../../data/faq.json';
 
 const { Panel } = Collapse;
 const { Title, Paragraph } = Typography;
@@ -22,7 +23,7 @@ const AboutPage = () => {
           boxShadow: "0 2px 8px rgba(0,0,0,0.05)"
         }}
       >
-        <Title level={2} style={{ 
+        <Title level={1} style={{ 
           textAlign: "center",
           color: "#1a365d",
           marginBottom: "24px"
@@ -43,9 +44,39 @@ const AboutPage = () => {
           from renowned breeders in Japan, all from the comfort of their own
           homes.
         </Paragraph>
+
+        <Title level={2} style={{ 
+          textAlign: "center",
+          color: "#1a365d",
+          marginTop: "32px",
+          marginBottom: "24px"
+        }}>
+          Our Story
+        </Title>
+        <Paragraph style={{ fontSize: "16px", lineHeight: "1.8" }}>
+          Welcome to Koi Auctions, your premier destination for buying and selling
+          high-quality Koi fish. Established with a passion for these living jewels,
+          we bring together Koi enthusiasts from around the world in a trusted
+          marketplace.
+        </Paragraph>
+
+        <Title level={2} style={{ 
+          textAlign: "center",
+          color: "#1a365d",
+          marginTop: "32px",
+          marginBottom: "24px"
+        }}>
+          Our Mission
+        </Title>
+        <Paragraph style={{ fontSize: "16px", lineHeight: "1.8" }}>
+          We strive to create a transparent and reliable platform where Koi collectors,
+          breeders, and enthusiasts can connect and trade exceptional Koi specimens.
+          Our commitment is to maintain the highest standards of authenticity and
+          customer satisfaction.
+        </Paragraph>
       </Card>
 
-      <Title level={3} style={{ 
+      <Title level={2} style={{ 
         color: "#1a365d",
         marginBottom: "24px",
         textAlign: "center" 
@@ -60,120 +91,23 @@ const AboutPage = () => {
         }}
         expandIconPosition="end"
       >
-        <Panel
-          header={
+        {faqData.faqs.map((faq) => (
+          <Panel
+          key = {faq.id}
+          header = {
             <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              🇯🇵 How do Breeder/Japan auctions work?
+              {faq.icon} {faq.title}
             </span>
           }
-          key="1"
-        >
-          <Paragraph>
-            Explanation for how Breeder/Japan auctions work.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              🇺🇸 How do In-House/USA auctions work?
-            </span>
-          }
-          key="2"
-        >
-          <Paragraph>
-            Explanation for how In-House/USA auctions work.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              📦 How does shipping work and how much does it cost?
-            </span>
-          }
-          key="3"
-        >
-          <Paragraph>
-            Explanation for how shipping works and its costs.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              💔 What happens if my Koi passes away in transit?
-            </span>
-          }
-          key="4"
-        >
-          <Paragraph>
-            Details on policies regarding Koi passing away during transit.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              💸 When are payments due after an auction?
-            </span>
-          }
-          key="5"
-        >
-          <Paragraph>
-            Information on payment deadlines after an auction.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              ⏳ How long can I expect to wait before my Koi is shipped?
-            </span>
-          }
-          key="6"
-        >
-          <Paragraph>
-            Expected waiting time before shipment of Koi.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              🏠 Do you offer boarding if I cannot receive my Koi right away?
-            </span>
-          }
-          key="7"
-        >
-          <Paragraph>
-            Yes, boarding is available for an additional fee. If you would like
-            to board your fish for the winter, we will hold them in our mud pond
-            for $50/month per fish. For indoor boarding, we offer $75/month per
-            Koi.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              🛡️ Is there bid sniping protection?
-            </span>
-          }
-          key="8"
-        >
-          <Paragraph>
-            Explanation on bid sniping protection policies.
-          </Paragraph>
-        </Panel>
-        <Panel
-          header={
-            <span style={{ fontSize: "16px", fontWeight: 500 }}>
-              🌍 I'm outside of the United States. Am I still eligible to bid?
-            </span>
-          }
-          key="9"
-        >
-          <Paragraph>
-            Information on international eligibility for bidding.
-          </Paragraph>
-        </Panel>
+          >
+            <Paragraph>
+              {faq.content}
+            </Paragraph>
+          </Panel>
+        ))}
       </Collapse>
 
-      <Title level={4} style={{ 
+      <Title level={2} style={{ 
         color: "#1a365d",
         marginBottom: "24px",
         textAlign: "center"
