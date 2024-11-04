@@ -2,16 +2,11 @@ import { Statistic, Row, Col, Typography, Tag } from "antd";
 import { useEffect, useState } from "react";
 const { Text } = Typography;
 
-const Countdown = ({ startTime, endTime, statusName }) => {
-  const [remainingTime, setRemainingTime] = useState(null);
+const Countdown = ({ startTime, endTime, predictEndTime, statusName }) => {
+  const [endTimeState, setEndTimeState] = useState(predictEndTime);
   useEffect(() => {
-    if (statusName == "Upcoming") {
-      setRemainingTime(startTime);
-    } else if (statusName == "Ongoing") {
-      setRemainingTime(endTime);
-    }
-  }, [startTime, endTime, statusName]);
-
+    setEndTimeState(predictEndTime);
+  }, [predictEndTime]);
   return (
     <div
       style={{
@@ -37,26 +32,27 @@ const Countdown = ({ startTime, endTime, statusName }) => {
               ? "#0958D9"
               : statusName == "Ongoing"
               ? "green"
+              : statusName == "Scheduled"
+              ? "orange"
               : "red",
         }}
       >
-        {statusName === "Upcoming" && startTime == null && "Upcoming"}
-        {statusName === "Upcoming" && startTime != null && "Starting in:"}
+        {statusName === "Upcoming" && "Upcoming"}
+        {statusName === "Scheduled" && "Before start:"}
         {statusName === "Ongoing" && "Time Left:"}
         {statusName === "Ended" &&
           `Ended at ${new Date(endTime).toLocaleString()}`}
       </Text>
 
-      {(statusName === "Upcoming" || statusName === "Ongoing") &&
-        remainingTime && (
-          <Statistic.Countdown
-            value={remainingTime}
-            format="HH:mm:ss"
-            valueStyle={{
-              fontSize: "2.5rem",
-            }}
-          />
-        )}
+      {(statusName === "Scheduled" || statusName === "Ongoing") && (
+        <Statistic.Countdown
+          value={statusName === "Scheduled" ? startTime : endTimeState}
+          format="HH:mm:ss"
+          valueStyle={{
+            fontSize: "2.5rem",
+          }}
+        />
+      )}
     </div>
   );
 };

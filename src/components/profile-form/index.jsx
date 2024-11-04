@@ -1,4 +1,17 @@
 import React, { useEffect, useState } from "react";
+import {
+  Col,
+  Row,
+  Card,
+  Form,
+  Input,
+  Select,
+  Button,
+  message,
+  DatePicker,
+  Image,
+  Dropdown,
+} from "antd";
 import { Col, Row, Card, Form, Input, Select, Button, message, Image, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
@@ -6,6 +19,99 @@ import userApi from "../../config/userApi";
 import "./index.css";
 
 const { Option } = Select;
+import "./index.css";
+const DATE_FORMAT = "YYYY-MM-DD",
+  TIME_FORMAT = "HH:mm";
+const imageExample =
+  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+const provinceData = [
+  {
+    id: 1,
+    name: "Hanoi",
+    cities: [
+      {
+        id: 101,
+        name: "Ba Dinh",
+        wards: [
+          { id: 1001, name: "Phuc Xa" },
+          { id: 1002, name: "Truc Bach" },
+          { id: 1003, name: "Vinh Phuc" },
+        ],
+      },
+      {
+        id: 102,
+        name: "Hoan Kiem",
+        wards: [
+          { id: 1004, name: "Hang Buom" },
+          { id: 1005, name: "Hang Dao" },
+          { id: 1006, name: "Dong Xuan" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "Ho Chi Minh City",
+    cities: [
+      {
+        id: 201,
+        name: "District 1",
+        wards: [
+          { id: 2001, name: "Ben Nghe" },
+          { id: 2002, name: "Ben Thanh" },
+          { id: 2003, name: "Da Kao" },
+        ],
+      },
+      {
+        id: 202,
+        name: "District 2",
+        wards: [
+          { id: 2004, name: "Thao Dien" },
+          { id: 2005, name: "An Phu" },
+          { id: 2006, name: "Binh An" },
+        ],
+      },
+    ],
+  },
+];
+export default function GeneralInfoForm({ user, refresh }) {
+  const [formVariable] = useForm();
+  const [provinceList] = useState(provinceData); // Don't need to set this state
+  const [cityList, setCityList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  const [avatarUrl, setAvatarUrl] = useState(imageExample);
+
+  const onFinish = (values) => {
+    message.success("Form submitted successfully!");
+    console.log(values);
+    handleSubmit(values);
+  };
+
+  //call Api get
+  //
+  useEffect(() => {
+    if (user) {
+      formVariable.setFieldsValue({
+        firstName: user.FirstName,
+        lastName: user.LastName,
+        email: user.Email,
+        phone: user.Phone,
+        // ward: user.Ward,
+        // city: user.City,
+        // province: user.Province,
+      });
+    }
+  }, [user, formVariable]);
+  useEffect(() => {
+    console.log(cityList);
+  }, [cityList]);
+  useEffect(() => {
+    console.log(wardList);
+  }, [wardList]);
+  const handleSubmit = (values) => {
+    console.log("Submitting form with values:", values);
+    // Add your API call here
+  };
 const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
 export default function GeneralInfoForm({ user, refresh }) {
