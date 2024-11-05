@@ -15,31 +15,54 @@ const Footer = () => {
               <Logo width={48} height={48} />
               <h1>Koi Auction</h1>
             </div>
-            <p>Bringing the beauty of Koi to your pond through our premium auctions.</p>
+            <p>
+              Bringing the beauty of Koi to your pond through our premium
+              auctions.
+            </p>
           </Col>
           <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
             <h3>Navigation</h3>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/auctions">Auctions</a></li>
-              <li><a href="/about">About</a></li>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/auction-listy">Auctions</a>
+              </li>
+              <li>
+                <a href="/about">About</a>
+              </li>
             </ul>
           </Col>
           <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
             <h3>Policy</h3>
             <ul>
-            <li onClick={() => navigate("/term")}>Terms and Conditions</li>
-            <li onClick={() => navigate("/policy")}>Privacy Policy</li>
+              <li>
+                <a href="/policy">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/term">Terms and Conditions</a>
+              </li>
             </ul>
           </Col>
           <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
             <h3>Account</h3>
             <ul>
-              <li><a href="/login">Login</a></li>
-              <li><a href="/register">Register</a></li>
+              <li>
+                <a href="/login">Login</a>
+              </li>
+              <li>
+                <a href="/register">Register</a>
+              </li>
             </ul>
           </Col>
-          <Col xs={24} sm={12} md={6} lg={4} className="footer-section contact-info">
+          <Col
+            xs={24}
+            sm={12}
+            md={6}
+            lg={4}
+            className="footer-section contact-info"
+          >
             <h3>Contact Info</h3>
             <ul>
               <li>
