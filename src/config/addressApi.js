@@ -1,6 +1,7 @@
 import axios from "axios";
-const baseUrl = "https://vapi.vnappmob.com/api";
+const baseUrl = "http://localhost:3000/user-service/address/";
 
-export const addressApi = axios.create({
+const addressApi = axios.create({
   baseURL: baseUrl,
 });
+export default addressApi;
