@@ -25,6 +25,7 @@ import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
 import WalletPage from "./pages/wallet-page";
 import OrderStatusPage from "./pages/order-status-page";
+import AboutPage from "./pages/about-page";
 import PolicyPage from "./pages/policy-page";
 import TermPage from "./pages/term-page";
 
@@ -59,6 +60,7 @@ function App() {
           element: <OrderStatusPage />,
         },
         { path: "/payment-callback", element: <PaymentCallBackPage /> },
+        { path: "/about", element: <AboutPage /> },
       ],
     },
     {

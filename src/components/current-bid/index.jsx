@@ -20,7 +20,9 @@ const CurrentBid = ({ currentBid }) => {
           Current Bid:{" "}
         </Text>
         <Text strong style={{ fontSize: "1.5rem", color: "red" }}>
-          {currentBid ? `${currentBid.toLocaleString()} VND` : "No Bids Yet"}
+          {currentBid != null
+            ? `${currentBid.toLocaleString()} VND`
+            : "No Bids Yet"}
         </Text>
       </div>
     </Card>

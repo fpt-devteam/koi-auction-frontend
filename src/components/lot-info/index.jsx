@@ -80,8 +80,8 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
           { required: true, message: "Please enter the starting price" },
           {
             type: "number",
-            min: 500000,
-            message: "Starting price must be at least 500,000 VND",
+            min: 100000,
+            message: "Starting price must be at least 100,000 VND",
           },
         ]}
       >

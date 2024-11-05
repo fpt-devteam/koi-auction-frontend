@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Descriptions,
-  Badge,
-  Card,
-  Button,
-  Modal,
   Form,
-  Input,
-  Switch,
   message,
   Spin,
 } from "antd";
@@ -24,7 +17,7 @@ const UserDetail = () => {
   const [loading, setLoading] = useState(true);
   const fetchUser = async (userId) => {
     try {
-      const response = await (userApi.get(`manage/detail-profile/${userId}`))
+      const response = await userApi.get(`manage/detail-profile/${userId}`);
       setUser(response.data);
       console.log(response.data);
       setLoading(false);
@@ -44,7 +37,6 @@ const UserDetail = () => {
   }, [userId]);
 
   const handleFormSubmit = () => {
-
     // Show loading message
     form
       .validateFields()
@@ -52,9 +44,15 @@ const UserDetail = () => {
         try {
           message.loading({ content: "Updating user...", key: "updatable" });
           values.UserId = userId;
-          const response = await userApi.patch(`manage/profile/${userId}`, values);
+          values.Active = values.Active.toString();
+          console.log(values.Active);
+
+          const response = await userApi.patch(
+            `manage/profile/${userId}`,
+            values
+          );
           console.log(response.data.message);
-          console.log(values);
+          console.log(values.Active);
           fetchUser(userId);
 
           // Show success message
@@ -80,7 +78,9 @@ const UserDetail = () => {
       });
   };
 
-  return loading ? (<Spin />) : (
+  return loading ? (
+    <Spin />
+  ) : (
     <>
       <UserDetailCard
         data={user}
@@ -102,7 +102,7 @@ const UserDetail = () => {
           UserRoleId: user.UserRoleId,
           FarmName: user.UserRoleId === 2 ? user.FarmName : undefined,
           Certificate: user.UserRoleId === 2 ? user.Certificate : undefined,
-          About: user.UserRoleId === 2 ? user.About : undefined
+          About: user.UserRoleId === 2 ? user.About : undefined,
         }}
         isBreeder={user.UserRoleId === 2}
         isModalVisible={isModalVisible}

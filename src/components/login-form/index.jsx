@@ -36,9 +36,7 @@ const LoginForm = () => {
         setTimeout(() => {
           message.success("Login successful!");
         }, 1000);
-        if (user.UserRoleId == 1) {
-          navigate(-1);
-        } else navigate("/management");
+        navigate(-1);
       }
     },
     onError: error => { console.log(error) },
