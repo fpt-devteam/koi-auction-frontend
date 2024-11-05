@@ -1,0 +1,16 @@
+.Pending {
+  color: #ffa34d;
+}
+.Success {
+  color: #52c41a;
+}
+.Failed {
+  color: #ff4d4f;
+}
+.Deposit {
+  color: #000000;
+}
+.Withdrawal {
+  color: #ff4d4f;
+}
+

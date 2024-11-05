@@ -19,6 +19,16 @@ function YourWallet({ balance }) {
   const [withdrawalModal, setWithdrawalModal] = useState(false);
   const [depositAmount, setDepositAmount] = useState(0);
   const [withdrawalAmount, setWithdrawalAmount] = useState(balance);
+
+  const numberFormatter = (value) => {
+    if (!value) return '';
+    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const numberParser = (value) => {
+    return value.replace(/\$\s?|(,*)/g, '');
+  };
+
   const handleDeposit = () => {
     setDepositModal(true);
   };
@@ -106,6 +116,10 @@ function YourWallet({ balance }) {
             placeholder="Enter amount"
             style={{ width: "100%" }}
             min={0}
+            max={100000000}
+            formatter={numberFormatter}
+            parser={numberParser}
+            required
             value={depositAmount}
             onChange={(value) => setDepositAmount(value)}
           />
@@ -130,6 +144,8 @@ function YourWallet({ balance }) {
           style={{ width: "100%" }}
           max={balance}
           min={0}
+          formatter={numberFormatter}
+          parser={numberParser}
           value={withdrawalAmount}
           onChange={(value) => setWithdrawalAmount(value)}
         />
