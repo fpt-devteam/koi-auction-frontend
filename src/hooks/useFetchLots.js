@@ -1,19 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
-import lotApi from "../config/lotApi";
-import { message } from "antd";
-import debounce from "lodash.debounce";
+import { useState, useEffect, useCallback } from 'react';
+import lotApi from '../config/lotApi';
+import { message } from 'antd';
+import debounce from 'lodash.debounce';
 
 // Custom hook to fetch lots data
-const useFetchLots = (
-  lotStatusId,
-  sortBy = "UpdatedAt",
-  isDescending = false,
-  breederId = null
-) => {
+const useFetchLots = (lotStatusId, sortBy = 'UpdatedAt', isDescending = false, breederId = null) => {
   const [lots, setLots] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái loading
   const [error, setError] = useState(null); // Trạng thái lỗi nếu có
-  const fetchLots = useCallback(async () => {
+  const fetchLots = async () => {
     try {
       const url =
         breederId != null
@@ -29,15 +24,10 @@ const useFetchLots = (
       message.error(error.message); // Hiển thị thông báo lỗi
       setLoading(false); // Kết thúc loading ngay cả khi lỗi xảy ra
     }
-  }, [lotStatusId]);
+  };
 
-  const debouncedFetchLots = useCallback(debounce(fetchLots, 100), [fetchLots]);
+  const debouncedFetchLots = useCallback(debounce(fetchLots, 700), [lotStatusId, sortBy, isDescending, breederId]);
 
-  // useEffect(() => {
-  //   if (lotStatusId) {
-  //     fetchLots(); // Gọi API khi lotStatusId thay đổi
-  //   }
-  // }, [lotStatusId, fetchLots]);
   useEffect(() => {
     if (lotStatusId) {
       debouncedFetchLots(); // Gọi API khi lotStatusId thay đổi, nhưng đã được debounce
@@ -48,7 +38,7 @@ const useFetchLots = (
     };
   }, [lotStatusId, debouncedFetchLots]);
 
-  return { lots, loading, error, refetch: fetchLots };
+  return { lots, loading, error, refetch: debouncedFetchLots };
 };
 
 export default useFetchLots;

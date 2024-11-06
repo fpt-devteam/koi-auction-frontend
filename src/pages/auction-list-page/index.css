@@ -27,7 +27,7 @@
 .countdown {
   font-weight: bold;
   /* color: #fa8c16; */
-  color: #fa2323;
+  color: #ff4d4f;
   /* Ant Design's orange color */
   font-size: 16px;
 }
@@ -61,7 +61,7 @@
 
 .joinButton {
   /* background-color: #fa8c16; */
-  background-color: red;
+  background-color: #ff4d4f;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -82,7 +82,7 @@
 .viewButton {
   /* background-color: #fde8d2; */
   /* color: #fa8c16; */
-  background-color: #fa2323;
+  background-color: #ff4d4f;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -97,5 +97,5 @@
   background-color: #ebebeb !important;
   /* Darker shade of orange for hover effect */
   /* color: #fa8c16 !important; */
-  color: #fa2323 !important;
+  color: #ff4d4f !important;
 }

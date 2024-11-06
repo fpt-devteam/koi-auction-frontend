@@ -1,45 +1,34 @@
-import { Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { loginSuccess, logout } from "../../redux/features/userSlice";
-import { message } from "antd";
-import userApi from "../../config/userApi";
+import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Loading from '../loading';
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  // const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.user);
+  //get url path
+  const location = useLocation();
 
-  // useEffect(() => {
-  //   const checkAuthStatus = async () => {
-  //     try {
-  //       const response = await userApi.get('/profile');
-  //       if (response.status === 200) {
-  //         dispatch(loginSuccess({user: response.data}));
-  //       }
-  //     } catch (error) {
-  //       dispatch(logout());
-  //       message.error('User is not authenticated or session expired', error);
-  //     }
-  //   };
-  //   checkAuthStatus(); // Kiểm tra trạng thái khi reload trang
-  // }, [dispatch]);
-
-  const { isAuthenticated, user } = useSelector((state) => state.user);
-
-  // console.log(user);
-  // console.log(isAuthenticated);
-
-  // Thêm kiểm tra khi state vẫn đang tải hoặc user chưa có
-  if (user === null || isAuthenticated === undefined) {
-    return null; // Hoặc hiển thị component Loading
+  if (loading) {
+    return <Loading />; // Hoặc hiển thị component Loading
   }
 
-  // Nếu không đăng nhập, chuyển hướng đến trang đăng nhập
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/login" />;
-  // }
+  if (!loading && user == null) {
+    if (!allowedRoles.includes(0)) {
+      return <Navigate to="/unauthorized" />;
+    }
+    return children;
+  }
 
   // Kiểm tra roleId của user
-  if (!allowedRoles.includes(user.UserRoleId)) {
+  if (!loading && !allowedRoles.includes(user.UserRoleId)) {
+    if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/' 
+      || location.pathname == '/unauthorized') {
+      switch (user.UserRoleId) {
+        case 1:
+          return <Navigate to="/" />;
+        default:
+          return <Navigate to="/management" />;
+      }
+    }
     return <Navigate to="/unauthorized" />; // Hoặc trang thông báo quyền truy cập bị từ chối
   }
 
