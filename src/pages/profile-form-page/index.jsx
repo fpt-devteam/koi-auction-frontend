@@ -4,21 +4,21 @@ import {
     Spin,
 } from "antd";
 import GeneralInfoForm from "../../components/profile-form";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ProfileFormPage() {
     const { user } = useSelector((store) => store.user);
+    const dispatch = useDispatch();
     const [seed, setSeed] = useState(0);
     const [loading, setLoading] = useState(!user);
-    console.log(user);
     const handleReset = () => {
-        setSeed(Math.random());
+        window.location.reload();
+        // setSeed(Math.random());
     }
     useEffect(() => {
         if (user) {
             setLoading(false);
-            console.log(1)
+            console.log(user);
         }
     }, [user]);
 

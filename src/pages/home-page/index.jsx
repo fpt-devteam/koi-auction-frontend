@@ -1,6 +1,8 @@
 import { Card, Carousel, Image, Row, Col, Button } from "antd";
 import { ReadOutlined, LikeOutlined } from "@ant-design/icons";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const imageList = [
   { image: "src/assets/login/koibanner.jpg", title: "FIND YOUR PERFECT KOI FROM TOP BREEDERS" },
   { image: "src/assets/login/koibanner2.jpg", title: "BID ON RARE AND BEAUTIFUL KOI VARIETIES" },
@@ -8,6 +10,15 @@ const imageList = [
   { image: "src/assets/login/koibanner4.jpg", title: "JOIN THE VIBRANT KOI AUCTION COMMUNITY" }
 ]
 function HomePage() {
+  const { user } = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const handleGetStarted = () => {
+    if (user) {
+      navigate("/auction-list");
+    } else {
+      navigate("/login");
+    }
+  }
   return (
     <>
       <div style={{ width: "100vw" }}>
@@ -47,7 +58,7 @@ function HomePage() {
               <div style={{
                 padding: "0px", marginTop: "30px"
               }}>
-                <a className="custom-link" href="http://localhost:5173/auction-list" style={{ fontSize: "28px", padding: "10px", fontWeight: "bold", color: "black", textDecoration: "underline" }}>
+                <a className="custom-link" onClick={handleGetStarted} style={{ fontSize: "28px", padding: "10px", fontWeight: "bold", color: "black", textDecoration: "underline" }}>
                   Get Started
                 </a>
               </div>
@@ -109,26 +120,6 @@ function HomePage() {
             </Col>
             <Col lg={5} style={{ textAlign: "center", margin: "auto", padding: "0px" }}>
               <ReadOutlined style={{ fontSize: "100px", color: "#000" }} />
-            </Col>
-          </Row>
-        </Card>
-      </div>
-
-      {/* fourth section */}
-      <div className="container" style={{ padding: "0px" }}>
-        <Card className="card-container" style={{ width: "100%" }}>
-          <Row>
-            <Col lg={16}>
-              <div>
-                <h1 className="title">JOIN OUR COMMUNITY</h1>
-                <div style={{ marginTop: "30px", display: "flex", gap: "20px" }}>
-                  <Button type="primary" size="large" style={{ backgroundColor: "white", color: "black", borderColor: "black", fontSize: "18px", padding: "10px 30px" }}>Forum</Button>
-                  <Button type="primary" size="large" style={{ backgroundColor: "white", color: "black", borderColor: "black", fontSize: "18px", padding: "10px 30px" }}>Newsletter</Button>
-                </div>
-              </div>
-            </Col>
-            <Col lg={5} style={{ textAlign: "center", margin: "auto", padding: "0px" }}>
-              <LikeOutlined style={{ fontSize: "100px", color: "#000" }} />
             </Col>
           </Row>
         </Card>

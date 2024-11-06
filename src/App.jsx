@@ -23,6 +23,8 @@ import WalletPage from './pages/wallet-page';
 import OrderStatusPage from './pages/order-status-page';
 import AboutPage from './pages/about-page';
 import UnauthorizedPage from './pages/unauthorized-page';
+import PolicyPage from "./pages/policy-page";
+import TermPage from "./pages/term-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -46,9 +48,15 @@ function App() {
         { path: '/auction-list', element: <AuctionList /> },
         { path: '/profile', element: <ProfileFormPage /> },
         { path: '/wallet', element: <WalletPage /> },
+        { path: "/policy", element: <PolicyPage /> },
+        { path: "/term", element: <TermPage /> },
         {
           path: '/auction-lot-detail/:auctionLotId',
           element: <AuctionLotDetailPage />
+        },
+        {
+          path: "/order",
+          element: <OrderStatusPage />,
         },
         { path: '/payment-callback', element: <PaymentCallBackPage /> },
         { path: '/about', element: <AboutPage /> }

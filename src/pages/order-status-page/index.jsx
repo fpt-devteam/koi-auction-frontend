@@ -1,51 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Spin, message, Card, List, Button, Popconfirm, Col, Row, Image, Typography, Modal, Form } from "antd";
+import { Tabs, Spin, message, Card, List, Button, Col, Row, Image, Typography, Modal, Table } from "antd";
+import { DollarOutlined } from "@ant-design/icons";
 import lotApi from "../../config/lotApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate } from "react-router-dom";
-import LotInfo from "../../components/lot-info";
+import './index.css';
 const { Text } = Typography;
-const dataSample = [
-    {
-        "lotId": 8,
-        "sku": "BRD14-185410-22102024",
-        "startingPrice": 50000000.00,
-        "createdAt": "2024-10-22T18:54:11.47",
-        "auctionMethod": {
-            "auctionMethodId": 1,
-            "auctionMethodName": "Fixed-Price Auction",
-            "description": null
-        },
-        "finishPrice": 100000000.00,
-        "breederId": 14,
-        "koiFishDto": {
-            "variety": "GayLord",
-            "sex": true,
-            "sizeCm": 100.00,
-            "yearOfBirth": 2000,
-            "weightKg": 100.00,
-            "koiMedia": [
-                {
-                    "koiMediaId": 7,
-                    "koiFishId": 8,
-                    "filePath": "https://firebasestorage.googleapis.com/v0/b/koiauction-59dc0.appspot.com/o/15f3c439-765e-4026-892b-e16b148ca7e1.jpg?alt=media&token=12fd9868-c15f-4441-9dd9-c8d2bbdbb79e"
-                }
-            ]
-        },
-        "lotStatusDto": {
-            "lotStatusId": 6,
-            "lotStatusName": "To Ship"
-        },
-        "breederDetailDto": {
-            "farmName": "hehehoho"
-        }
-    }
-]
 export default function OrderStatusPage() {
     const [tabsData, setTabsData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("4");
+    const [activeTab, setActiveTab] = useState("6");
     const dispatch = useDispatch();
     const [seed, setSeed] = useState(1);
     const navigate = useNavigate();
@@ -63,24 +28,16 @@ export default function OrderStatusPage() {
     //         }
     //     }
     // };
-    const handleReset = () => {
-        setSeed(Math.random());
-    };
+
+    const handleReset = () => setSeed(Math.random());
+
     useEffect(() => {
-        setTabsData([
-            {
-                lotStatusId: 6,
-                lotStatusName: "To Ship",
-            },
-            {
-                lotStatusId: 7,
-                lotStatusName: "To Receive",
-            },
-            {
-                lotStatusId: 8,
-                lotStatusName: "Completed",
-            },
-        ]);
+        const staticTabsData = [
+            { lotStatusId: 6, lotStatusName: "To Ship" },
+            { lotStatusId: 7, lotStatusName: "To Receive" },
+            { lotStatusId: 8, lotStatusName: "Completed" },
+        ];
+        setTabsData(staticTabsData);
         setLoading(false);
     }, []);
 
@@ -107,7 +64,7 @@ export default function OrderStatusPage() {
         <div className="order-status-container">
             <div className="header-section">
                 <Button style={{ marginBottom: 20 }} type="primary" size="middle" onClick={() => navigate(-1)}>Back</Button>
-                <h1>Orders Status</h1>
+                <h1>Your Orders</h1>
             </div>
             <Tabs
                 defaultActiveKey={activeTab}
@@ -123,19 +80,21 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh }) => {
     const [orderList, setOrderList] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchOrderData = async () => {
-        try {
-            // const response = await lotApi.get("lots");
-            // const data = response.data.filter((lot) => lot.lotStatusDto.lotStatusId === lotStatusId);
-            const data = dataSample.filter((lot) => lot.lotStatusDto.lotStatusId === lotStatusId);
-            setOrderList(data);
-            setLoading(false);
-        } catch (error) {
-            message.error(error.message);
-        }
-    };
-
     useEffect(() => {
+        const fetchOrderData = async () => {
+            try {
+                const response = await lotApi.get("lots");
+                const filteredData = response.data.filter(
+                    (lot) => lot.lotStatusDto.lotStatusId === lotStatusId
+                );
+                setOrderList(filteredData);
+            } catch (error) {
+                message.error(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchOrderData();
     }, [lotStatusId]);
 
@@ -155,20 +114,16 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh }) => {
     );
 };
 
-const LotCard = ({ lot, refetch }) => {
+const LotCard = ({ lot }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
+    const toggleModal = () => setIsModalVisible(!isModalVisible);
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    const handleModalCancel = () => {
-        setIsModalVisible(false);
-    };
     return (
-        <>
+        <div className="lot-card-wrapper">
             <Card
+                style={{
+                    border: "2px solid #d9d9d9",
+                }}
                 className="lot-card"
                 title={
                     <div className="lot-card-title">
@@ -176,106 +131,113 @@ const LotCard = ({ lot, refetch }) => {
                     </div>
                 }
                 hoverable
-                onClick={showModal}
+                onClick={toggleModal}
             >
-                <Row gutter={[16, 16]}>
-                    <Col
-                        xs={4}
-                        sm={4}
-                        md={4}
-                        lg={4}
-                        xl={4}
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
+                <Row gutter={[16, 16]} align="flex-start">
+                    <Col span={3} className="image-col">
                         <Image
-                            src={
-                                lot.koiFishDto.koiMedia?.[0]?.filePath ||
-                                "default-placeholder.png"
-                            }
+                            src={lot.koiFishDto.koiMedia?.[0]?.filePath || "default-placeholder.png"}
                             width={80}
                             height={80}
+                            alt="Koi Fish"
                         />
                     </Col>
-                    <Col xs={16} sm={16} md={16} lg={16} xl={16}>
-                        <Text strong>Starting Price: </Text>
-                        <span>{lot.startingPrice || "..."}</span>
-                        <br />
-                        <Text strong>Varitey: </Text>
-                        <span>{lot.koiFishDto.variety || "..."}</span>
-                        <br />
-                        <Text strong>Method: </Text>
-                        <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
-                        <br />
-                        {userRoleId > 2 && (
-                            <>
+                    <Col span={12}>
+                        <div className="lot-details">
+                            <div className="lot-detail-item">
+                                <Text strong>Variety: </Text>
+                                <span>{lot.koiFishDto.variety || "..."}</span>
+                            </div>
+                            <div className="lot-detail-item">
                                 <Text strong>By: </Text>
                                 <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
-                                <br />
-                            </>
-                        )}
-                        <Text strong>Finish Price: </Text>
-                        <span>{lot.finishPrice || "..."}</span>
+                            </div>
+                            <div className="lot-detail-item">
+                                <Text strong>Method: </Text>
+                                <span>{lot.auctionMethod.auctionMethodName || "Unknown"}</span>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col span={9}>
+                        <div className="lot-detail-item">
+                            <DollarOutlined />
+                            <span>{lot.finishPrice || "..."}</span>
+                        </div>
                     </Col>
                 </Row>
             </Card>
             <Modal
                 open={isModalVisible}
-                onCancel={handleModalCancel}
+                onCancel={toggleModal}
                 footer={null}
                 width={1200}
+                style={{ top: 0 }}
             >
                 <LotInfoModal
-                    title={"Lot Detail"}
                     lotInfoData={lot}
                     uploadKoiMediaData={lot.koiFishDto.koiMedia || []}
                 />
             </Modal>
-        </>
+        </div>
     );
 };
-const LotInfoModal = ({
-    title,
-    uploadKoiMediaData,
-    lotInfoData,
-    showLotStatus,
-}) => {
-    const [form] = Form.useForm();
+const LotInfoModal = ({ lotInfoData }) => {
+    const defaultImage = "default-placeholder.png";
+    const koiImage = lotInfoData.koiFishDto.koiMedia?.[0]?.filePath || defaultImage;
+
+    const tableDataSource = [
+        { key: 'sku', label: 'SKU', value: lotInfoData.sku },
+        { key: 'variety', label: 'Variety', value: lotInfoData.koiFishDto.variety },
+        { key: 'size', label: 'Size', value: `${lotInfoData.koiFishDto.sizeCm} cm` },
+        { key: 'yearOfBirth', label: 'Year of Birth', value: `${lotInfoData.koiFishDto.yearOfBirth}` },
+        { key: 'sex', label: 'Sex', value: lotInfoData.koiFishDto.sex ? "Male" : "Female" },
+        { key: 'farm', label: 'Farm', value: lotInfoData.breederDetailDto?.farmName },
+        { key: 'method', label: 'Auction Method', value: lotInfoData.auctionMethod.auctionMethodName },
+        { key: 'status', label: 'Status', value: lotInfoData.lotStatusDto.lotStatusName },
+    ];
+
     return (
         <div className="lot-info-modal">
-            <Form
-                form={form}
-                layout="vertical"
-                initialValues={{
-                    koiMedia: uploadKoiMediaData,
-                }}
-                disabled={true}
-            >
-                <Row gutter={[24, 24]}>
-                    <Col span={14}>
-                        <h2 style={{ fontWeight: "bold" }}>{title}</h2>
-                        <LotInfo
-                            initData={lotInfoData}
-                            showLotStatus={showLotStatus}
-                            form={form}
-                        />
-
-                    </Col>
-                    <Col span={10}>
+            <Row gutter={[32, 32]}>
+                <Col span={14}>
+                    <h2 className="lot-info-title" >Lot Detail</h2>
+                    <br />
+                    <div className="lot-info-content">
+                        <div className="info-section">
+                            <Table
+                                dataSource={tableDataSource}
+                                columns={[
+                                    {
+                                        title: 'Property',
+                                        dataIndex: 'label',
+                                        key: 'label',
+                                        width: '40%',
+                                        render: (text) => <Text strong>{text}</Text>
+                                    },
+                                    {
+                                        title: 'Value',
+                                        dataIndex: 'value',
+                                        key: 'value',
+                                    }
+                                ]}
+                                pagination={false}
+                                size="middle"
+                                bordered
+                            />
+                        </div>
+                    </div>
+                </Col>
+                <Col span={10}>
+                    <div className="image-container">
                         <Image
-                            src={
-                                lotInfoData.koiFishDto.koiMedia?.[0]?.filePath ||
-                                "default-placeholder.png"
-                            }
-                            width={200}
-                            height={200}
+                            className="lot-image"
+                            src={koiImage}
+                            width="100%"
+                            alt="Koi Fish"
                         />
-                    </Col>
-                </Row>
-            </Form>
+                    </div>
+                </Col>
+            </Row>
         </div>
     );
 };

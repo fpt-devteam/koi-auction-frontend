@@ -10,11 +10,15 @@ import {
 } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import lotApi from "../../config/lotApi";
+import axios from "axios";
 
 const { Option } = Select;
 
 const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const [auctionMethods, setAuctionMethods] = useState([]);
+  const [koiVarieties, setKoiVarieties] = useState([]);
+
+
   //fetch auction methods
   const fetchAuctionMethods = async () => {
     try {
@@ -25,6 +29,28 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
       message.error(error.message);
     }
   };
+  const fetchKoiVarieties = async () => {
+    try {
+      const response = await axios.get(
+        "https://66f961f6afc569e13a989d9d.mockapi.io/KOi"
+      );
+      setKoiVarieties(response.data);
+      
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+    // Transform the API data for Select options
+    const koiOptions = useMemo(() => {
+      return koiVarieties.map((koi) => ({
+        value: koi.variety,
+        label: koi.variety,
+      }));
+    }, [koiVarieties]);
+    useEffect(() => {
+      fetchKoiVarieties();
+    }, []);
 
   useEffect(() => {
     fetchAuctionMethods();
@@ -94,7 +120,18 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
         name="variety"
         rules={[{ required: true, message: "Please enter the variety" }]}
       >
-        <Input placeholder="Enter variety" />
+        <Select
+          showSearch
+          style={{ width: "100%" }}
+          placeholder="Search to Select"
+          optionFilterProp="label"
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? "")
+              .toLowerCase()
+              .localeCompare((optionB?.label ?? "").toLowerCase())
+          }
+          options={koiOptions}
+        />
       </Form.Item>
 
       {/* Size và Weight */}
