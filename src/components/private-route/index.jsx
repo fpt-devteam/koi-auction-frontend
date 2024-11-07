@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Loading from '../loading';
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user); 
   //get url path
   const location = useLocation();
 
@@ -20,8 +20,13 @@ const PrivateRoute = ({ children, allowedRoles }) => {
 
   // Kiểm tra roleId của user
   if (!loading && !allowedRoles.includes(user.UserRoleId)) {
-    if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/' 
-      || location.pathname == '/unauthorized') {
+    // Nếu user đã đăng nhập và có UserRoleId > 1, luôn chuyển đến /management
+    // if (user.UserRoleId > 1 && location.pathname === '/') {
+    //   return <Navigate to="/management" />;
+    // }
+
+    if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/' 
+      || location.pathname === '/unauthorized') {
       switch (user.UserRoleId) {
         case 1:
           return <Navigate to="/" />;
@@ -29,7 +34,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
           return <Navigate to="/management" />;
       }
     }
-    return <Navigate to="/unauthorized" />; // Hoặc trang thông báo quyền truy cập bị từ chối
+    return <Navigate to="/unauthorized" />;
   }
 
   // Nếu tất cả điều kiện đều đạt, render component con (children)

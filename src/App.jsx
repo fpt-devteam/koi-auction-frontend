@@ -30,6 +30,7 @@ import UnauthorizedPage from "./pages/unauthorized-page";
 import PolicyPage from "./pages/policy-page";
 import TermPage from "./pages/term-page";
 import DashBoardPage from "./pages/admin-dashboard-page";
+import NotFoundPage from "./pages/not-found-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,27 +44,18 @@ function App() {
     {
       path: "/",
       element: (
-        <PrivateRoute allowedRoles={[0, 1]}>
           <AppLayout />
-        </PrivateRoute>
       ),
       children: [
         { path: "", element: <HomePage /> },
         { path: "/auction-detail/:auctionId", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
-        { path: "/profile", element: <ProfileFormPage /> },
-        { path: "/wallet", element: <WalletPage /> },
         { path: "/policy", element: <PolicyPage /> },
         { path: "/term", element: <TermPage /> },
         {
           path: "/auction-lot-detail/:auctionLotId",
           element: <AuctionLotDetailPage />,
         },
-        {
-          path: "/order",
-          element: <OrderStatusPage />,
-        },
-        { path: "/payment-callback", element: <PaymentCallBackPage /> },
         { path: "/about", element: <AboutPage /> },
       ],
     },
@@ -77,6 +69,23 @@ function App() {
       children: [
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+      ],
+    },
+    {
+      path: "/",
+      element: (
+        <PrivateRoute allowedRoles={[1,2,3,4]}>
+          <AppLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/profile", element: <ProfileFormPage /> },
+        { path: "/wallet", element: <WalletPage /> },
+        {
+          path: "/order",
+          element: <OrderStatusPage />,
+        },
+        { path: "/payment-callback", element: <PaymentCallBackPage /> },
       ],
     },
     {
@@ -116,7 +125,7 @@ function App() {
       ],
     },
     {
-      path: "/admin",
+      path: "/management",
       element: (
         <PrivateRoute allowedRoles={[4]}>
           <MngLayout />
@@ -124,47 +133,28 @@ function App() {
       ),
       children: [
         {
-          path: "/admin/management/user-list",
+          path: "/management/user-list",
           element: <UserList number={1} />,
         },
         {
-          path: "/admin/management/breeder-list",
+          path: "/management/breeder-list",
           element: <UserList number={2} />,
         },
         {
-          path: "/admin/management/staff-list",
+          path: "/management/staff-list",
           element: <UserList number={3} />,
         },
-        { path: "/admin/management/user-detail", element: <UserDetail /> },
-      ],
-    },
-    {
-      path: "/admin",
-      element: (
-        <PrivateRoute allowedRoles={[4]}>
-          <MngLayout />
-        </PrivateRoute>
-      ),
-      children: [
-        {
-          path: "/admin/management/user-list",
-          element: <UserList number={1} />,
-        },
-        {
-          path: "/admin/management/breeder-list",
-          element: <UserList number={2} />,
-        },
-        {
-          path: "/admin/management/staff-list",
-          element: <UserList number={3} />,
-        },
-        { path: "/admin/management/user-detail", element: <UserDetail /> },
+        { path: "/management/user-detail", element: <UserDetail /> },
       ],
     },
     {
       path: "/unauthorized",
       element: <UnauthorizedPage />,
     },
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    }
   ]);
 
   return <RouterProvider router={router} />;
