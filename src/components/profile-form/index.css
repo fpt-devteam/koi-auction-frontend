@@ -33,3 +33,20 @@
 .ant-form-item-label>label {
     font-weight: 600;
 }
+
+/* Style for disabled inputs to maintain normal opacity */
+.ant-input[disabled],
+.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-input-disabled {
+  color: rgba(0, 0, 0, 0.88) !important;  /* Normal text color */
+  background-color: #ffffff !important;    /* White background */
+  cursor: not-allowed;
+  opacity: 1 !important;                   /* Full opacity */
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.88) !important; /* For Safari */
+}
+
+/* Optional: Remove the disabled input border style if you want */
+.ant-input[disabled],
+.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: #d9d9d9 !important;
+}

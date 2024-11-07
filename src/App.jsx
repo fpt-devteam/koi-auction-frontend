@@ -96,6 +96,8 @@ function App() {
         </PrivateRoute>
       ),
       children: [
+        { path: "/management/your-profile", element: <ProfileFormPage /> },
+        { path: "/management/wallet", element: <WalletPage /> },
         { path: "/management/lots", element: <LotManagementPage /> },
         { path: "/management", element: <LotManagementPage /> },
         {

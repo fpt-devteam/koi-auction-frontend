@@ -76,9 +76,9 @@ function MngHeader() {
             items,
             onClick: ({ key }) => {
               if (key === "2") {
-                handleNavigation("/profile");
+                handleNavigation("/management/your-profile");
               } else if (key === "3") {
-                handleNavigation("/wallet");
+                handleNavigation("/management/wallet");
               }
             },
           }}
