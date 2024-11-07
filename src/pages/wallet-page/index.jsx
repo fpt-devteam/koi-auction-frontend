@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Card, Space } from "antd";
+import { Card, Space, Spin } from "antd";
 import YourWallet from "../../components/your-wallet";
 import TransactionList from "../../components/transaction-list";
 import paymentApi from "../../config/paymentApi";
+import { useSelector } from "react-redux";
 
 const WalletPage = () => {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [seed, setSeed] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const { user } = useSelector((store) => store.user);
+
+  const handleRefresh = () => {
+    setSeed(seed + 1);
+  };
 
   const fetchBalance = async () => {
     try {
@@ -22,10 +30,11 @@ const WalletPage = () => {
       const response = await paymentApi.get("/get-transaction-history");
       const formattedTransactions = response.data.map(trans => ({
         key: trans.TransId,
-        status: trans.StatusId === 1 ? "Pending" : "Completed",
+        status: trans.Status,
         transId: trans.TransId,
         balanceAfter: trans.BalanceAfter,
         amount: trans.Amount,
+        // walletId: trans.WalletId,
       }));
       setTransactions(formattedTransactions);
     } catch (error) {
@@ -34,21 +43,27 @@ const WalletPage = () => {
   };
 
   useEffect(() => {
-    fetchBalance();
-    fetchTransactions();
-  }, []);
+    if (user) {
+      fetchBalance();
+      fetchTransactions();
+      setLoading(false);
+    }
+  }, [user, seed]);
 
-  return (
+  return loading ? (
+    <Spin />
+  ) : (
     <Space
+      key={seed}
       direction="vertical"
       size="large"
       style={{ display: "flex", padding: "24px" }}
     >
       <Card>
-        <YourWallet balance={balance} />
+        <YourWallet balance={balance} refresh={handleRefresh} user={user} />
       </Card>
       <Card>
-        <TransactionList transactions={transactions} />
+        <TransactionList transactions={transactions} user={user} />
       </Card>
     </Space>
   );

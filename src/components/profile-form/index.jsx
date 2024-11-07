@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
-  Col,
-  Row,
-  Card,
-  Form,
-  Input,
-  Select,
-  Button,
-  message,
-  DatePicker,
-  Image,
-  Dropdown,
+    Col,
+    Row,
+    Card,
+    Form,
+    Input,
+    Select,
+    Button,
+    message,
+    Image,
+    Spin,
+    Modal,
 } from "antd";
-import { Col, Row, Card, Form, Input, Select, Button, message, Image, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
 import userApi from "../../config/userApi";
@@ -20,98 +19,7 @@ import "./index.css";
 
 const { Option } = Select;
 import "./index.css";
-const DATE_FORMAT = "YYYY-MM-DD",
-  TIME_FORMAT = "HH:mm";
-const imageExample =
-  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
-const provinceData = [
-  {
-    id: 1,
-    name: "Hanoi",
-    cities: [
-      {
-        id: 101,
-        name: "Ba Dinh",
-        wards: [
-          { id: 1001, name: "Phuc Xa" },
-          { id: 1002, name: "Truc Bach" },
-          { id: 1003, name: "Vinh Phuc" },
-        ],
-      },
-      {
-        id: 102,
-        name: "Hoan Kiem",
-        wards: [
-          { id: 1004, name: "Hang Buom" },
-          { id: 1005, name: "Hang Dao" },
-          { id: 1006, name: "Dong Xuan" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Ho Chi Minh City",
-    cities: [
-      {
-        id: 201,
-        name: "District 1",
-        wards: [
-          { id: 2001, name: "Ben Nghe" },
-          { id: 2002, name: "Ben Thanh" },
-          { id: 2003, name: "Da Kao" },
-        ],
-      },
-      {
-        id: 202,
-        name: "District 2",
-        wards: [
-          { id: 2004, name: "Thao Dien" },
-          { id: 2005, name: "An Phu" },
-          { id: 2006, name: "Binh An" },
-        ],
-      },
-    ],
-  },
-];
-export default function GeneralInfoForm({ user, refresh }) {
-  const [formVariable] = useForm();
-  const [provinceList] = useState(provinceData); // Don't need to set this state
-  const [cityList, setCityList] = useState([]);
-  const [wardList, setWardList] = useState([]);
-  const [avatarUrl, setAvatarUrl] = useState(imageExample);
-
-  const onFinish = (values) => {
-    message.success("Form submitted successfully!");
-    console.log(values);
-    handleSubmit(values);
-  };
-
-  //call Api get
-  //
-  useEffect(() => {
-    if (user) {
-      formVariable.setFieldsValue({
-        firstName: user.FirstName,
-        lastName: user.LastName,
-        email: user.Email,
-        phone: user.Phone,
-        // ward: user.Ward,
-        // city: user.City,
-        // province: user.Province,
-      });
-    }
-  }, [user, formVariable]);
-  useEffect(() => {
-    console.log(cityList);
-  }, [cityList]);
-  useEffect(() => {
-    console.log(wardList);
-  }, [wardList]);
-  const handleSubmit = (values) => {
-    console.log("Submitting form with values:", values);
-    // Add your API call here
-  };
+import ChangePasswordForm from "../change-password-form";
 const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
 export default function GeneralInfoForm({ user, refresh }) {
@@ -123,6 +31,7 @@ export default function GeneralInfoForm({ user, refresh }) {
     const [wardList, setWardList] = useState([]);
     const [provinceId, setProvinceId] = useState(null);
     const [districtId, setDistrictId] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
         if (user) {
             initializeFormData();
@@ -147,7 +56,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                 fetchDistricts(user.ProvinceCode),
                 fetchWards(user.DistrictCode),
             ]);
-
+            console.log(provinces, districts, wards);
             setProvinceList(provinces);
             setDistrictList(districts);
             setWardList(wards);
@@ -241,14 +150,16 @@ export default function GeneralInfoForm({ user, refresh }) {
     ) : (
         <>
             <div className="image-input">
-                <Image
-                    className="image-avatar"
-                    alt="Avatar"
-                    width={300}
-                    height={300}
-                    preview={false}
-                    src={imageExample}
-                />
+                <figure>
+                    <Image
+                        className="image-avatar"
+                        alt="Avatar"
+                        width={300}
+                        height={300}
+                        preview={false}
+                        src={imageExample}
+                    />
+                </figure>
                 <br />
             </div>
             <Card size="small" className="card" bordered={false} style={{ width: 700 }}>
@@ -338,12 +249,25 @@ export default function GeneralInfoForm({ user, refresh }) {
                     </Row>
 
                     <Row gutter={16}>
-                        <Col span={12}>
+                        <Col span={5}>
+                            <a onClick={() => setIsModalVisible(true)}>
+                                Change Password
+                            </a>
+                            <Modal
+                                footer={null}
+                                open={isModalVisible}
+                                onCancel={() => setIsModalVisible(false)}
+                                style={{ width: "fit-content", height: "fit-content" }}
+                            >
+                                <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
+                            </Modal>
+                        </Col>
+                        <Col span={10}>
                             <Button type="primary" onClick={handleSubmit}>
                                 Save All
                             </Button>
                         </Col>
-                        <Col span={12}>
+                        <Col span={9}>
                             <Button type="primary" onClick={refresh}>
                                 Reset
                             </Button>
