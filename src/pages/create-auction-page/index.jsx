@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 // import styled from "styled-components";
-import {
-  message,
-} from "antd";
+import { message } from "antd";
 import useFetchLots from "../../hooks/useFetchLots";
 import AuctionForm from "../../components/auction-form";
 import lotApi from "../../config/lotApi";
-
 
 export default function CreateAuctionPage() {
   const { lots, refetch } = useFetchLots(2); //get lot list
@@ -17,25 +14,30 @@ export default function CreateAuctionPage() {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     const seconds = 0;
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMinutes = String(remainingMinutes).padStart(2, '0');
-    const formattedSeconds = String(seconds).padStart(2, '0');
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(remainingMinutes).padStart(2, "0");
+    const formattedSeconds = String(seconds).padStart(2, "0");
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
   const handleCreate = async (auctionData, atoiList) => {
     try {
       const response = await lotApi.post("auctions", auctionData);
+      console.log("response", response);
       let cnt = 0;
       let newAuctionLotList = atoiList.map(
         (item) =>
-        (item = {
-          auctionId: response.data.auctionId,
-          auctionLotId: item.lotId,
-          orderInAuction: ++cnt,
-          duration: convertToTimeFormat(item.duration),
-          stepPercent: item.stepPercent,
-        })
+          (item = {
+            // auctionId: 5,
+            auctionId: response.data.auctionId,
+            auctionLotId: item.lotId,
+            orderInAuction: ++cnt,
+            duration: convertToTimeFormat(item.duration),
+            stepPercent: item.stepPercent,
+          })
       );
+      console.log(auctionData);
+      console.log("list gui di", newAuctionLotList);
+
       const auctionLotRespone = await lotApi.post(
         "auction-lots/listAuctionLot",
         newAuctionLotList
@@ -51,9 +53,18 @@ export default function CreateAuctionPage() {
     setSeed(Math.random());
     refetch();
   };
-  return <>
-    <AuctionForm key={seed} auctionLots={[]} approvedLots={lots} onSubmit={handleCreate} mode="Create" handleReset={handleReset} />
-  </>
+  return (
+    <>
+      <AuctionForm
+        key={seed}
+        auctionLots={[]}
+        approvedLots={lots}
+        onSubmit={handleCreate}
+        mode="Create"
+        handleReset={handleReset}
+      />
+    </>
+  );
 }
 
 /*

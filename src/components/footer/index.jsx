@@ -12,41 +12,80 @@ const Footer = () => {
         <Row gutter={[32, 32]} justify="space-between" align="top">
           <Col xs={24} sm={12} md={8} lg={6} className="footer-section">
             <div className="footer-logo">
-              <Logo width={80} height={80} />
+              <Logo width={48} height={48} />
               <h1>Koi Auction</h1>
             </div>
-            <p>Bringing the beauty of Koi to your pond through our premium auctions.</p>
+            <p>
+              Bringing the beauty of Koi to your pond through our premium
+              auctions.
+            </p>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} className="footer-section">
-            <h3>Company</h3>
+          <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
+            <h3>Navigation</h3>
             <ul>
-              <li>About Us</li>
-              <li>Legal Information</li>
-              <li onClick={() => navigate("/term")}>Terms</li>
-              <li onClick={() => navigate("/policy")}>Policy</li>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/auction-listy">Auctions</a>
+              </li>
+              <li>
+                <a href="/about">About</a>
+              </li>
             </ul>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} className="footer-section">
-            <h3>Help Center</h3>
+          <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
+            <h3>Policy</h3>
             <ul>
-              <li>Why Choose Us</li>
-              <li>FAQs</li>
-              <li>Buyer's Guide</li>
-              <li>Seller's Guide</li>
-
+              <li>
+                <a href="/policy">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/term">Terms and Conditions</a>
+              </li>
             </ul>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} className="footer-section">
+          <Col xs={24} sm={12} md={6} lg={4} className="footer-section">
+            <h3>Account</h3>
+            <ul>
+              <li>
+                <a href="/login">Login</a>
+              </li>
+              <li>
+                <a href="/register">Register</a>
+              </li>
+            </ul>
+          </Col>
+          <Col
+            xs={24}
+            sm={12}
+            md={6}
+            lg={4}
+            className="footer-section contact-info"
+          >
             <h3>Contact Info</h3>
             <ul>
-              <li>📞 (123) 456-7890</li>
-              <li>✉️ info@koiauction.com</li>
-              <li>🏠 100 Smart Street, LA, USA</li>
+              <li>
+                <a href="tel:(123) 456-7890">
+                  <span className="icon">📞</span>
+                  (123) 456-7890
+                </a>
+              </li>
+              <li>
+                <a href="mailto:info@koiauction.com">
+                  <span className="icon">✉️</span>
+                  info@koiauction.com
+                </a>
+              </li>
+              <li>
+                <span className="icon">🏠</span>
+                <span>100 Smart Street, LA, USA</span>
+              </li>
             </ul>
           </Col>
         </Row>
         <div className="footer-bottom">
-          <p>&copy; 2023 Koi Auction. All rights reserved.</p>
+          <p>© 2023 Koi Auction. All rights reserved.</p>
         </div>
       </div>
     </footer>

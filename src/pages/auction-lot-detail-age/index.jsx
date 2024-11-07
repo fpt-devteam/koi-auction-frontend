@@ -9,7 +9,6 @@ import BidHistoryTable from "../../components/bid-history-table";
 import BackButton from "../../components/back-button";
 import { useEffect, useState } from "react";
 import lotApi from "../../config/lotApi";
-import StatusTag from "../../components/status-tag";
 import AuctionMethod from "../../components/auction-method";
 const { Text } = Typography;
 import * as signalR from "@microsoft/signalr";
@@ -17,38 +16,38 @@ import PriceDisplayComponent from "../../components/price-display";
 import BidForm from "../../components/bid-form";
 import CurrentBid from "../../components/current-bid";
 import PriceBuy from "../../components/price-buy";
-import { ref } from "firebase/storage";
 import WinnerPrice from "../../components/winner-price";
+import { placeBid } from "../../helpers/signalRHelper";
+import useSignalRConnection from "../../hooks/useSignalRConnection";
 
 const AuctionLotDetailPage = () => {
+  const { user } = useSelector((state) => state.user);
+  const userId = user?.UserId || null;
+
   const { auctionLotId } = useParams();
+
   const [auctionLot, setAuctionLot] = useState();
   const [connection, setConnection] = useState(null);
-  const [currentBid, setCurrentBid] = useState(null);
-  const [currentPrice, setCurrentPrice] = useState(null);
   const [bidLogs, setBidLogs] = useState([]);
   const [predictEndTime, setPredictEndTime] = useState(null);
-  const [refetch, setRefetch] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [priceDesc, setPriceDesc] = useState(null);
+  
 
-  const JOIN_AUCTION_LOT = "JoinAuctionLot";
-  const RECEIVE_START_AUCTION_LOT = "ReceiveStartAuctionLot";
-  const RECEIVE_END_AUCTION_LOT = "ReceiveEndAuctionLot";
-  const RECEIVE_EXCEPTION_MESSAGE = "ReceiveExceptionMessage";
-  const RECEIVE_PLACE_BID = "ReceivePlaceBid";
-  const RECEIVE_PREDICT_END_TIME = "ReceivePredictEndTime";
-  const PLACE_BID = "PlaceBid";
-  const RECEIVE_WINNER = "ReceiveWinner";
-  const RECEIVE_FETCH_BID_LOG = "ReceiveFetchBidLog";
-
-  const fetchAuctionLotById = async () => {
+  const fetchAuctionLot = async () => {
     try {
       const response = await lotApi.get(`auction-lots/${auctionLotId}`);
       const fetchedAuctionLot = response.data;
+      console.log("fetchedAuctionLot", fetchedAuctionLot);
       setAuctionLot(fetchedAuctionLot);
     } catch (error) {
-      message.error(error.message);
+      // message.error(error.message);
+      console.log("error", error.response.data);
     }
   };
+  useEffect(() => {
+    fetchAuctionLot();
+  }, [auctionLotId]);
 
   const fetchBigLog = async () => {
     try {
@@ -56,146 +55,34 @@ const AuctionLotDetailPage = () => {
       const fetchedBidLogs = response.data;
       setBidLogs(fetchedBidLogs);
     } catch (error) {
-      message.error(error.message);
+      // message.error(error.message);
+      console.log("error", error);
     }
   };
-
-  const handleBid = (bidAmount) => {
-    const createBidLogDto = {
-      BidderId: parseInt(userId),
-      AuctionLotId: parseInt(auctionLotId),
-      BidAmount: parseFloat(parseFloat(bidAmount).toFixed(2)),
-    };
-    console.log("clg: createBidLogDto", createBidLogDto);
-    connection.invoke(PLACE_BID, createBidLogDto);
-    setRefetch(!refetch);
-    message.success("Bid successfully!", 5);
-  };
-
-  const { user } = useSelector((state) => state.user);
-  const userId = user?.UserId || null;
-
-  // singalR
-  useEffect(() => {
-    if (auctionLotId == null) return;
-    // Khởi tạo kết nối SignalR
-    const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:3002/hub") // Đảm bảo URL đúng
-      .withAutomaticReconnect()
-      .build();
-
-    newConnection
-      .start()
-      .then(() => {
-        console.log("Connected to SignalR");
-        // Gọi hàm JoinAuctionLot từ server bằng invoke
-        newConnection
-          .invoke(JOIN_AUCTION_LOT, {
-            UserId: userId ?? parseInt(userId),
-            AuctionLotId: parseInt(auctionLotId),
-          })
-          .then(() => console.log("CLG: Joined auction lot" + auctionLotId))
-          .catch((err) => console.error("Error invoking JoinAuctionLot:", err));
-
-        newConnection.on(
-          RECEIVE_START_AUCTION_LOT,
-          function (auctionLotBidDto) {
-            console.log("Start auction lot");
-            // alert for start auction
-            setRefetch(!refetch);
-            fetchAuctionLotById();
-            fetchBigLog();
-            setPredictEndTime(auctionLotBidDto.PredictEndTime);
-            Modal.confirm({
-              title: "The auction has started!",
-              content: `The auction has started! The starting price is ${auctionLotBidDto.StartingPrice.toLocaleString()} VND`,
-              okText: "Ok",
-              onOk() {
-                setRefetch(!refetch);
-                fetchAuctionLotById();
-                fetchBigLog();
-              },
-              onCancel() {
-                console.log("Modal closed without redirection");
-              },
-            });
-          }
-        );
-
-        newConnection.on(RECEIVE_END_AUCTION_LOT, function (winner) {
-          console.log("winner: ", winner);
-          setRefetch(!refetch);
-          message.success("The auction lot has ended!", 5);
-        });
-
-        newConnection.on(
-          RECEIVE_EXCEPTION_MESSAGE,
-          function (exceptionMessage) {
-            message.error(exceptionMessage);
-          }
-        );
-
-        newConnection.on(RECEIVE_PLACE_BID, function (bid) {
-          setCurrentBid(bid);
-          fetchBigLog();
-          console.log("Receive current bid: ", bid);
-        });
-
-        newConnection.on(RECEIVE_PREDICT_END_TIME, function (predictEndTime) {
-          setPredictEndTime(predictEndTime);
-          console.log("Receive remaining time: ", predictEndTime);
-        });
-
-        newConnection.on(RECEIVE_WINNER, function (winner) {
-          console.log("Receive winner: ", winner);
-          // Show a modal for the winner
-          Modal.confirm({
-            title: "Congratulations!",
-            content: `The winner is ${
-              winner.BidderName
-            } with the price of ${winner.FinalPrice.toLocaleString()} VND`,
-            okText: "Ok",
-            onOk() {
-              setRefetch(!refetch);
-              fetchAuctionLotById();
-              fetchBigLog();
-            },
-            onCancel() {
-              console.log("Modal closed without redirection");
-            },
-          });
-        });
-
-        newConnection.onclose(RECEIVE_FETCH_BID_LOG, function () {
-          setRefetch(!refetch);
-        });
-      })
-      .catch((err) => console.log("Error while starting connection: ", err));
-
-    setConnection(newConnection);
-
-    // Cleanup: Dừng kết nối khi component bị unmount
-    return () => {
-      if (newConnection) {
-        newConnection
-          .stop()
-          .then(() => console.log("SignalR connection stopped"))
-          .catch((err) =>
-            console.error("Error while stopping connection: ", err)
-          );
-      }
-    };
-  }, [auctionLotId, userId]); // Dependencies: auctionLotId, userId
-
-  // get auctionLot
-  useEffect(() => {
-    fetchAuctionLotById();
-  }, [auctionLotId, refetch]); // Dependencies: auctionLotId, auctionLotStatus
-
-  // get bid logs
   useEffect(() => {
     fetchBigLog();
-  }, [auctionLotId, refetch]); // Dependencies: auctionLotId
+  }, [auctionLotId]);
+
+  const fetchWinner = async () => {
+    try {
+      const response = await lotApi.get(`bid-log/highest-bid/${auctionLotId}`);
+      const fetchedData = response.data;
+      console.log("fetchedWinner", fetchedData);
+      setWinner(fetchedData);
+    } catch (error) {
+      // message.error(error.message);
+      console.log("error", error.response.data);
+    }
+  };
+  useEffect(() => {
+    fetchWinner();
+  }, [auctionLotId]);
+
+  const handleBid = (bidAmount) => {
+    placeBid(connection, userId, auctionLotId, bidAmount);
+  }; 
+
+  useSignalRConnection(auctionLotId, userId, setPredictEndTime, setWinner, setPriceDesc, setConnection, fetchAuctionLot, fetchBigLog);
 
   if (!auctionLot) {
     return <Spin />;
@@ -214,16 +101,13 @@ const AuctionLotDetailPage = () => {
     },
     auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName },
   } = auctionLot;
+  const stepPrice = stepPercent != null ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100 : stepPercent;
 
-  const farmName = breederDetailDto ? breederDetailDto.farmName : "Unknown";
-  const stepPrice =
-    stepPercent != null
-      ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100
-      : stepPercent;
   return (
     <div style={{ padding: "20px 120px" }}>
-      {/* Auction Lot Detail */}
+      {/* Row 1 - Auction Lot Detail */}
       <Row gutter={(0, 20)}>
+        {/* Koi Media */}
         <Col span={11}>
           {/* Koi Media */}
           <KoiMedia media={auctionLot.lotDto.koiFishDto.koiMedia} />
@@ -242,7 +126,10 @@ const AuctionLotDetailPage = () => {
               {variety + " #" + sku}
             </Text>
           </div>
+            
+          {/* Info */}
           <Row gutter={(0, 20)}>
+            {/* Koi Info */}
             <Col span={8}>
               {/* Koi Info */}
               <KoiInfo
@@ -250,6 +137,8 @@ const AuctionLotDetailPage = () => {
                 breederDetailDto={breederDetailDto}
               />
             </Col>
+
+            {/* Starting Price || Step Price || Auction Method */}
             <Col span={16}>
               {/* Starting price*/}
               {auctionMethodId != 2 && (
@@ -271,22 +160,23 @@ const AuctionLotDetailPage = () => {
               <AuctionMethod auctionMethod={auctionLot.lotDto.auctionMethod} />
             </Col>
           </Row>
+
+          {/* Winner Bid */}
           <Row gutter={(0, 20)}>
             {/* Current Bid */}
             <Col span={24}>
+            {/* Current Bid */}
               {auctionMethodId == 3 && auctionLotStatusId == 3 && (
-                <CurrentBid currentBid={currentBid} />
-              )}
-
-              {auctionLotStatusId == 4 && (
-                <WinnerPrice auctionLotId={auctionLotId} />
+                <CurrentBid currentBid={winner != null ? winner.bidAmount : null} />
               )}
             </Col>
           </Row>
         </Col>
       </Row>
 
+      {/* Row 2 Time countdown and Bid Form */}
       <Row gutter={(0, 20)}>
+        {/* Time countdown */}
         <Col span={11}>
           {/* Time countdown */}
           <Countdown
@@ -296,30 +186,39 @@ const AuctionLotDetailPage = () => {
             statusName={auctionLotStatusName}
           />
         </Col>
+
+        {/* Bid Form || Price Buy || Suggest Login || Winner Price */}
         <Col span={13}>
           {/* Bid Form */}
-          {userId &&
-            (auctionMethodId == 3 || auctionMethodId == 2) &&
-            auctionLotStatusId == 3 && (
-              <BidForm currentBid={currentBid} onBidSubmit={handleBid} />
+          {userId && (auctionMethodId == 3 || auctionMethodId == 2) && auctionLotStatusId == 3 && (
+              <BidForm currentBid={winner != null ? winner.bidAmount : null} onBidSubmit={handleBid} />
             )}
 
-          {/* Price Buy */}
-          {userId &&
-            (auctionMethodId == 1 || auctionMethodId == 4) &&
-            auctionLotStatusId == 3 && (
+          {/* Price Buy Method 1*/}
+          {userId && auctionMethodId == 1 && auctionLotStatusId == 3 && (
               <PriceBuy price={startingPrice} onBuySubmit={handleBid} />
-            )}
+          )}
+
+          {/* Price Buy Method 4*/}
+          {userId && auctionMethodId == 4 && auctionLotStatusId == 3 && (
+              <PriceBuy price={priceDesc} onBuySubmit={handleBid} />
+          )}
 
           {/* Suggest Login */}
           {!userId && <SuggestLogin />}
+
+          {/* Winner Price */}
+          {userId && auctionLotStatusId == 4 && (
+            <WinnerPrice auctionLotId={auctionLotId} />
+          )}
         </Col>
       </Row>
 
+      {/* Row 3 Bid History */}
       <Row gutter={(0, 20)}>
         <Col span={24}>
           {/* Bid History Table */}
-          {(auctionMethodId == 1 || auctionMethodId == 3) && (
+          {(auctionMethodId == 1 || auctionMethodId == 3 || auctionLotStatusId == 4) && (
             <BidHistoryTable data={bidLogs} />
           )}
           <BackButton />

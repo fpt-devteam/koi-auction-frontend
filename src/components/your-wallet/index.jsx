@@ -90,7 +90,7 @@ function YourWallet({ balance, refresh, user }) {
           </Button>
         </Space>
         <Title level={1} style={{ margin: 0 }}>
-          {balance} VND
+          {balance.toLocaleString()} VND
         </Title>
       </Space>
 
