@@ -28,15 +28,16 @@ const WalletPage = () => {
   const fetchTransactions = async () => {
     try {
       const response = await paymentApi.get("/get-transaction-history");
-      const formattedTransactions = response.data.map(trans => ({
+      console.log("hihi:" + response.data);
+      const formattedTransactions = response.data
+      .sort(trans => trans.TransId)
+      .map(trans => ({
         key: trans.TransId,
         status: trans.Status,
         transId: trans.TransId,
-        balanceAfter: trans.BalanceAfter,
+        balanceBefore: trans.BalanceBefore,
         amount: trans.Amount,
         transType: trans.TransType,
-
-        // walletId: trans.WalletId,
       }));
       console.log("formattedTransactions", formattedTransactions)
       setTransactions(formattedTransactions);
@@ -66,7 +67,7 @@ const WalletPage = () => {
         <YourWallet balance={balance} refresh={handleRefresh} user={user} />
       </Card>
       <Card>
-        <TransactionList transactions={transactions} user={user} />
+        <TransactionList transactions={transactions} />
       </Card>
     </Space>
   );

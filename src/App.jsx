@@ -32,6 +32,7 @@ import Roles from './helpers/role';
 import UserOrderStatusPage from './pages/user-order-status-page';
 import StaffWithdrawStatusPage from './pages/staff-withdraw-page';
 import StaffOrderStatusPage from './pages/staff-delivery-lot-page';
+import NotFoundPage from './pages/not-found-page';
 
 function App() {
   const dispatch = useDispatch();
@@ -235,106 +236,8 @@ function App() {
         { path: "profile", element: <ProfileFormPage /> },
       ],
     },
+    { path: "*", element: <NotFoundPage />}
 
-    // {
-    //   path: "/",
-    //   element: (
-    //     <PrivateRoute allowedRoles={[0, 1]}>
-    //       <AppLayout />
-    //     </PrivateRoute>
-    //   ),
-    //   children: [
-    //     { path: "", element: <HomePage /> },
-    //     { path: "/auction-detail/:auctionId", element: <AuctionDetailPage /> },
-    //     { path: "/auction-list", element: <AuctionList /> },
-    //     { path: "/profile", element: <ProfileFormPage /> },
-    //     { path: "/wallet", element: <WalletPage /> },
-    //     { path: "/policy", element: <PolicyPage /> },
-    //     { path: "/term", element: <TermPage /> },
-    //     {
-    //       path: "/auction-lot-detail/:auctionLotId",
-    //       element: <AuctionLotDetailPage />,
-    //     },
-    //     {
-    //       path: "/order",
-    //       element: <OrderStatusPage />,
-    //     },
-    //     { path: "/payment-callback", element: <PaymentCallBackPage /> },
-    //     { path: "/about", element: <AboutPage /> },
-    //     { path: "/breeder", element: <BreederPage /> },
-    //     { path: "/breeder-detail/:breederId", element: <BreederDetailPage /> },
-    //   ],
-    // },
-    // // {
-    // //   path: "/",
-    // //   element: (
-    // //     <PrivateRoute allowedRoles={[0]}>
-    // //       <AppLayout />
-    // //     </PrivateRoute>
-    // //   ),
-    // //   children: [
-    // //     { path: "/login", element: <Login /> },
-    // //     { path: "/register", element: <Register /> },
-    // //   ],
-    // // },
-    // {
-    //   path: "/management",
-    //   element: (
-    //     <PrivateRoute allowedRoles={[2, 3, 4]}>
-    //       <MngLayout />
-    //     </PrivateRoute>
-    //   ),
-    //   children: [
-    //     { path: "/management/lots", element: <LotManagementPage /> },
-    //     {
-    //       path: "/management/create-lot-request",
-    //       element: <CreateLotPage />,
-    //     },
-    //     {
-    //       path: "/management/create-auction-request",
-    //       element: <CreateAuctionPage />,
-    //     },
-    //     {
-    //       path: "/management/update-auction-request",
-    //       element: <UpdateAuctionPage />,
-    //     },
-    //     {
-    //       path: "/management/auction",
-    //       element: <AuctionManagementPage />,
-    //     },
-    //     {
-    //       path: "/management/order",
-    //       element: <OrderStatusPage />,
-    //     },
-    //     {
-    //       path: "/management/dashboard",
-    //       element: <DashBoardPage />,
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: "/admin",
-    //   element: (
-    //     <PrivateRoute allowedRoles={[4]}>
-    //       <MngLayout />
-    //     </PrivateRoute>
-    //   ),
-    //   children: [
-    //     {
-    //       path: "/admin/management/user-list",
-    //       element: <UserList number={1} />,
-    //     },
-    //     {
-    //       path: "/admin/management/breeder-list",
-    //       element: <UserList number={2} />,
-    //     },
-    //     {
-    //       path: "/admin/management/staff-list",
-    //       element: <UserList number={3} />,
-    //     },
-    //     { path: "/admin/management/user-detail", element: <UserDetail /> },
-    //   ],
-    // },
   ]);
 
   return <RouterProvider router={router} />;

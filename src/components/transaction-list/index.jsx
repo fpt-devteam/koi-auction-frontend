@@ -27,7 +27,7 @@ const checkStatus = (status) => {
   // }
   return status;
 };
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 const TransactionList = ({ transactions }) => {
   const columns = [
     {
@@ -55,12 +55,13 @@ const TransactionList = ({ transactions }) => {
       render: (amount) => <Text strong>{amount.toLocaleString()} VND</Text>,
     },
     {
-      title: "BALANCE AFTER",
-      dataIndex: "balanceAfter",
-      key: "balanceAfter",
+      title: "BALANCE BEFORE",
+      dataIndex: "balanceBefore",
+      key: "balanceBefore",
       align: "right",
-      render: (balance) => <Text strong>{balance.toLocaleString()} VND</Text>,
+      render: (balanceBefore) => <Text strong>{balanceBefore.toLocaleString()} VND</Text>,
     },
+  
   ];
 
   return (
