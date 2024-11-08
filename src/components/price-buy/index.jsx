@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Input, Button, Row, Col, Card, Modal } from "antd";
 const PriceBuy = ({ onBuySubmit, price }) => {
+  if (!price) {
+    return null;
+  }
   const handleBuySubmit = (price) => () => {
     //are you sure you want to buy this product?
     Modal.confirm({
