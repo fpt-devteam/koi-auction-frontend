@@ -3,11 +3,20 @@ import { Form, Input, Button, message, Col, Row } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import "./index.css";
 import userApi from '../../config/userApi';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../redux/features/userSlice';
 
 const ChangePasswordForm = ({ cancel }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const logoutUser = () => {
+        userApi.post("/logout");
+        dispatch(logout());
+        navigate("/");
+    };
     const onFinish = async (values) => {
         try {
             setLoading(true);
@@ -16,6 +25,7 @@ const ChangePasswordForm = ({ cancel }) => {
             const response = await userApi.patch("/update-password", newPassword);
             console.log(response);
             message.success('Password changed successfully');
+            logoutUser();
             form.resetFields();
         } catch (error) {
             message.error('Failed to change password');

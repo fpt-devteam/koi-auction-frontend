@@ -4,26 +4,28 @@ import "./index.css";
 
 const { Text } = Typography;
 const checkTransType = (transType) => {
-  switch (transType) {
-    case 1:
-      return "Deposit";
-    case 2:
-      return "Withdrawal";
-    case 3:
-      return "Payment";
-    case 4:
-      return "Refund";
-  }
+  // switch (transType) {
+  //   case 1:
+  //     return "Deposit";
+  //   case 2:
+  //     return "Withdrawal";
+  //   case 3:
+  //     return "Payment";
+  //   case 4:
+  //     return "Refund";
+  // }
+  return transType;
 };
 const checkStatus = (status) => {
-  switch (status) {
-    case 1:
-      return "Pending";
-    case 2:
-      return "Success";
-    case 3:
-      return "Failed";
-  }
+  // switch (status) {
+  //   case 1:
+  //     return "Pending";
+  //   case 2:
+  //     return "Success";
+  //   case 3:
+  //     return "Failed";
+  // }
+  return status;
 };
 
 const TransactionList = ({ transactions }) => {
