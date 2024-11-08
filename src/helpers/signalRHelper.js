@@ -32,11 +32,13 @@ export const signalRMess = Object.freeze({
     RECEIVE_PREDICT_END_TIME: "ReceivePredictEndTime",
     RECEIVE_FETCH_BID_LOG: "ReceiveFetchBidLog",
     RECEIVE_FETCH_AUCTION_LOT: "ReceiveFetchAuctionLot",
+    RECEIVE_FETCH_WINNER_PRICE: "ReceiveFetchWinnerPrice",
     RECEIVE_EXCEPTION_MESSAGE: "ReceiveExceptionMessage",
     RECEIVE_START_AUCTION_LOT: "ReceiveStartAuctionLot",
     RECEIVE_END_AUCTION_LOT: "ReceiveEndAuctionLot",
     RECEIVE_PRICE_DESC: "ReceivePriceDesc",
     RECEIVE_SUCCESS_PAYMENT: "ReceiveSuccessPayment",
+    RECEIVE_LOADING: "ReceiveLoading",
 
     JOIN_AUCTION_LOT: "JoinAuctionLot",
     PLACE_BID: "PlaceBid",

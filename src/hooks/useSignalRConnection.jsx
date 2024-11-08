@@ -6,7 +6,8 @@ import { placeBid } from "../helpers/signalRHelper";
 import { signalRMess } from "../helpers/signalRHelper";
 
 const useSignalRConnection = (auctionLotId, userId, setPredictEndTime, setWinner, 
-                                setPriceDesc, setConnection, fetchAuctionLot, fetchBidLog) => {  
+                                setPriceDesc, setConnection, 
+                                fetchAuctionLot, fetchBidLog, fetchSoldLot) => {  
     useEffect(() => {
         if (auctionLotId == null) return;
         
@@ -41,6 +42,7 @@ const useSignalRConnection = (auctionLotId, userId, setPredictEndTime, setWinner
                 });
 
                 newConnection.on(signalRMess.RECEIVE_PRICE_DESC, (priceDesc) => {
+                    console.log(`Price has decreased to ${priceDesc}`);
                     message.success(`Price has decreased to ${priceDesc}`, TIME_MESS);
                     setPriceDesc(priceDesc);
                 });
@@ -54,7 +56,12 @@ const useSignalRConnection = (auctionLotId, userId, setPredictEndTime, setWinner
                     await fetchBidLog();
                 });
 
+                newConnection.on(signalRMess.RECEIVE_FETCH_WINNER_PRICE, async () => {
+                    await fetchSoldLot();
+                });
+
                 newConnection.on(signalRMess.RECEIVE_END_AUCTION_LOT, (winner) => {
+                    message.destroy();
                     setWinner(winner);
                     const mess = winner === null ? "Auction has ended. No winner" : `Auction has ended. Winner is ${winner.bidderId} with bid ${winner.bidAmount}`;
                     message.success(mess, TIME_MESS);
@@ -80,8 +87,10 @@ const useSignalRConnection = (auctionLotId, userId, setPredictEndTime, setWinner
                         ),
                         onOk() {},
                     });
+                });
 
-
+                newConnection.on(signalRMess.RECEIVE_LOADING, () => {
+                    message.loading("Waiting for finding winner...");
                 });
 
                 await joinAuctionLot(newConnection, userId, auctionLotId);

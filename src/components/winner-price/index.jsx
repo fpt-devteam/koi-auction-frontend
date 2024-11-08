@@ -5,31 +5,8 @@ import { Typography } from "antd";
 import { ref } from "firebase/storage";
 
 const { Text } = Typography;
-const WinnerPrice = ({ auctionLotId, refetch }) => {
-  //fetch sold lot of auction lot id
-  const [price, setPrice] = useState(0);
-  const [winner, setWinner] = useState(null);
-  const fetchSoldLot = async () => {
-    try {
-      console.warn(`auctionLotId: ${auctionLotId}`);
-      const response = await lotApi.get(`/sold-lots/${auctionLotId}`);
-      const fetchedSoldLot = response.data;
-      console.warn(`fetchedSoldLot: ${JSON.stringify(fetchedSoldLot)}`);
-      if (fetchedSoldLot) {
-        console.warn(`fetchedSoldLot.finalPrice: ${fetchedSoldLot.FinalPrice}`);
-        setPrice(fetchedSoldLot.finalPrice);
-        setWinner(fetchedSoldLot.winnerId);
-      }
-    } catch (error) {
-      // message.error(error.message);
-      // return;
-    }
-  };
-
-  useEffect(() => {
-    fetchSoldLot();
-  }, [auctionLotId, refetch]);
-
+const WinnerPrice = ({ winnerPrice }) => {
+  console.log("price", winnerPrice);
   return (
     <Card
       style={{
@@ -47,7 +24,7 @@ const WinnerPrice = ({ auctionLotId, refetch }) => {
           Sold Price:{" "}
         </Text>
         <Text strong style={{ fontSize: "1.5rem", color: "red" }}>
-          {price ? `${price.toLocaleString()} VND` : "No Bids Yet"}
+          {winnerPrice ? `${winnerPrice.toLocaleString()} VND` : "No Bids Yet"}
         </Text>
       </div>
     </Card>
