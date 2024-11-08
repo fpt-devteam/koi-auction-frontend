@@ -1,70 +1,118 @@
-import { Upload, Button, message, Form } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Upload, message, Spin, Button } from "antd";
+import { UploadOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
 import uploadToFirebase from "../../utils/upload";
 import { useState } from "react";
 
-// Maximum size for avatar
-const MAX_IMAGE_SIZE_MB = 2; // 2MB for avatar
+const UploadAvatar = ({ value, onChange }) => {
+  const [loading, setLoading] = useState(false);
 
-const UploadAvatar = ({ initData, form, showOnly = false }) => {
-  const [avatar, setAvatar] = useState(initData || null);
-  const fileList = avatar ? [
-    {
-      uid: -1,
-      name: 'Avatar',
-      status: 'done',
-      url: avatar.filePath,
+  const handleBeforeUpload = (file) => {
+    const isImage = file.type.startsWith('image/');
+    if (!isImage) {
+      message.error('You can only upload image files!');
+      return Upload.LIST_IGNORE;
     }
-  ] : [];
-
-  // Validate avatar before upload
-  const handleBeforeUploadImage = (file) => {
-    if (!file.type.startsWith("image/")) {
-      message.error("You can only upload image files!");
-      return false;
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must be smaller than 2MB!');
+      return Upload.LIST_IGNORE;
     }
-    if (file.size / 1024 / 1024 > MAX_IMAGE_SIZE_MB) {
-      message.error(`Image size must be smaller than ${MAX_IMAGE_SIZE_MB}MB!`);
-      return false;
-    }
-    return false; // Prevent default upload behavior
+    return true;
   };
 
-  // Handle file change
-  const handleChange = async ({ fileList }) => {
-    if (fileList.length > 0) {
-      const file = fileList[fileList.length - 1];
-      if (file.originFileObj) {
-        const firebaseUrl = await uploadToFirebase(file.originFileObj);
-        const newAvatar = { filePath: firebaseUrl };
-        form.setFieldsValue({ avatar: newAvatar });
-        setAvatar(newAvatar);
+  const handleChange = async ({ file }) => {
+    if (file.status !== 'uploading') {
+      try {
+        setLoading(true);
+        const firebaseUrl = await uploadToFirebase(file.originFileObj || file);
+        console.log("Uploaded URL:", firebaseUrl);
+        onChange?.(firebaseUrl);
+      } catch (error) {
+        message.error('Upload failed. Please try again.');
+        console.error('Upload error:', error);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      form.setFieldsValue({ avatar: null });
-      setAvatar(null);
     }
   };
+
+  console.log("Current value in UploadAvatar:", value);
 
   return (
-    <Form.Item
-      style={{ marginBottom: "24px" }}
-      name="avatar"
-      rules={[{ required: true, message: "Please upload an avatar" }]}
+    <Upload
+      listType="picture-card"
+      beforeUpload={handleBeforeUpload}
+      onChange={handleChange}
+      showUploadList={false}
+      customRequest={({ onSuccess }) => {
+        onSuccess("ok");
+      }}
     >
-      <Upload
-        beforeUpload={handleBeforeUploadImage}
-        listType="picture-circle"
-        onChange={handleChange}
-        fileList={fileList}
-        showUploadList={{ showRemoveIcon: !showOnly }}
-        maxCount={1}
-      >
-        {!showOnly && (!avatar ? (
-          <Button icon={<UploadOutlined />}>Upload Avatar</Button>
-        ) : null)}
-      </Upload>
-    </Form.Item>
+      {value ? (
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          {loading && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              background: 'rgba(255, 255, 255, 0.8)',
+              borderRadius: '5%',
+              zIndex: 1
+            }}>
+              <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+            </div>
+          )}
+          <Button
+            type="text"
+            icon={<DeleteOutlined />}
+            style={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              background: 'rgba(255, 255, 255, 0.8)',
+              zIndex: 2
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange?.(null);
+            }}
+          />
+          <img
+            src={value}
+            alt="avatar"
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '5%',
+              border: '1px solid #ccc',
+              objectFit: 'cover'
+            }}
+          />
+        </div>
+      ) : (
+        <div style={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%'
+        }}>
+          {loading ? (
+            <LoadingOutlined style={{ fontSize: 30 }} />
+          ) : (
+            <>
+              <UploadOutlined style={{ fontSize: 30 }} />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </>
+          )}
+        </div>
+      )}
+    </Upload>
   );
 };
 

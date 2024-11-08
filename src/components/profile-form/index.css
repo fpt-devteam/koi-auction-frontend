@@ -26,8 +26,18 @@
 }
 
 .image-input {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
+}
+
+.image-input .ant-upload {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.image-input .ant-upload-select {
+    margin: 0 !important;
 }
 
 .ant-form-item-label>label {

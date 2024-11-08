@@ -8,19 +8,19 @@ import {
   Select,
   Button,
   message,
-  Image,
   Spin,
+  Modal,
+  Avatar,
+  Image,
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
 import userApi from "../../config/userApi";
 import "./index.css";
+import { UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
-const DATE_FORMAT = "YYYY-MM-DD",
-  TIME_FORMAT = "HH:mm";
-const imageExample =
-  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+
 
 export default function GeneralInfoForm({ user, refresh }) {
   const [form] = useForm();
@@ -31,8 +31,18 @@ export default function GeneralInfoForm({ user, refresh }) {
   const [wardList, setWardList] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districtId, setDistrictId] = useState(null);
+  
   const [isBreeder, setIsBreeder] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [breederInfo, setBreederInfo] = useState(null);
+  
+  const showModal = () => {
+    setIsOpen(true);
+  };
+  const handleModelOk = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (user) {
@@ -66,6 +76,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         Certificate: response.data.Certificate,
         About: response.data.About,
       });
+      setBreederInfo(response.data);
     } catch (error) {
       console.error("Error fetching breeder data:", error);
       message.error("Failed to load breeder data");
@@ -181,22 +192,35 @@ export default function GeneralInfoForm({ user, refresh }) {
     <Spin />
   ) : (
     <>
-      <div className="image-input">
-        <Image
-          className="image-avatar"
-          alt="Avatar"
-          width={300}
-          height={300}
-          preview={false}
-          src={imageExample}
-        />
-        <br />
-      </div>
       <Card
-        size="small"
+        size="medium"
         className="card"
         bordered={false}
-        style={{ width: 700 }}
+        style={{ width: '900px' }}
+        title={
+          isBreeder ? (
+            <>
+              <Image src={breederInfo?.Certificate} width={"50em"} />
+              <br />
+              <span style={{ fontSize: '34px', fontWeight: 'bold', padding: '20px', color: ' rgb(255, 77, 79)' }}>{breederInfo?.FarmName}</span>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '40px' }}>
+              <Avatar 
+                size={64}
+                icon={<UserOutlined />}
+                src={user?.Avatar}
+                style={{ 
+                  backgroundColor: '#1890ff',
+                  flexShrink: 0
+                }}
+              />
+              <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                {`${user?.FirstName} ${user?.LastName}'s Profile`}
+              </span>
+            </div>
+          )
+        }
       >
         <Form form={form} layout="vertical">
           {isBreeder && (
@@ -285,19 +309,13 @@ export default function GeneralInfoForm({ user, refresh }) {
 
           {isBreeder && (
             <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="Certificate" name="Certificate">
-                  <Input 
-                    placeholder="Enter your Certificate information" 
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
+
+              <Col span={24}>
                 <Form.Item label="About" name="About">
                   <Input.TextArea 
                     placeholder="Enter information about your farm" 
                     disabled={!isEditing}
+                    style={{ height: '10em' }}
                   />
                 </Form.Item>
               </Col>
@@ -358,11 +376,12 @@ export default function GeneralInfoForm({ user, refresh }) {
 
           <Row gutter={16}>
             <Col span={24} style={{ textAlign: 'right' }}>
-              {!isEditing ? (
+              {!isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
                 <Button type="primary" onClick={() => setIsEditing(true)}>
                   Update
                 </Button>
-              ) : (
+              ) }
+              { isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
                 <>
                   <Button 
                     onClick={handleCancel} 
@@ -378,6 +397,20 @@ export default function GeneralInfoForm({ user, refresh }) {
                   </Button>
                 </>
               )}
+              {(user.UserRoleId == 2 || user.UserRoleId == 3) && (
+                <Button type="primary" onClick={showModal}>
+                  Update
+                </Button>
+              )}
+              <Modal
+                title="Contact Information"
+                open={isOpen}
+                onOk={handleModelOk}
+                onCancel={handleModelOk}
+                footer={[
+                  <Button key="submit" onClick={handleModelOk}>OK</Button>
+                ]}
+                ><p>If you want any update, please contact our mail: support@example.com</p></Modal>
             </Col>
           </Row>
         </Form>
