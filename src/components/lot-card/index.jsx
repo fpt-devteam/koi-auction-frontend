@@ -31,7 +31,15 @@ const LotCard = ({ lot, refetch }) => {
 
   return (
     <>
-      <Card title={<div style={{ textAlign: 'left' }}>{`${lot.koiFishDto.variety} #${lot.sku}`}</div>}>
+      <Card
+        style={{
+          //shadow
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          //background color
+          backgroundColor: '#fafafa'
+        }}
+        title={<div style={{ textAlign: 'left' }}>{`${lot.koiFishDto.variety} #${lot.sku}`}</div>}
+      >
         <Row gutter={[16, 16]}>
           <Col
             xs={4}

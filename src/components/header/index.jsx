@@ -79,6 +79,9 @@ function Header() {
           <li onClick={() => handleNavigation("/auction-list")}>
             <ShoppingOutlined className="nav-icon"/> Auctions
           </li>
+          <li onClick={() => handleNavigation("/breeder")}>
+            <InfoCircleOutlined className="nav-icon"/> Breeders
+          </li>
           <li onClick={() => handleNavigation("/about")}>
             <InfoCircleOutlined className="nav-icon"/> About
           </li>

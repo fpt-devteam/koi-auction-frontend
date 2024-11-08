@@ -30,6 +30,8 @@ import UnauthorizedPage from "./pages/unauthorized-page";
 import PolicyPage from "./pages/policy-page";
 import TermPage from "./pages/term-page";
 import DashBoardPage from "./pages/admin-dashboard-page";
+import BreederPage from "./pages/breeder-page";
+import BreederDetailPage from "./pages/breeder-detail-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -65,6 +67,8 @@ function App() {
         },
         { path: "/payment-callback", element: <PaymentCallBackPage /> },
         { path: "/about", element: <AboutPage /> },
+        { path: "/breeder", element: <BreederPage /> },
+        { path: "/breeder-detail/:breederId", element: <BreederDetailPage /> },
       ],
     },
     {
