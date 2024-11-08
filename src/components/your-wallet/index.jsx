@@ -45,7 +45,8 @@ function YourWallet({ balance, refresh, user }) {
         Amount: values.depositAmount,
       });
       console.log(response.data.order_url);
-      window.location.href = response.data.order_url;
+      
+      window.open(response.data.order_url, '_blank');                                                   
     } catch (error) {
       console.log(error);
     }

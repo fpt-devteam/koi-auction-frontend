@@ -76,17 +76,6 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             </Text>
           ),
         },
-        // {
-        //   title: "Unsuccess",
-        //   dataIndex: "percentUnsuccess",
-        //   key: "percentUnsuccess",
-        //   align: "center", // Center align this column
-        //   render: (text) => (
-        //     <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-        //       {text}%
-        //     </Text>
-        //   ),
-        // },
         {
           title: "Unsold",
           dataIndex: "percentUnsold",
