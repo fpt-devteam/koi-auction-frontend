@@ -107,11 +107,13 @@ const PieChartComponent = ({
             innerRadius={90}
             outerRadius={150}
             paddingAngle={4}
-            label={({ [dataKey]: value }) => `${value}%`}
+            label={({ [nameKey]: value1, [dataKey]: value2 }) =>
+              `${value1} : ${value2}%`
+            }
             labelLine={true}
             dataKey={dataKey}
             nameKey={nameKey}
-            isAnimationActive={false}
+            isAnimationActive={true}
             animationDuration={500}
           >
             {chartData.map((entry, index) => (
