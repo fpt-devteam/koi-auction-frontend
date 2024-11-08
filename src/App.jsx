@@ -30,6 +30,8 @@ import BreederPage from './pages/breeder-page';
 import BreederDetailPage from './pages/breeder-detail-page';
 import Roles from './helpers/role';
 import UserOrderStatusPage from './pages/user-order-status-page';
+import StaffWithdrawStatusPage from './pages/staff-withdraw-page';
+import StaffOrderStatusPage from './pages/staff-delivery-lot-page';
 
 function App() {
   const dispatch = useDispatch();
@@ -112,7 +114,7 @@ function App() {
       path: '/profile',
       element: (
         <PrivateRoute allowedRoles={[Roles.MEMBER]}>
-          <AppLayout /> 
+          <AppLayout />
         </PrivateRoute>
       ),
       children: [{ path: '', element: <ProfileFormPage /> }]
@@ -151,6 +153,8 @@ function App() {
         { path: 'create-auction-request', element: <CreateAuctionPage />, allowedRoles: [Roles.STAFF, Roles.ADMIN] },
         { path: 'update-auction-request', element: <UpdateAuctionPage />, allowedRoles: [Roles.STAFF, Roles.ADMIN] },
         { path: 'auction', element: <AuctionManagementPage />, allowedRoles: [Roles.STAFF, Roles.ADMIN] },
+        { path: 'withdraw', element: <StaffWithdrawStatusPage />, allowedRoles: [Roles.STAFF, Roles.ADMIN] },
+        { path: 'order', element: <StaffOrderStatusPage />, allowedRoles: [Roles.STAFF, Roles.ADMIN] },
 
         //admin
         { path: 'user-list', element: <UserList number={Roles.MEMBER} />, allowedRoles: [Roles.ADMIN] },
