@@ -7,15 +7,17 @@ import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate } from "react-router-dom";
 import './index.css';
 import paymentApi from "../../config/paymentApi";
+import internalPaymentApi from "../../config/internalPaymentApi";
 const { Text } = Typography;
 export default function UserOrderStatusPage() {
     const [tabsData, setTabsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("6");
     const dispatch = useDispatch();
-    const [seed, setSeed] = useState(1);
     const navigate = useNavigate();
     const { user } = useSelector((store) => store.user);
+    const [auctionLotList, setAuctionLotList] = useState([]);
+    const [soldLotList, setSoldLotList] = useState([]);
     // const fetchTabsData = async () => {
     //     if (tabsData.length === 0) {
     //         try {
@@ -30,22 +32,31 @@ export default function UserOrderStatusPage() {
     //     }
     // };
 
-    const handleReset = () => setSeed(Math.random());
-
     useEffect(() => {
         if (user) {
-            console.log(user)
             const staticTabsData = [
                 { lotStatusId: 6, lotStatusName: "To Ship" },
                 { lotStatusId: 7, lotStatusName: "To Receive" },
                 { lotStatusId: 8, lotStatusName: "Completed" },
                 { lotStatusId: 9, lotStatusName: "Canceled" },
             ];
+            async function fetchLotData() {
+                try {
+                    await Promise.all([lotApi.get("auction-lots"), lotApi.get("sold-lots")])
+                        .then(([auctionLotList, soldLotList]) => {
+                            setAuctionLotList(auctionLotList.data);
+                            setSoldLotList(soldLotList.data);
+                            setLoading(false);
+                        });
+
+                } catch (error) {
+                    message.error(error.message);
+                }
+            };
+            fetchLotData();
             setTabsData(staticTabsData);
-            setLoading(false);
         }
     }, [user]);
-
     const handleTabChange = (key) => {
         setActiveTab(key);
         dispatch(setStatusId(key));
@@ -66,11 +77,11 @@ export default function UserOrderStatusPage() {
                     label: tab.lotStatusName || `Tab ${tab.lotStatusId + 1}`,
                     children: (
                         <OrderList
-                            key={seed}
                             lotStatusId={tab.lotStatusId}
                             lotStatusName={tab.lotStatusName}
-                            refresh={handleReset}
                             userId={user?.UserId}
+                            auctionLotList={auctionLotList}
+                            soldLotList={soldLotList}
                         />
                     ),
                 }))}
@@ -80,22 +91,21 @@ export default function UserOrderStatusPage() {
     );
 }
 
-const OrderList = ({ lotStatusId, lotStatusName, refresh, userId }) => {
+const OrderList = ({ auctionLotList, soldLotList, lotStatusId, lotStatusName, userId }) => {
+    // console.log("auctionLotList1", auctionLotList);
+    // console.log("soldLotList1", soldLotList);
     const [orderList, setOrderList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [seed, setSeed] = useState(1);
+    const handleReset = () => setSeed(Math.random());
     useEffect(() => {
         const fetchOrderData = async () => {
             try {
-                const auctionLotList = await lotApi.get("auction-lots");
-                const soldLotList = await lotApi.get("sold-lots");
-                // console.log("soldLotList", soldLotList.data);
-                // console.log("userId", userId);
                 const filteredData = [];
-                if (soldLotList.data) {
-                    soldLotList.data.forEach(soldLot => {
-                        // console.log("soldLot", soldLot);
+                if (soldLotList) {
+                    soldLotList.forEach(soldLot => {
                         if (soldLot.winnerId === userId) {
-                            auctionLotList.data.forEach(auctionLot => {
+                            auctionLotList.forEach(auctionLot => {
                                 if (auctionLot.lotDto.lotId === soldLot.soldLotId && auctionLot.lotDto.lotStatusDto.lotStatusId === lotStatusId) {
                                     filteredData.push({
                                         ...auctionLot.lotDto,
@@ -117,7 +127,7 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh, userId }) => {
         if (userId) {
             fetchOrderData();
         }
-    }, [lotStatusId, userId]);
+    }, [seed]);
 
     return loading ? (
         <Spin />
@@ -127,7 +137,7 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh, userId }) => {
             dataSource={orderList}
             renderItem={(order) => (
                 <List.Item>
-                    <LotCard lot={order} refresh={refresh} />
+                    <LotCard lot={order} refresh={handleReset} />
                 </List.Item>
             )}
             locale={{ emptyText: `No ${lotStatusName} orders` }}
@@ -142,18 +152,20 @@ const LotCard = ({ lot, refresh }) => {
     const toggleLotInfoModal = () => setIsLotInfoModalVisible(!isLotInfoModalVisible);
     const handleOperation = async () => {
         try {
-            const response = await lotApi.put(`lots/${lot.lotId}/status`, {
-                lotStatusName: "Completed"
-            });
-
-            const paymentResponse = await paymentApi.post(`payout`, {
-                Amount: lot.finalPrice
-            });
-
-            if (response && paymentResponse) {
-                refresh();
-                message.success('Delivery confirmed successfully');
-            }
+            await Promise.all([
+                lotApi.put(`lots/${lot.lotId}/status`, {
+                    lotStatusName: "Completed"
+                }),
+                paymentApi.post(`payout`, {
+                    Amount: lot.finalPrice,
+                    BreederId: lot.breederId
+                })])
+                .then(([response, paymentResponse]) => {
+                    console.log("response", response.data);
+                    console.log("paymentResponse", paymentResponse.data);
+                    refresh();
+                    message.success('Delivery confirmed successfully');
+                });
         } catch (error) {
             message.error(error.message);
         }
