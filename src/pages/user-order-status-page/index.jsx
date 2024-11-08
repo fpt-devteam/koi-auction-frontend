@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate } from "react-router-dom";
 import './index.css';
+import paymentApi from "../../config/paymentApi";
 const { Text } = Typography;
 export default function UserOrderStatusPage() {
     const [tabsData, setTabsData] = useState([]);
@@ -85,19 +86,28 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh, userId }) => {
     useEffect(() => {
         const fetchOrderData = async () => {
             try {
-                // const lotList = await lotApi.get("lots");
+                const auctionLotList = await lotApi.get("auction-lots");
                 const soldLotList = await lotApi.get("sold-lots");
-                // console.log("lotList", lotList.data);
-                console.log("soldLotList", soldLotList.data);
-                console.log("userId", userId);
+                // console.log("soldLotList", soldLotList.data);
+                // console.log("userId", userId);
                 const filteredData = [];
-                soldLotList.data.forEach(soldLot => {
-                    if (soldLot.winnerId === userId) {
-                        filteredData.push(soldLot);
-                    }
-                });
+                if (soldLotList.data) {
+                    soldLotList.data.forEach(soldLot => {
+                        // console.log("soldLot", soldLot);
+                        if (soldLot.winnerId === userId) {
+                            auctionLotList.data.forEach(auctionLot => {
+                                if (auctionLot.lotDto.lotId === soldLot.soldLotId && auctionLot.lotDto.lotStatusDto.lotStatusId === lotStatusId) {
+                                    filteredData.push({
+                                        ...auctionLot.lotDto,
+                                        finalPrice: soldLot.finalPrice
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
                 console.log("filteredData", filteredData);
-                // setOrderList(filteredData);
+                setOrderList(filteredData);
             } catch (error) {
                 message.error(error.message);
             } finally {
@@ -135,7 +145,12 @@ const LotCard = ({ lot, refresh }) => {
             const response = await lotApi.put(`lots/${lot.lotId}/status`, {
                 lotStatusName: "Completed"
             });
-            if (response) {
+
+            const paymentResponse = await paymentApi.post(`payout`, {
+                Amount: lot.finalPrice
+            });
+
+            if (response && paymentResponse) {
                 refresh();
                 message.success('Delivery confirmed successfully');
             }
@@ -184,7 +199,7 @@ const LotCard = ({ lot, refresh }) => {
                     <Col span={5}>
                         <div className="lot-detail-item">
                             <DollarOutlined />
-                            <span>{lot.finishPrice || "..."}</span>
+                            <span>{lot.finalPrice || "..."}</span>
                         </div>
                     </Col>
                     <Col span={5}>
@@ -201,7 +216,7 @@ const LotCard = ({ lot, refresh }) => {
                         </div>
                     </Col>
                 </Row>
-            </Card> 
+            </Card>
             <Modal
                 open={isLotInfoModalVisible}
                 onCancel={toggleLotInfoModal}
