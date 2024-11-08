@@ -24,7 +24,6 @@ import UpdateAuctionPage from "./pages/update-auction-page";
 import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
 import WalletPage from "./pages/wallet-page";
-import OrderStatusPage from "./pages/order-status-page";
 import AboutPage from "./pages/about-page";
 import UnauthorizedPage from "./pages/unauthorized-page";
 import PolicyPage from "./pages/policy-page";
@@ -32,6 +31,10 @@ import TermPage from "./pages/term-page";
 import DashBoardPage from "./pages/admin-dashboard-page";
 import BreederPage from "./pages/breeder-page";
 import BreederDetailPage from "./pages/breeder-detail-page";
+import UserOrderStatusPage from "./pages/user-order-status-page";
+import StaffOrderStatusPage from "./pages/staff-delivery-lot-page";
+import StaffWithdrawStatusPage from "./pages/staff-withdraw-page";
+import ForgotPasswordPage from "./pages/forgot-password-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,14 +60,16 @@ function App() {
         { path: "/wallet", element: <WalletPage /> },
         { path: "/policy", element: <PolicyPage /> },
         { path: "/term", element: <TermPage /> },
+        { path: "/order", element: <UserOrderStatusPage /> },
+        { path: "/forgot-password", element: <ForgotPasswordPage /> },
         {
           path: "/auction-lot-detail/:auctionLotId",
           element: <AuctionLotDetailPage />,
         },
-        {
-          path: "/order",
-          element: <OrderStatusPage />,
-        },
+        // {
+        //   path: "/order",
+        //   element: <OrderStatusPage />,
+        // },
         { path: "/payment-callback", element: <PaymentCallBackPage /> },
         { path: "/about", element: <AboutPage /> },
         { path: "/breeder", element: <BreederPage /> },
@@ -83,6 +88,15 @@ function App() {
         { path: "/register", element: <Register /> },
       ],
     },
+    // {
+    //   //Only user can access
+    //   path: "/wallet",
+    //   element: (
+    //     <PrivateRoute allowedRoles={[1]}>
+    //       <AppLayout />
+    //     </PrivateRoute>
+    //   ),
+    // },
     {
       path: "/management",
       element: (
@@ -111,7 +125,11 @@ function App() {
         },
         {
           path: "/management/order",
-          element: <OrderStatusPage />,
+          element: <StaffOrderStatusPage />,
+        },
+        {
+          path: "/management/withdraw",
+          element: <StaffWithdrawStatusPage />,
         },
         {
           path: "/management/dashboard",

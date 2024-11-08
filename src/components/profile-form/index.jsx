@@ -1,36 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Card, Form, Input, Select, Button, message, Image, Spin } from "antd";
+import {
+    Col,
+    Row,
+    Card,
+    Form,
+    Input,
+    Select,
+    Button,
+    message,
+    Image,
+    Spin,
+    Modal,
+} from "antd";
 import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
 import userApi from "../../config/userApi";
 import "./index.css";
 
 const { Option } = Select;
-const DATE_FORMAT = "YYYY-MM-DD",
-  TIME_FORMAT = "HH:mm";
+import "./index.css";
+import ChangePasswordForm from "../change-password-form";
 const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
 export default function GeneralInfoForm({ user, refresh }) {
-  const [form] = useForm();
-  const [loading, setLoading] = useState(true);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [provinceList, setProvinceList] = useState([]);
-  const [districtList, setDistrictList] = useState([]);
-  const [wardList, setWardList] = useState([]);
-  const [provinceId, setProvinceId] = useState(null);
-  const [districtId, setDistrictId] = useState(null);
-
-  useEffect(() => {
-    if (user) {
-      initializeFormData();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (provinceId) {
-      fetchDistricts(provinceId);
-    }
-  }, [provinceId]);
+    const [form] = useForm();
+    const [loading, setLoading] = useState(true);
+    const [initialLoading, setInitialLoading] = useState(true);
+    const [provinceList, setProvinceList] = useState([]);
+    const [districtList, setDistrictList] = useState([]);
+    const [wardList, setWardList] = useState([]);
+    const [provinceId, setProvinceId] = useState(null);
+    const [districtId, setDistrictId] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    useEffect(() => {
+        if (user) {
+            initializeFormData();
+        }
+    }, [user]);
+    useEffect(() => {
+        if (provinceId) {
+            fetchDistricts(provinceId);
+        }
+    }, [provinceId]);
 
   useEffect(() => {
     if (districtId) {
@@ -38,23 +49,23 @@ export default function GeneralInfoForm({ user, refresh }) {
     }
   }, [districtId]);
 
-  const initializeFormData = async () => {
-    try {
-      const [provinces, districts, wards] = await Promise.all([
-        fetchProvinces(),
-        fetchDistricts(user.ProvinceCode),
-        fetchWards(user.DistrictCode),
-      ]);
-
-      setProvinceList(provinces);
-      setDistrictList(districts);
-      setWardList(wards);
-      setInitialLoading(false);
-    } catch (error) {
-      console.error("Error initializing form data:", error);
-      message.error("Failed to load initial data");
-    }
-  };
+    const initializeFormData = async () => {
+        try {
+            const [provinces, districts, wards] = await Promise.all([
+                fetchProvinces(),
+                fetchDistricts(user.ProvinceCode),
+                fetchWards(user.DistrictCode),
+            ]);
+            console.log(provinces, districts, wards);
+            setProvinceList(provinces);
+            setDistrictList(districts);
+            setWardList(wards);
+            setInitialLoading(false);
+        } catch (error) {
+            console.error("Error initializing form data:", error);
+            message.error("Failed to load initial data");
+        }
+    };
 
   useEffect(() => {
     if (!initialLoading && user) {
@@ -134,43 +145,45 @@ export default function GeneralInfoForm({ user, refresh }) {
     setDistrictId(value);
   };
 
-  return loading ? (
-    <Spin />
-  ) : (
-    <>
-      <div className="image-input">
-        <Image
-          className="image-avatar"
-          alt="Avatar"
-          width={300}
-          height={300}
-          preview={false}
-          src={imageExample}
-        />
-        <br />
-      </div>
-      <Card size="small" className="card" bordered={false} style={{ width: 700 }}>
-        <Form form={form} layout="vertical">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="First Name"
-                name="FirstName"
-                rules={[{ required: true, message: "Please enter your first name" }]}
-              >
-                <Input placeholder="Enter your first name" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Last Name"
-                name="LastName"
-                rules={[{ required: true, message: "Please enter your last name" }]}
-              >
-                <Input placeholder="Enter your last name" />
-              </Form.Item>
-            </Col>
-          </Row>
+    return loading ? (
+        <Spin />
+    ) : (
+        <>
+            <div className="image-input">
+                <figure>
+                    <Image
+                        className="image-avatar"
+                        alt="Avatar"
+                        width={300}
+                        height={300}
+                        preview={false}
+                        src={imageExample}
+                    />
+                </figure>
+                <br />
+            </div>
+            <Card size="small" className="card" bordered={false} style={{ width: 700 }}>
+                <Form form={form} layout="vertical">
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="First Name"
+                                name="FirstName"
+                                rules={[{ required: true, message: "Please enter your first name" }]}
+                            >
+                                <Input placeholder="Enter your first name" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Last Name"
+                                name="LastName"
+                                rules={[{ required: true, message: "Please enter your last name" }]}
+                            >
+                                <Input placeholder="Enter your last name" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
           <Row gutter={16}>
             <Col span={12}>
@@ -235,20 +248,33 @@ export default function GeneralInfoForm({ user, refresh }) {
 
           </Row>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Button type="primary" onClick={handleSubmit}>
-                Save All
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button type="primary" onClick={refresh}>
-                Reset
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
-    </>
-  );
+                    <Row gutter={16}>
+                        <Col span={5}>
+                            <a onClick={() => setIsModalVisible(true)}>
+                                Change Password
+                            </a>
+                            <Modal
+                                footer={null}
+                                open={isModalVisible}
+                                onCancel={() => setIsModalVisible(false)}
+                                style={{ width: "fit-content", height: "fit-content" }}
+                            >
+                                <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
+                            </Modal>
+                        </Col>
+                        <Col span={10}>
+                            <Button type="primary" onClick={handleSubmit}>
+                                Save All
+                            </Button>
+                        </Col>
+                        <Col span={9}>
+                            <Button type="primary" onClick={refresh}>
+                                Reset
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card>
+        </>
+    );
 }

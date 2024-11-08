@@ -55,6 +55,15 @@ function MngSider() {
         "/management/auction"
       )
     );
+    items.push(
+      getItem(
+        "Withdraw Management ",
+        counter++, // Tăng counter
+        <FormOutlined />,
+        null,
+        "/management/withdraw"
+      )
+    );
   }
   if (userRoleId === 4) {
     const accountDropdownItems = [
