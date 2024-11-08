@@ -1,11 +1,10 @@
-import React from 'react';
-import BreederLotCard from '../breeder-lot-card';
+import BreederLotCard from "../breeder-lot-card";
 
 const BreederLotList = ({ breederLotList }) => {
   return (
     <div>
       {breederLotList.map((lot) => (
-        <BreederLotCard key={lot.LotId} lot={lot} />
+        <BreederLotCard key={lot.lotId} lot={lot} />
       ))}
     </div>
   );

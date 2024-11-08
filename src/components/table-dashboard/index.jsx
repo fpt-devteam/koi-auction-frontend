@@ -76,17 +76,17 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             </Text>
           ),
         },
-        {
-          title: "Unsuccess",
-          dataIndex: "percentUnsuccess",
-          key: "percentUnsuccess",
-          align: "center", // Center align this column
-          render: (text) => (
-            <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-              {text}%
-            </Text>
-          ),
-        },
+        // {
+        //   title: "Unsuccess",
+        //   dataIndex: "percentUnsuccess",
+        //   key: "percentUnsuccess",
+        //   align: "center", // Center align this column
+        //   render: (text) => (
+        //     <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
+        //       {text}%
+        //     </Text>
+        //   ),
+        // },
         {
           title: "Unsold",
           dataIndex: "percentUnsold",
@@ -123,7 +123,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             // Áp dụng màu sắc tùy thuộc vào mức độ ưu tiên
             switch (priority) {
               case "Low":
-                color = "#5A8DEE";
+                color = "#FF4C4C";
                 break;
               case "Medium":
                 color = "#00C1D4";
@@ -131,9 +131,9 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
               case "High":
                 color = "#FF7F50";
                 break;
-              case "Critical":
-                color = "#FF4C4C";
-                break;
+              // case "Very Low":
+              //   color = "#FF4C4C";
+              //   break;
               default:
                 color = "grey";
             }
