@@ -28,8 +28,17 @@ function BreederPage() {
   }, []);
 
   return (
-    <div style={styles.pageContainer}>   
-      <Card title={<span><Title level={1} style={styles.pageTitle}>Our Breeders</Title></span>} style={styles.cardContainer}>
+    <div style={styles.pageContainer}>
+      <Card
+        title={
+          <span>
+            <Title level={1} style={styles.pageTitle}>
+              Our Breeders
+            </Title>
+          </span>
+        }
+        style={styles.cardContainer}
+      >
         {isLoading ? (
           <div style={styles.spinnerContainer}>
             <Spin tip="Loading breeders..." />
@@ -42,7 +51,12 @@ function BreederPage() {
               onClick={() => navigate(`/breeder-detail/${breeder.BreederId}`)}
               hoverable
             >
-              <Image src={breeder.Certificate} preview={false} alt="Breeder Certificate" style={styles.imageStyle} />
+              <Image
+                src={breeder.Certificate}
+                preview={false}
+                alt="Breeder Certificate"
+                style={styles.imageStyle}
+              />
               <div style={farmNameStyle}>{breeder.FarmName}</div>
             </Card.Grid>
           ))
@@ -61,45 +75,45 @@ const farmNameStyle = {
 };
 const styles = {
   pageContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '40px 20px',
-    backgroundColor: '#f8f9fa',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "40px 20px",
+    backgroundColor: "#f8f9fa",
   },
   pageTitle: {
-    textAlign: 'center',
-    marginBottom: '40px',
-    color: '#333',
+    textAlign: "center",
+    marginBottom: "40px",
+    color: "#333",
   },
   cardContainer: {
-    width: '100%',
-    maxWidth: '1200px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#ffffff',
-    padding: '30px',
+    width: "100%",
+    maxWidth: "1200px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#ffffff",
+    padding: "30px",
   },
   spinnerContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '200px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "200px",
   },
   gridStyle: {
-    width: '25%',
-    textAlign: 'center',
-    borderRadius: '8px',
-    border: '1px solid #f0f0f0',
-    cursor: 'pointer',
-    padding: '10px',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    backgroundColor: '#ffffff',
+    width: "25%",
+    textAlign: "center",
+    borderRadius: "8px",
+    border: "1px solid #f0f0f0",
+    cursor: "pointer",
+    padding: "10px",
+    transition: "transform 0.2s, box-shadow 0.2s",
+    backgroundColor: "#ffffff",
   },
   imageStyle: {
-    width: '100%',
-    height: 'auto',
-    borderRadius: '4px',
+    width: "100%",
+    height: "auto",
+    borderRadius: "4px",
   },
 };
 

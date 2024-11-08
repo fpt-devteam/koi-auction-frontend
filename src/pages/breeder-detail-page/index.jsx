@@ -5,6 +5,7 @@ import KoiSearchBar from "../../components/koi-search-bar";
 import lotApi from "../../config/lotApi";
 import { message } from "antd";
 import { useParams } from "react-router-dom";
+import userApi from "../../config/userApi";
 
 function BreederDetailPage() {
   const sampleBreeder = {
@@ -13,6 +14,22 @@ function BreederDetailPage() {
     Certificate: "https://link-to-logo-image.jpg", // Link tới logo của breeder
     About: "Owner: Mr. Ryuki Narita",
   };
+  const [breeder, setBreeder] = useState([]);
+  const { breederId } = useParams();
+
+  const fetchBreederInfo = async () => {
+    try {
+      const response = await userApi.get(`/manage/breeder/profile/${breederId}`);
+      console.log("breeder", response.data);
+      setBreeder(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBreederInfo();
+  }, [breederId]);
 
   // Sample data
   const sampleLots = [
@@ -38,9 +55,6 @@ function BreederDetailPage() {
     },
     // Add more sample lots as needed
   ];
-
-  const { breederId } = useParams();
-  console.log("breederId", breederId);
 
   const [filteredLots, setFilteredLots] = useState([]);
   const [allLots, setAlllots] = useState([]);
@@ -73,7 +87,7 @@ function BreederDetailPage() {
 
   return (
     <div style={{ padding: "2% 15%" }}>
-      <BreederDetail breeder={sampleBreeder} />
+      <BreederDetail breeder={breeder} />
       <KoiSearchBar
         allLots={allLots} // Truyền allLots vào KoiSearchBar
         setFilteredLots={setFilteredLots}

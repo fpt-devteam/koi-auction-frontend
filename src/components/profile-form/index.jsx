@@ -39,6 +39,7 @@ export default function GeneralInfoForm({ user, refresh }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [breederInfo, setBreederInfo] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
     setIsOpen(true);
@@ -83,23 +84,6 @@ export default function GeneralInfoForm({ user, refresh }) {
     } catch (error) {
       console.error("Error fetching breeder data:", error);
       message.error("Failed to load breeder data");
-    }
-  };
-  const initializeFormData = async () => {
-    try {
-      const [provinces, districts, wards] = await Promise.all([
-        fetchProvinces(),
-        fetchDistricts(user.ProvinceCode),
-        fetchWards(user.DistrictCode),
-      ]);
-
-      setProvinceList(provinces);
-      setDistrictList(districts);
-      setWardList(wards);
-      setInitialLoading(false);
-    } catch (error) {
-      console.error("Error initializing form data:", error);
-      message.error("Failed to load initial data");
     }
   };
   const initializeFormData = async () => {
@@ -403,8 +387,10 @@ export default function GeneralInfoForm({ user, refresh }) {
           </Row>
 
           <Row gutter={16}>
-            <Col span={5}>
-              <a onClick={() => setIsModalVisible(true)}>Change Password</a>
+            <Col span={8}>
+              <Button onClick={() => setIsModalVisible(true)}>
+                Change Password
+              </Button>
               <Modal
                 footer={null}
                 open={isModalVisible}
@@ -414,17 +400,8 @@ export default function GeneralInfoForm({ user, refresh }) {
                 <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
               </Modal>
             </Col>
-            <Col span={10}>
-              <Button type="primary" onClick={handleSubmit}>
-                Save All
-              </Button>
-            </Col>
-            <Col span={9}>
-              <Button type="primary" onClick={refresh}>
-                Reset
-              </Button>
-            </Col>
-            <Col span={24} style={{ textAlign: "right" }}>
+
+            <Col span={12} style={{ textAlign: "right" }}>
               {!isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
                 <Button type="primary" onClick={() => setIsEditing(true)}>
                   Update
