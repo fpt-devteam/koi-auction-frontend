@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Loading from "../loading";
 
 function MngHeader() {
   // const navigate = useNavigate();
@@ -31,12 +32,7 @@ function MngHeader() {
       label: "Profile",
       extra: "⌘P",
     },
-    {
-      key: "3",
-      icon: <WalletOutlined />,
-      label: "Wallet",
-      extra: "⌘B",
-    },
+   
   ];
 
   const { user } = useSelector((store) => store.user);
@@ -50,6 +46,18 @@ function MngHeader() {
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+  if (user == null) {
+    return <Loading />
+  }
+  if (user.UserRoleId == 2) {
+    items.push( {
+      key: "3",
+      icon: <WalletOutlined />,
+      label: "Wallet",
+      extra: "⌘B",
+    });
+  }
 
 
   return (
@@ -76,9 +84,9 @@ function MngHeader() {
             items,
             onClick: ({ key }) => {
               if (key === "2") {
-                handleNavigation("/profile");
-              } else if (key === "3") {
-                handleNavigation("/wallet");
+                handleNavigation("/management/profile");
+              } else if (key === "3" && user.UserRoleId == 2) {
+                handleNavigation("/management/wallet");
               }
             },
           }}
@@ -90,7 +98,7 @@ function MngHeader() {
             <Space>
               <Button
                 icon={<UserOutlined />}
-                onClick={() => handleNavigation("/profile")}
+                onClick={() => handleNavigation("/management/profile")}
                 className="monochrome-button"
               >
                 {user.FirstName}
