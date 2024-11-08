@@ -28,7 +28,7 @@ const BreederInfo = ({ breeder }) => {
               {breeder.FarmName}
             </Title>
             <br />
-            <Text strong style={{fontSize: '16px'}}>Detail:</Text> <Text>{breeder.About}</Text>
+            <Text strong style={{fontSize: '16px'}}>Detail:</Text> <Text>{breeder.FarmName}</Text>
             <br />
             <Text strong style={{fontSize: '16px'}}>Address:</Text> <Text>815 Mitsubuchi, Komaki-shi, Aichi, Japan</Text>
             <br />
@@ -45,9 +45,7 @@ const BreederInfo = ({ breeder }) => {
           backgroundColor: "#f4f4f5",  // light grey background
           borderRadius: "2px",         // rounded corners
         }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam animi earum commodi porro temporibus dolor vitae similique, qui doloribus? Est facilis rem eaque dolore quaerat neque illo voluptate asperiores eveniet.
-            Debitis repellendus dignissimos aliquam sint harum molestiae consequatur cumque? Velit delectus pariatur, repudiandae ex maxime, obcaecati a, aut nemo totam repellat voluptas! At earum dicta esse quisquam id repellat quae.
-            Eius culpa fugit, odit dolor error at quasi, voluptatibus, sit hic placeat distinctio? Ipsa perferendis perspiciatis quibusdam, nemo voluptatum rem vel distinctio aliquam? Rem quibusdam at magnam eos minima eligendi.
+        {breeder.About}
         </Row>
     </div>
   );
