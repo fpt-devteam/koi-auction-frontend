@@ -36,15 +36,15 @@ const StatusTab = ({ LotList }) => {
 
   // Xử lý sự kiện khi chọn tab
   const handleTabChange = (key) => {
-    setActiveTab(key);
     dispatch(setStatusId(key));
+    console.log("tab key", key);
+    setActiveTab(key);
   };
 
   // Render UI cho các tab
   const items = tabsData.map((tab) => ({
     key: String(tab.lotStatusId),
     label: tab.lotStatusName || `Tab ${tab.lotStatusId + 1}`,
-    children: <LotList lotStatusId={activeTab} breederId={breederId} />, // Render LotList như một JSX component
     icon: tab.lotStatusId % 2 === 0 ? <AppleOutlined /> : <AndroidOutlined />,
   }));
 
@@ -55,11 +55,14 @@ const StatusTab = ({ LotList }) => {
   return loading ? (
     <Spin /> // Hiển thị vòng quay loading khi đang tải dữ liệu
   ) : (
-    <Tabs
-      defaultActiveKey="{activeTab}"
-      onChange={handleTabChange}
-      items={items}
-    />
+    <>
+      <Tabs
+        defaultActiveKey="{activeTab}"
+        onChange={handleTabChange}
+        items={items}
+      />
+      <LotList lotStatusId={activeTab} breederId={breederId} />,
+    </>
   );
 };
 

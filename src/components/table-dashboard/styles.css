@@ -1,0 +1,19 @@
+.custom-table-header .ant-table {
+  border-radius: 10px; /* Bo góc */
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.custom-table-header .ant-table-thead > tr > th {
+  background-color: #555; /* Màu nền nhạt hơn */
+  color: #f1f1f1; /* Màu chữ trắng xám */
+  font-weight: bold;
+  text-align: center; /* Căn giữa chữ */
+  font-size: 18px;
+  height: 60px;
+}
+
+.custom-avatar {
+  font-size: 18px; /* Avatar font size */
+  width: 45px; /* Avatar width */
+  height: 45px; /* Avatar height */
+}

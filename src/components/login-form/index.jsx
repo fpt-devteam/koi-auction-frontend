@@ -1,30 +1,33 @@
-import { Form, Input, Button, Card, Checkbox, message } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import "./index.scss"; // Custom CSS for styling
-import userApi from "../../config/userApi";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/features/userSlice";
-import { redirect, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { Form, Input, Button, Card, Checkbox, message } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import './index.scss'; // Custom CSS for styling
+import userApi from '../../config/userApi';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../redux/features/userSlice';
+import { redirect, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 const LoginForm = () => {
+  const [isLoading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (response) => {
-      const userInfo = await axios.get(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
-        { headers: { Authorization: `Bearer ${response.access_token}` } },
-      );
+      const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${response.access_token}` } });
       console.log(userInfo.data);
       const { email, family_name, given_name, sub } = userInfo.data;
-      const loginResponse = await userApi.post('/auth/google', {
-        Email: email,
-        FirstName: given_name,
-        LastName: family_name,
-        GoogleId: sub,
-      },
+      const loginResponse = await userApi.post(
+        '/auth/google',
+        {
+          Email: email,
+          FirstName: given_name,
+          LastName: family_name,
+          GoogleId: sub
+        },
         { withCredentials: true }
       );
       console.log(loginResponse.data);
@@ -34,34 +37,32 @@ const LoginForm = () => {
 
         dispatch(loginSuccess({ user }));
         setTimeout(() => {
-          message.success("Login successful!");
+          message.success('Login successful!');
         }, 1000);
-        navigate(-1);
+        navigate("/");
       }
     },
-    onError: error => { console.log(error) },
+    onError: (error) => {
+      console.log(error);
+    }
   });
 
-  const [isLoading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   const handleLogin = async (values) => {
     setLoading(true);
     try {
       const response = await userApi.post(
-        "/login",
+        '/login',
         {
           Username: values.username,
           Password: values.password,
-          RememberMe: values.remember,
+          RememberMe: values.remember
         },
         {
-          withCredentials: true,
+          withCredentials: true
         }
       );
       setLoading(false);
@@ -71,26 +72,22 @@ const LoginForm = () => {
 
         dispatch(loginSuccess({ user }));
         setTimeout(() => {
-          message.success("Login successful!");
+          message.success('Login successful!');
         }, 1000);
-        if (user.UserRoleId == 1) {
-          //chuyển về trang liền trước
-          navigate(-1);
-        } else navigate("/management");
+        
+        navigate("/");
       }
     } catch (error) {
       setLoading(false);
       if (error.response) {
         // Server-side error (received a response from the server)
-        message.error(
-          error.response.data.message || "Login failed. Please try again."
-        );
+        message.error(error.response.data.message || 'Login failed. Please try again.');
       } else if (error.request) {
         // Network error (request was made but no response received)
-        message.error("Network error. Please check your internet connection.");
+        // message.error('Network error. Please check your internet connection.');
       } else {
         // Other types of errors (coding issues, etc.)
-        message.error("An unexpected error occurred. Please try again later.");
+        // message.error('An unexpected error occurred. Please try again later.');
       }
     }
   };
@@ -98,55 +95,38 @@ const LoginForm = () => {
   return (
     <div className="login-form-container">
       <Card
-        title={
-          <span style={{ fontWeight: "550", fontSize: "24px" }}>Log In</span>
-        }
+        title={<span style={{ fontWeight: '550', fontSize: '24px' }}>Log In</span>}
         bordered={false}
         style={{
           maxWidth: 500,
-          margin: "0 auto",
-          padding: "20px",
-          borderRadius: "10px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          margin: '0 auto',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
       >
         <Form
           name="login"
           layout="vertical"
-          style={{ width: "27rem" }}
+          style={{ width: '27rem' }}
           initialValues={{
-            remember: true,
+            remember: true
           }}
           onFinish={handleLogin}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
           {/* Username */}
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please input your username!" }]}
-          >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Enter your username"
-            />
+          <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
+            <Input prefix={<UserOutlined />} placeholder="Enter your username" />
           </Form.Item>
 
           {/* Password */}
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
-            hasFeedback
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Enter your password"
-            />
+          <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]} hasFeedback>
+            <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
           </Form.Item>
 
           {/* Remember Me */}
@@ -156,33 +136,20 @@ const LoginForm = () => {
 
           {/* Submit Button */}
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              loading={isLoading}
-              style={{ fontWeight: "500", height: "40px" }}
-            >
+            <Button type="primary" htmlType="submit" block loading={isLoading} style={{ fontWeight: '500', height: '40px' }}>
               Log In
             </Button>
           </Form.Item>
 
-          {          /* Google Login */}
-            <GoogleLogin
-              buttonText="Login with Google"
-              onSuccess={() => googleLogin()}
-              onFailure={() => googleLogin()}
-              width={400}
-              size="large"
-            />
-          
+          {/* Google Login */}
+          <GoogleLogin buttonText="Login with Google" onSuccess={() => googleLogin()} onFailure={() => googleLogin()} width={400} size="large" />
+
           {/* Forgot Password and Register Link */}
-          <p style={{ textAlign: "center", marginTop: "10px" }}>
+          <p style={{ textAlign: 'center', marginTop: '10px' }}>
             Forgot your password? <a href="/forgot-password">Click here</a>.
           </p>
-          <p style={{ textAlign: "center" }}>
-            Don&apos;t have an account?{" "}
-            <a href="/register">Create an account</a>.
+          <p style={{ textAlign: 'center' }}>
+            Don&apos;t have an account? <a href="/register">Create an account</a>.
           </p>
         </Form>
       </Card>

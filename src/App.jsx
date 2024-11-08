@@ -25,8 +25,12 @@ import ProfileFormPage from "./pages/profile-form-page";
 import PaymentCallBackPage from "./pages/payment-callback-page";
 import WalletPage from "./pages/wallet-page";
 import AboutPage from "./pages/about-page";
+import UnauthorizedPage from "./pages/unauthorized-page";
 import PolicyPage from "./pages/policy-page";
 import TermPage from "./pages/term-page";
+import DashBoardPage from "./pages/admin-dashboard-page";
+import BreederPage from "./pages/breeder-page";
+import BreederDetailPage from "./pages/breeder-detail-page";
 import UserOrderStatusPage from "./pages/user-order-status-page";
 import StaffOrderStatusPage from "./pages/staff-delivery-lot-page";
 import StaffWithdrawStatusPage from "./pages/staff-withdraw-page";
@@ -34,7 +38,7 @@ import ForgotPasswordPage from "./pages/forgot-password-page";
 
 function App() {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   useEffect(() => {
     // Kiểm tra trạng thái đăng nhập khi app load
@@ -43,11 +47,13 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <AppLayout />,
+      element: (
+        <PrivateRoute allowedRoles={[0, 1]}>
+          <AppLayout />
+        </PrivateRoute>
+      ),
       children: [
         { path: "", element: <HomePage /> },
-        { path: "/login", element: <Login /> },
-        { path: "/register", element: <Register /> },
         { path: "/auction-detail/:auctionId", element: <AuctionDetailPage /> },
         { path: "/auction-list", element: <AuctionList /> },
         { path: "/profile", element: <ProfileFormPage /> },
@@ -66,6 +72,20 @@ function App() {
         // },
         { path: "/payment-callback", element: <PaymentCallBackPage /> },
         { path: "/about", element: <AboutPage /> },
+        { path: "/breeder", element: <BreederPage /> },
+        { path: "/breeder-detail/:breederId", element: <BreederDetailPage /> },
+      ],
+    },
+    {
+      path: "/",
+      element: (
+        <PrivateRoute allowedRoles={[0]}>
+          <AppLayout />
+        </PrivateRoute>
+      ),
+      children: [
+        { path: "/login", element: <Login /> },
+        { path: "/register", element: <Register /> },
       ],
     },
     // {
@@ -111,7 +131,11 @@ function App() {
           path: "/management/withdraw",
           element: <StaffWithdrawStatusPage />,
         },
-      ],   
+        {
+          path: "/management/dashboard",
+          element: <DashBoardPage />,
+        },
+      ],
     },
     {
       path: "/admin",
@@ -121,9 +145,18 @@ function App() {
         </PrivateRoute>
       ),
       children: [
-        { path: "/admin/management/user-list", element: <UserList number={1} /> },
-        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
-        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        {
+          path: "/admin/management/user-list",
+          element: <UserList number={1} />,
+        },
+        {
+          path: "/admin/management/breeder-list",
+          element: <UserList number={2} />,
+        },
+        {
+          path: "/admin/management/staff-list",
+          element: <UserList number={3} />,
+        },
         { path: "/admin/management/user-detail", element: <UserDetail /> },
       ],
     },
@@ -135,17 +168,24 @@ function App() {
         </PrivateRoute>
       ),
       children: [
-        { path: "/admin/management/user-list", element: <UserList number={1} /> },
-        { path: "/admin/management/breeder-list", element: <UserList number={2} /> },
-        { path: "/admin/management/staff-list", element: <UserList number={3} /> },
+        {
+          path: "/admin/management/user-list",
+          element: <UserList number={1} />,
+        },
+        {
+          path: "/admin/management/breeder-list",
+          element: <UserList number={2} />,
+        },
+        {
+          path: "/admin/management/staff-list",
+          element: <UserList number={3} />,
+        },
         { path: "/admin/management/user-detail", element: <UserDetail /> },
       ],
     },
     {
       path: "/unauthorized",
-      element: (
-        <h1>Unauthorized: You do not have permission to access this page.</h1>
-      ),
+      element: <UnauthorizedPage />,
     },
   ]);
 
