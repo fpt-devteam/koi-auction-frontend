@@ -1,0 +1,57 @@
+/* Page Container */
+.breeder-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+}
+
+/* Page Title */
+.breeder-page-title {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Card Container */
+.breeder-card-container {
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 30px;
+}
+
+/* Spinner Container */
+.breeder-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Grid Style */
+.breeder-grid-style {
+  width: 25%;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #fafafa;
+}
+
+/* Image Style */
+.breeder-image-style {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Hover Effect */
+.breeder-grid-style:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

@@ -1,47 +1,68 @@
 import React, { useEffect, useState } from "react";
 import {
-    Col,
-    Row,
-    Card,
-    Form,
-    Input,
-    Select,
-    Button,
-    message,
-    Image,
-    Spin,
-    Modal,
+  Col,
+  Row,
+  Card,
+  Form,
+  Input,
+  Select,
+  Button,
+  message,
+  Spin,
+  Modal,
+  Avatar,
+  Image,
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
 import userApi from "../../config/userApi";
 import "./index.css";
+import { UserOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 import "./index.css";
 import ChangePasswordForm from "../change-password-form";
-const imageExample = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+const imageExample =
+  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
 export default function GeneralInfoForm({ user, refresh }) {
-    const [form] = useForm();
-    const [loading, setLoading] = useState(true);
-    const [initialLoading, setInitialLoading] = useState(true);
-    const [provinceList, setProvinceList] = useState([]);
-    const [districtList, setDistrictList] = useState([]);
-    const [wardList, setWardList] = useState([]);
-    const [provinceId, setProvinceId] = useState(null);
-    const [districtId, setDistrictId] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    useEffect(() => {
-        if (user) {
-            initializeFormData();
-        }
-    }, [user]);
-    useEffect(() => {
-        if (provinceId) {
-            fetchDistricts(provinceId);
-        }
-    }, [provinceId]);
+  const [form] = useForm();
+  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+
+  const [isBreeder, setIsBreeder] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [breederInfo, setBreederInfo] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsOpen(true);
+  };
+  const handleModelOk = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (user) {
+      setIsBreeder(user.UserRoleId === 2);
+      initializeFormData();
+      if (user.UserRoleId === 2) {
+        fetchBreederData();
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (provinceId) {
+      fetchDistricts(provinceId);
+    }
+  }, [provinceId]);
 
   useEffect(() => {
     if (districtId) {
@@ -49,23 +70,39 @@ export default function GeneralInfoForm({ user, refresh }) {
     }
   }, [districtId]);
 
-    const initializeFormData = async () => {
-        try {
-            const [provinces, districts, wards] = await Promise.all([
-                fetchProvinces(),
-                fetchDistricts(user.ProvinceCode),
-                fetchWards(user.DistrictCode),
-            ]);
-            console.log(provinces, districts, wards);
-            setProvinceList(provinces);
-            setDistrictList(districts);
-            setWardList(wards);
-            setInitialLoading(false);
-        } catch (error) {
-            console.error("Error initializing form data:", error);
-            message.error("Failed to load initial data");
-        }
-    };
+  const fetchBreederData = async () => {
+    try {
+      const response = await userApi.get(`/breeder/profile`);
+      console.log(response);
+      form.setFieldsValue({
+        BreederId: response.data.BreederId,
+        FarmName: response.data.FarmName,
+        Certificate: response.data.Certificate,
+        About: response.data.About,
+      });
+      setBreederInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching breeder data:", error);
+      message.error("Failed to load breeder data");
+    }
+  };
+  const initializeFormData = async () => {
+    try {
+      const [provinces, districts, wards] = await Promise.all([
+        fetchProvinces(),
+        fetchDistricts(user.ProvinceCode),
+        fetchWards(user.DistrictCode),
+      ]);
+      console.log(provinces, districts, wards);
+      setProvinceList(provinces);
+      setDistrictList(districts);
+      setWardList(wards);
+      setInitialLoading(false);
+    } catch (error) {
+      console.error("Error initializing form data:", error);
+      message.error("Failed to load initial data");
+    }
+  };
 
   useEffect(() => {
     if (!initialLoading && user) {
@@ -80,7 +117,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         WardCode: user.WardCode,
       });
       setLoading(false);
-      form.validateFields(['DistrictCode']);
+      form.validateFields(["DistrictCode"]);
     }
   }, [initialLoading, user]);
 
@@ -125,14 +162,23 @@ export default function GeneralInfoForm({ user, refresh }) {
     try {
       const values = await form.validateFields();
       console.log("Form data to submit:", values);
+      if (isBreeder) {
+        values.BreederId = values.BreederId;
+      }
       const response = await userApi.patch(`update-profile`, values);
       console.log("Response:", response);
       refresh();
-      message.success("Form submitted successfully!");
+      setIsEditing(false);
+      message.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error submitting form:", error);
-      message.error("Failed to submit form");
+      message.error("Failed to update profile");
     }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    refresh();
   };
 
   const handleSelectProvince = (value) => {
@@ -145,76 +191,165 @@ export default function GeneralInfoForm({ user, refresh }) {
     setDistrictId(value);
   };
 
-    return loading ? (
-        <Spin />
-    ) : (
-        <>
-            <div className="image-input">
-                <figure>
-                    <Image
-                        className="image-avatar"
-                        alt="Avatar"
-                        width={300}
-                        height={300}
-                        preview={false}
-                        src={imageExample}
-                    />
-                </figure>
-                <br />
+  return loading ? (
+    <Spin />
+  ) : (
+    <>
+      <Card
+        size="medium"
+        className="card"
+        bordered={false}
+        style={{ width: "900px" }}
+        title={
+          isBreeder ? (
+            <>
+              <Image src={breederInfo?.Certificate} width={"50em"} />
+              <br />
+              <span
+                style={{
+                  fontSize: "34px",
+                  fontWeight: "bold",
+                  padding: "20px",
+                  color: " rgb(255, 77, 79)",
+                }}
+              >
+                {breederInfo?.FarmName}
+              </span>
+            </>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                padding: "40px",
+              }}
+            >
+              <Avatar
+                size={64}
+                icon={<UserOutlined />}
+                src={user?.Avatar}
+                style={{
+                  backgroundColor: "#1890ff",
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{ fontSize: "24px", fontWeight: "bold" }}>
+                {`${user?.FirstName} ${user?.LastName}'s Profile`}
+              </span>
             </div>
-            <Card size="small" className="card" bordered={false} style={{ width: 700 }}>
-                <Form form={form} layout="vertical">
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="First Name"
-                                name="FirstName"
-                                rules={[{ required: true, message: "Please enter your first name" }]}
-                            >
-                                <Input placeholder="Enter your first name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Last Name"
-                                name="LastName"
-                                rules={[{ required: true, message: "Please enter your last name" }]}
-                            >
-                                <Input placeholder="Enter your last name" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+          )
+        }
+      >
+        <Form form={form} layout="vertical">
+          {isBreeder && (
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  label="Farm Name"
+                  name="FarmName"
+                  rules={[
+                    { required: true, message: "Please enter your Farm Name" },
+                  ]}
+                >
+                  <Input
+                    placeholder="Enter your Farm Name"
+                    disabled={!isEditing}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="First Name"
+                name="FirstName"
+                rules={[
+                  { required: true, message: "Please enter your first name" },
+                ]}
+              >
+                <Input
+                  placeholder="Enter your first name"
+                  disabled={!isEditing}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Last Name"
+                name="LastName"
+                rules={[
+                  { required: true, message: "Please enter your last name" },
+                ]}
+              >
+                <Input
+                  placeholder="Enter your last name"
+                  disabled={!isEditing}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 label="Email"
                 name="Email"
-                rules={[{ required: true, type: "email", message: "Please enter a valid email" }]}
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "Please enter a valid email",
+                  },
+                ]}
               >
-                <Input placeholder="example@gmail.com" />
+                <Input placeholder="example@gmail.com" disabled={!isEditing} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 label="Phone"
                 name="Phone"
-                rules={[{ required: true, message: "Please enter your phone number" }]}
+                rules={[
+                  { required: true, message: "Please enter your phone number" },
+                ]}
               >
-                <Input placeholder="+84 - 345 678 910" />
+                <Input placeholder="+84 - 345 678 910" disabled={!isEditing} />
               </Form.Item>
             </Col>
           </Row>
 
+          {isBreeder && (
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="About" name="About">
+                  <Input.TextArea
+                    placeholder="Enter information about your farm"
+                    disabled={!isEditing}
+                    style={{ height: "10em" }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+
           <Row gutter={16}>
             <Col span={6}>
               <Form.Item label="Address" name="Address">
-                <Input placeholder="Enter your home address" />
+                <Input
+                  placeholder="Enter your home address"
+                  disabled={!isEditing}
+                />
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label="Province" name="ProvinceCode">
-                <Select placeholder="Select province" onChange={handleSelectProvince}>
+                <Select
+                  placeholder="Select province"
+                  onChange={handleSelectProvince}
+                  disabled={!isEditing}
+                >
                   {provinceList?.map((province) => (
                     <Option key={province.code} value={province.code}>
                       {province.name}
@@ -225,7 +360,11 @@ export default function GeneralInfoForm({ user, refresh }) {
             </Col>
             <Col span={6}>
               <Form.Item label="District" name="DistrictCode">
-                <Select placeholder="Select district" onChange={handleSelectDistrict}>
+                <Select
+                  placeholder="Select district"
+                  onChange={handleSelectDistrict}
+                  disabled={!isEditing}
+                >
                   {districtList?.map((district) => (
                     <Option key={district.code} value={district.code}>
                       {district.name}
@@ -236,7 +375,7 @@ export default function GeneralInfoForm({ user, refresh }) {
             </Col>
             <Col span={6}>
               <Form.Item label="Ward" name="WardCode">
-                <Select placeholder="Select ward">
+                <Select placeholder="Select ward" disabled={!isEditing}>
                   {wardList?.map((ward) => (
                     <Option key={ward.code} value={ward.code}>
                       {ward.name}
@@ -245,36 +384,64 @@ export default function GeneralInfoForm({ user, refresh }) {
                 </Select>
               </Form.Item>
             </Col>
-
           </Row>
 
-                    <Row gutter={16}>
-                        <Col span={5}>
-                            <a onClick={() => setIsModalVisible(true)}>
-                                Change Password
-                            </a>
-                            <Modal
-                                footer={null}
-                                open={isModalVisible}
-                                onCancel={() => setIsModalVisible(false)}
-                                style={{ width: "fit-content", height: "fit-content" }}
-                            >
-                                <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
-                            </Modal>
-                        </Col>
-                        <Col span={10}>
-                            <Button type="primary" onClick={handleSubmit}>
-                                Save All
-                            </Button>
-                        </Col>
-                        <Col span={9}>
-                            <Button type="primary" onClick={refresh}>
-                                Reset
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </Card>
-        </>
-    );
+          <Row gutter={16}>
+            <Col span={8}>
+              <Button onClick={() => setIsModalVisible(true)}>
+                Change Password
+              </Button>
+              <Modal
+                footer={null}
+                open={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                style={{ width: "fit-content", height: "fit-content" }}
+              >
+                <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
+              </Modal>
+            </Col>
+
+            <Col span={12} style={{ textAlign: "right" }}>
+              {!isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
+                <Button type="primary" onClick={() => setIsEditing(true)}>
+                  Update
+                </Button>
+              )}
+              {isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
+                <>
+                  <Button onClick={handleCancel} style={{ marginRight: 8 }}>
+                    Cancel
+                  </Button>
+                  <Button type="primary" onClick={handleSubmit}>
+                    Save
+                  </Button>
+                </>
+              )}
+              {(user.UserRoleId == 2 || user.UserRoleId == 3) && (
+                <Button type="primary" onClick={showModal}>
+                  Update
+                </Button>
+              )}
+              <Modal
+                title="Contact Information"
+                open={isOpen}
+                onOk={handleModelOk}
+                onCancel={handleModelOk}
+                footer={[
+                  <Button key="submit" onClick={handleModelOk}>
+                    OK
+                  </Button>,
+                ]}
+              >
+                <p>
+                  If you want any update, please contact our mail:
+                  support@example.com
+                </p>
+              </Modal>
+            </Col>
+          </Row>
+        </Form>
+      </Card>
+    </>
+  );
 }

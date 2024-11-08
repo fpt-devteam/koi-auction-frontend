@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined, UserOutlined } from "@ant-design/icons";
+import { FormOutlined, HistoryOutlined, UserOutlined, DashboardOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 function getItem(label, key, icon, children = null, url = "/management") {
@@ -83,12 +83,20 @@ function MngSider() {
         onClick: () => navigate("/management/staff-list"),
       },
     ];
-    items.push({
+    items.push(
+      {
       key: "account-management",
       icon: <UserOutlined />,
       label: "Account Management",
       children: accountDropdownItems,
-    });
+    },
+    {
+      label: "Dash Board",
+      icon: <DashboardOutlined />,
+      key: "dashboard",
+      onClick: () => navigate("/management/dashboard"),
+    },
+  );
   }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();

@@ -8,7 +8,11 @@ const authMiddleware = (store) => (next) => async (action) => {
       console.log("tao dang fetch user")
       // Call the API to check user authentication
       const response = await userApi.get("/profile");
-      store.dispatch(loginSuccess({ user: response.data }));
+      const user = response.data;
+      store.dispatch(loginSuccess({ user }));
+      if (user.UserRoleId > 1 && window.location.pathname === "/") {
+        window.location.href = '/management';
+      }
       console.log("tao fetch duoc user")
     } catch (error) {
       console.log("tao khong fetch duco user");

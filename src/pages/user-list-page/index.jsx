@@ -136,7 +136,7 @@ export default function UserList({ number }) {
           <Button
             className="viewButton"
             onClick={() =>
-              navigate("/admin/management/user-detail?id=" + record.UserId)
+              navigate("/management/user-detail?id=" + record.UserId)
             }
           >
             View Details

@@ -1,5 +1,6 @@
-import { Form, Input, Modal, Switch } from "antd";
+import { Form, Input, Modal, Switch, Upload } from "antd";
 import React from "react";
+import UploadAvatar from "../upload-avatar";
 
 function ProfileForm({
   form,
@@ -9,10 +10,13 @@ function ProfileForm({
   onClose,
   isBreeder,
   isCreate,
-  roleId
+  roleId,
 }) {
   const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
-  const noLeadingTrailingSpacesRule = { pattern: /^\S.*\S$|^\S$/, message: "No leading or trailing spaces are allowed!" };
+  const noLeadingTrailingSpacesRule = {
+    pattern: /^\S.*\S$|^\S$/,
+    message: "No leading or trailing spaces are allowed!",
+  };
 
   return (
     <div>
@@ -38,12 +42,21 @@ function ProfileForm({
           layout="horizontal"
           initialValues={initialValues}
         >
+          { isBreeder && <Form.Item
+            label="Avatar"
+            name="Certificate"
+            rules={[{ required: true, message: "Please upload an avatar!" }]}
+          >
+            <UploadAvatar />
+          </Form.Item> 
+          }
+          
           <Form.Item
             label="Username"
             name="Username"
             rules={[
               { required: true, message: "Please input the username!" },
-              noSpacesRule
+              noSpacesRule,
             ]}
             readOnly={true}
           >
@@ -55,7 +68,7 @@ function ProfileForm({
               name="Password"
               rules={[
                 { required: true, message: "Please input the password!" },
-                noSpacesRule
+                noSpacesRule,
               ]}
             >
               <Input.Password size="small" />
@@ -66,7 +79,7 @@ function ProfileForm({
             name="FirstName"
             rules={[
               { required: true, message: "Please input the first name!" },
-              noLeadingTrailingSpacesRule
+              noLeadingTrailingSpacesRule,
             ]}
           >
             <Input size="small" />
@@ -76,7 +89,7 @@ function ProfileForm({
             name="LastName"
             rules={[
               { required: true, message: "Please input the last name!" },
-              noLeadingTrailingSpacesRule
+              noLeadingTrailingSpacesRule,
             ]}
           >
             <Input size="small" />
@@ -87,7 +100,7 @@ function ProfileForm({
             rules={[
               { required: true, message: "Please input the email!" },
               { type: "email", message: "Please enter a valid email!" },
-              noSpacesRule
+              noSpacesRule,
             ]}
           >
             <Input size="small" />
@@ -101,7 +114,7 @@ function ProfileForm({
                 pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
                 message: "Please enter a valid phone number!",
               },
-              noSpacesRule
+              noSpacesRule,
             ]}
           >
             <Input size="small" />
@@ -117,29 +130,19 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the farm name!" },
                   { required: true },
-                  noLeadingTrailingSpacesRule
+                  noLeadingTrailingSpacesRule,
                 ]}
               >
                 <Input size="small" />
               </Form.Item>
-              <Form.Item
-                label="Certificate"
-                name="Certificate"
-                rules={[
-                  { message: "Please input the certificate!" },
-                  { required: true },
-                  noLeadingTrailingSpacesRule
-                ]}
-              >
-                <Input size="small" />
-              </Form.Item>
+
               <Form.Item
                 label="About"
                 name="About"
                 rules={[
                   { message: "Please input the about section!" },
                   { required: true },
-                  noLeadingTrailingSpacesRule
+                  noLeadingTrailingSpacesRule,
                 ]}
               >
                 <Input.TextArea size="small" />

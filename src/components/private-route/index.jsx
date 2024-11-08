@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Loading from '../loading';
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user); 
   //get url path
   const location = useLocation();
 
@@ -31,7 +31,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
           return <Navigate to="/management" />;
       }
     }
-    return <Navigate to="/unauthorized" />; // Hoặc trang thông báo quyền truy cập bị từ chối
+    return <Navigate to="/unauthorized" />;
   }
 
   // Nếu tất cả điều kiện đều đạt, render component con (children)
