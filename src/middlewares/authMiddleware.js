@@ -1,17 +1,5 @@
-import { message } from "antd";
 import userApi from "../config/userApi";
-import { loginSuccess, logout, loadStart, loadDone } from "../redux/features/userSlice";
-import { useSelector } from "react-redux";
-
-// List of public paths (no authentication required)
-const publicPaths = [
-  "/login",
-  "/register",
-  "/",
-  "/auction-list",
-  /^\/auction-detail\/\d+$/, // Regex to match /auction-detail/21 or /auction-detail/any-number
-  /^\/auction-lot-detail\/\d+$/, // Regex to match /auction-lot-detail/any-number
-];
+import { loginSuccess, loadStart, loadDone } from "../redux/features/userSlice";
 
 const authMiddleware = (store) => (next) => async (action) => {
   if (action.type === "auth/checkAuth") {
@@ -28,7 +16,6 @@ const authMiddleware = (store) => (next) => async (action) => {
       console.log("error", error);
     }
   }
-  // Pass the action to the next middleware/reducer
   return next(action);
 };
 

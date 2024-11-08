@@ -18,8 +18,10 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return children;
   }
 
+  console.log("user", user);
   // Kiểm tra roleId của user
   if (!loading && !allowedRoles.includes(user.UserRoleId)) {
+    console.log("vgao day");
     if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/' 
       || location.pathname == '/unauthorized') {
       switch (user.UserRoleId) {

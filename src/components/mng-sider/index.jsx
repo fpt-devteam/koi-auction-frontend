@@ -70,17 +70,17 @@ function MngSider() {
       {
         label: "User Management",
         key: "account-user-management",
-        onClick: () => navigate("/admin/management/user-list"),
+        onClick: () => navigate("/management/user-list"),
       },
       {
         label: "Breeder Management",
         key: "account-breeder-management",
-        onClick: () => navigate("/admin/management/breeder-list"),
+        onClick: () => navigate("/management/breeder-list"),
       },
       {
         label: "Staff Management",
         key: "account-staff-management",
-        onClick: () => navigate("/admin/management/staff-list"),
+        onClick: () => navigate("/management/staff-list"),
       },
     ];
     items.push({
