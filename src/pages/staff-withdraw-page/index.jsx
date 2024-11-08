@@ -5,7 +5,7 @@ import paymentApi from "../../config/paymentApi";
 import './index.css';
 import Modal from "antd/es/modal/Modal";
 import TextArea from "antd/es/input/TextArea";
-import internalPaymentApi from "../../config/internalPaymentApi";
+import internalPaymentApi from "../../config/internalPaymentApi.js";
 
 export default function StaffWithdrawStatusPage() {
     const [loading, setLoading] = useState(true);
@@ -158,7 +158,7 @@ const OrderList = ({ statusName, refresh, isPending }) => {
             title: <span className="table-header">Amount</span>,
             dataIndex: 'amount',
             key: 'amount',
-            render: (amount) => `$${amount.toLocaleString()}`,
+            render: (amount) => `${amount?.toLocaleString()} VND`,
         },
         {
             title: 'Description',
