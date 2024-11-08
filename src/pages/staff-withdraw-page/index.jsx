@@ -5,6 +5,7 @@ import paymentApi from "../../config/paymentApi";
 import './index.css';
 import Modal from "antd/es/modal/Modal";
 import TextArea from "antd/es/input/TextArea";
+import internalPaymentApi from "../../config/internalPaymentApi";
 
 export default function StaffWithdrawStatusPage() {
     const [loading, setLoading] = useState(true);
@@ -86,7 +87,7 @@ const OrderList = ({ statusName, refresh, isPending }) => {
         const fetchTransactions = async () => {
             setLoading(true);
             try {
-                const response = await paymentApi.get("/get-transaction-history");
+                const response = await paymentApi.get("/manage/get-transaction-history");
                 const filteredTransactions = response?.data?.filter(
                     (trans) => trans.Status === statusName
                 ).map((trans) => ({
@@ -99,7 +100,8 @@ const OrderList = ({ statusName, refresh, isPending }) => {
                     userId: trans.UserId,
                     description: trans.Description,
                 }));
-                console.log(filteredTransactions);
+                console.log("response", response.data)
+                console.log("filteredTransactions", filteredTransactions);
                 setTransactions(filteredTransactions || []);
             } catch (error) {
                 console.log(error);
@@ -197,10 +199,13 @@ const OrderList = ({ statusName, refresh, isPending }) => {
     return loading ? (
         <Spin />
     ) : (
-        <Table
-            columns={columns}
-            dataSource={transactions}
-            locale={{ emptyText: `No ${statusName} transactions` }}
-        />
+        <div>
+            {/* <h1>h1h1h1</h1> */}
+            <Table
+                columns={columns}
+                dataSource={transactions}
+                locale={{ emptyText: `No ${statusName} transactions` }}
+            />
+        </div>
     );
 };

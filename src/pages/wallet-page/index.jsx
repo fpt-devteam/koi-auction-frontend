@@ -34,8 +34,11 @@ const WalletPage = () => {
         transId: trans.TransId,
         balanceAfter: trans.BalanceAfter,
         amount: trans.Amount,
+        transType: trans.TransType,
+
         // walletId: trans.WalletId,
       }));
+      console.log("formattedTransactions", formattedTransactions)
       setTransactions(formattedTransactions);
     } catch (error) {
       console.log(error);

@@ -19,7 +19,7 @@ const MIN_DEPOSIT_AMOUNT = 1000;
 const MIN_WITHDRAWAL_AMOUNT = 1000;
 
 function YourWallet({ balance, refresh, user }) {
-  // console.log("user", user)
+  console.log("user", user)
   const [depositModal, setDepositModal] = useState(false);
   const [withdrawalModal, setWithdrawalModal] = useState(false);
   const handleDeposit = () => {
@@ -59,6 +59,7 @@ function YourWallet({ balance, refresh, user }) {
         BankName: values.bankName,
         AccountHolder: values.accountHolder,
       });
+      console.log(response.data)
       message.success("Your withdrawal request submitted successfully");
       // window.location.reload();
       refresh();
@@ -80,7 +81,7 @@ function YourWallet({ balance, refresh, user }) {
           style={{ backgroundColor: "#ffc0cb" }}
         />
         <Space>
-          {user.role === 1 && (
+          {user.UserRoleId === 1 && (
             <Button type="default" size="large" onClick={handleDeposit}>
               Deposit
             </Button>
