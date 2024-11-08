@@ -15,6 +15,7 @@ function BreederPage() {
     try {
       const response = await userApi.get("/manage/breeder/profile");
       setBreeders(response.data);
+
     } catch (error) {
       message.error("Failed to load breeder information");
       console.log(error);
@@ -26,7 +27,7 @@ function BreederPage() {
   useEffect(() => {
     fetchBreederInfo();
   }, []);
-
+  console.log(breeders)
   return (
     <div style={styles.pageContainer}>
       <Card

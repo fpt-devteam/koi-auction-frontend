@@ -153,8 +153,7 @@ const RegisterForm = () => {
               { required: true, message: "Please input your password!" },
               {
                 pattern: /^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/,
-                message:
-                  "Password must be at least 8 characters long, contain at least one special character, and must not include spaces.",
+                message: "Password must be at least 8 characters long, contain at least one special character, and must not include spaces.",
               },
             ]}
             hasFeedback
@@ -200,6 +199,12 @@ const RegisterForm = () => {
             className="form-item"
             name="agreement"
             valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value ? Promise.resolve() : Promise.reject(new Error("You must agree to our terms and policy!")),
+              },
+            ]}
           >
             <Checkbox>I agreed with company policies and terms.</Checkbox>
           </Form.Item>
