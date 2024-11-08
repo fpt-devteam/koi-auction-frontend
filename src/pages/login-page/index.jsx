@@ -6,6 +6,11 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const user = useSelector((store) => store.user.user);
+  const navigate = useNavigate();
+  if (user != null) {
+    navigate('/');
+  }
   return (
     <div>
       <Row align={'middle'}>

@@ -18,15 +18,12 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return children;
   }
 
+  console.log("user", user);
   // Kiểm tra roleId của user
   if (!loading && !allowedRoles.includes(user.UserRoleId)) {
-    // Nếu user đã đăng nhập và có UserRoleId > 1, luôn chuyển đến /management
-    // if (user.UserRoleId > 1 && location.pathname === '/') {
-    //   return <Navigate to="/management" />;
-    // }
-
-    if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/' 
-      || location.pathname === '/unauthorized') {
+    console.log("vgao day");
+    if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/' 
+      || location.pathname == '/unauthorized') {
       switch (user.UserRoleId) {
         case 1:
           return <Navigate to="/" />;

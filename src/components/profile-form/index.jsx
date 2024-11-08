@@ -17,10 +17,13 @@ import { useForm } from "antd/es/form/Form";
 import addressApi from "../../config/addressApi";
 import userApi from "../../config/userApi";
 import "./index.css";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
-
+import "./index.css";
+import ChangePasswordForm from "../change-password-form";
+const imageExample =
+  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
 export default function GeneralInfoForm({ user, refresh }) {
   const [form] = useForm();
@@ -31,12 +34,12 @@ export default function GeneralInfoForm({ user, refresh }) {
   const [wardList, setWardList] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districtId, setDistrictId] = useState(null);
-  
+
   const [isBreeder, setIsBreeder] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [breederInfo, setBreederInfo] = useState(null);
-  
+
   const showModal = () => {
     setIsOpen(true);
   };
@@ -99,6 +102,23 @@ export default function GeneralInfoForm({ user, refresh }) {
       message.error("Failed to load initial data");
     }
   };
+  const initializeFormData = async () => {
+    try {
+      const [provinces, districts, wards] = await Promise.all([
+        fetchProvinces(),
+        fetchDistricts(user.ProvinceCode),
+        fetchWards(user.DistrictCode),
+      ]);
+      console.log(provinces, districts, wards);
+      setProvinceList(provinces);
+      setDistrictList(districts);
+      setWardList(wards);
+      setInitialLoading(false);
+    } catch (error) {
+      console.error("Error initializing form data:", error);
+      message.error("Failed to load initial data");
+    }
+  };
 
   useEffect(() => {
     if (!initialLoading && user) {
@@ -111,7 +131,6 @@ export default function GeneralInfoForm({ user, refresh }) {
         ProvinceCode: user.ProvinceCode,
         DistrictCode: user.DistrictCode,
         WardCode: user.WardCode,
-
       });
       setLoading(false);
       form.validateFields(["DistrictCode"]);
@@ -196,26 +215,42 @@ export default function GeneralInfoForm({ user, refresh }) {
         size="medium"
         className="card"
         bordered={false}
-        style={{ width: '900px' }}
+        style={{ width: "900px" }}
         title={
           isBreeder ? (
             <>
               <Image src={breederInfo?.Certificate} width={"50em"} />
               <br />
-              <span style={{ fontSize: '34px', fontWeight: 'bold', padding: '20px', color: ' rgb(255, 77, 79)' }}>{breederInfo?.FarmName}</span>
+              <span
+                style={{
+                  fontSize: "34px",
+                  fontWeight: "bold",
+                  padding: "20px",
+                  color: " rgb(255, 77, 79)",
+                }}
+              >
+                {breederInfo?.FarmName}
+              </span>
             </>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '40px' }}>
-              <Avatar 
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                padding: "40px",
+              }}
+            >
+              <Avatar
                 size={64}
                 icon={<UserOutlined />}
                 src={user?.Avatar}
-                style={{ 
-                  backgroundColor: '#1890ff',
-                  flexShrink: 0
+                style={{
+                  backgroundColor: "#1890ff",
+                  flexShrink: 0,
                 }}
               />
-              <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
+              <span style={{ fontSize: "24px", fontWeight: "bold" }}>
                 {`${user?.FirstName} ${user?.LastName}'s Profile`}
               </span>
             </div>
@@ -233,8 +268,8 @@ export default function GeneralInfoForm({ user, refresh }) {
                     { required: true, message: "Please enter your Farm Name" },
                   ]}
                 >
-                  <Input 
-                    placeholder="Enter your Farm Name" 
+                  <Input
+                    placeholder="Enter your Farm Name"
                     disabled={!isEditing}
                   />
                 </Form.Item>
@@ -250,8 +285,8 @@ export default function GeneralInfoForm({ user, refresh }) {
                   { required: true, message: "Please enter your first name" },
                 ]}
               >
-                <Input 
-                  placeholder="Enter your first name" 
+                <Input
+                  placeholder="Enter your first name"
                   disabled={!isEditing}
                 />
               </Form.Item>
@@ -264,8 +299,8 @@ export default function GeneralInfoForm({ user, refresh }) {
                   { required: true, message: "Please enter your last name" },
                 ]}
               >
-                <Input 
-                  placeholder="Enter your last name" 
+                <Input
+                  placeholder="Enter your last name"
                   disabled={!isEditing}
                 />
               </Form.Item>
@@ -285,10 +320,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                   },
                 ]}
               >
-                <Input 
-                  placeholder="example@gmail.com" 
-                  disabled={!isEditing}
-                />
+                <Input placeholder="example@gmail.com" disabled={!isEditing} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -299,23 +331,19 @@ export default function GeneralInfoForm({ user, refresh }) {
                   { required: true, message: "Please enter your phone number" },
                 ]}
               >
-                <Input 
-                  placeholder="+84 - 345 678 910" 
-                  disabled={!isEditing}
-                />
+                <Input placeholder="+84 - 345 678 910" disabled={!isEditing} />
               </Form.Item>
             </Col>
           </Row>
 
           {isBreeder && (
             <Row gutter={16}>
-
               <Col span={24}>
                 <Form.Item label="About" name="About">
-                  <Input.TextArea 
-                    placeholder="Enter information about your farm" 
+                  <Input.TextArea
+                    placeholder="Enter information about your farm"
                     disabled={!isEditing}
-                    style={{ height: '10em' }}
+                    style={{ height: "10em" }}
                   />
                 </Form.Item>
               </Col>
@@ -325,8 +353,8 @@ export default function GeneralInfoForm({ user, refresh }) {
           <Row gutter={16}>
             <Col span={6}>
               <Form.Item label="Address" name="Address">
-                <Input 
-                  placeholder="Enter your home address" 
+                <Input
+                  placeholder="Enter your home address"
                   disabled={!isEditing}
                 />
               </Form.Item>
@@ -375,24 +403,39 @@ export default function GeneralInfoForm({ user, refresh }) {
           </Row>
 
           <Row gutter={16}>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col span={5}>
+              <a onClick={() => setIsModalVisible(true)}>Change Password</a>
+              <Modal
+                footer={null}
+                open={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                style={{ width: "fit-content", height: "fit-content" }}
+              >
+                <ChangePasswordForm cancel={() => setIsModalVisible(false)} />
+              </Modal>
+            </Col>
+            <Col span={10}>
+              <Button type="primary" onClick={handleSubmit}>
+                Save All
+              </Button>
+            </Col>
+            <Col span={9}>
+              <Button type="primary" onClick={refresh}>
+                Reset
+              </Button>
+            </Col>
+            <Col span={24} style={{ textAlign: "right" }}>
               {!isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
                 <Button type="primary" onClick={() => setIsEditing(true)}>
                   Update
                 </Button>
-              ) }
-              { isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
+              )}
+              {isEditing && (user.UserRoleId == 4 || user.UserRoleId == 1) && (
                 <>
-                  <Button 
-                    onClick={handleCancel} 
-                    style={{ marginRight: 8 }}
-                  >
+                  <Button onClick={handleCancel} style={{ marginRight: 8 }}>
                     Cancel
                   </Button>
-                  <Button 
-                    type="primary" 
-                    onClick={handleSubmit}
-                  >
+                  <Button type="primary" onClick={handleSubmit}>
                     Save
                   </Button>
                 </>
@@ -408,9 +451,16 @@ export default function GeneralInfoForm({ user, refresh }) {
                 onOk={handleModelOk}
                 onCancel={handleModelOk}
                 footer={[
-                  <Button key="submit" onClick={handleModelOk}>OK</Button>
+                  <Button key="submit" onClick={handleModelOk}>
+                    OK
+                  </Button>,
                 ]}
-                ><p>If you want any update, please contact our mail: support@example.com</p></Modal>
+              >
+                <p>
+                  If you want any update, please contact our mail:
+                  support@example.com
+                </p>
+              </Modal>
             </Col>
           </Row>
         </Form>
