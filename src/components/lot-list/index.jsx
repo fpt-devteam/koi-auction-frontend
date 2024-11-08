@@ -24,7 +24,7 @@ const LotList = ({ lotStatusId, breederId = null }) => {
       <Row gutter={[16, 16]}>
         {lots.map((lot) => (
           <Col key={lot.lotId} xs={24} sm={24} md={24} lg={24}>
-            <LotCard lot={lot} refetch={refetch} />
+            <LotCard lotStatusId={lotStatusId} lot={lot} refetch={refetch} />
           </Col>
         ))}
       </Row>
