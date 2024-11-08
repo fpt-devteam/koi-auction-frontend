@@ -89,7 +89,7 @@ const OrderList = ({ statusName, refresh, isPending }) => {
             try {
                 const response = await paymentApi.get("/manage/get-transaction-history");
                 const filteredTransactions = response?.data?.filter(
-                    (trans) => trans.Status === statusName
+                    (trans) => trans.Status === statusName && trans.TransType === "Withdraw"
                 ).map((trans) => ({
                     key: trans.TransId,
                     status: trans.Status,

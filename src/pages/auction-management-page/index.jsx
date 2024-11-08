@@ -95,20 +95,12 @@ const AuctionList = ({ auctionStatusId, auctionStatusName, refresh }) => {
     const fetchAuctionData = async () => {
         try {
             const response = await lotApi.get("auctions");
-            let data;
-            const now = new Date();
-            if (auctionStatusId === 1) {
-                data = response.data.filter((auction) => new Date(auction.startTime) > now);
-            } else if (auctionStatusId === 2) {
-                data = response.data.filter(
-                    (auction) =>
-                        new Date(auction.startTime) <= now && new Date(auction.endTime) >= now
-                );
-            } else if (auctionStatusId === 3) {
-                data = response.data.filter((auction) => new Date(auction.endTime) < now);
+            if (response) {
+                let data;
+                data = response?.data.filter((auction) => auction.auctionStatus.auctionStatusId === auctionStatusId);
+                setAuctionList(data);
+                setLoading(false);
             }
-            setAuctionList(data);
-            setLoading(false);
         } catch (error) {
             message.error(error.message);
         }

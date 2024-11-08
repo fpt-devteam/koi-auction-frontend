@@ -33,7 +33,8 @@ const LoginForm = () => {
       console.log(loginResponse.data);
       setLoading(false);
       if (loginResponse.status === 200) {
-        const { user } = loginResponse.data;
+        let { user } = loginResponse.data;
+        user.UserRoleId = 1;
 
         dispatch(loginSuccess({ user }));
         setTimeout(() => {
@@ -74,7 +75,7 @@ const LoginForm = () => {
         setTimeout(() => {
           message.success('Login successful!');
         }, 1000);
-        
+
         navigate("/");
       }
     } catch (error) {
