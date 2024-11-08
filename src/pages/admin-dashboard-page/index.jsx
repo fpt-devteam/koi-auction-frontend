@@ -42,6 +42,7 @@ function DashBoardPage() {
     fetchBreederStatistics();
   }, []);
 
+  //total lot
   const [totalStatistics, setTotal] = useState([]);
   const fetchTotalStatistics = async () => {
     try {
@@ -60,6 +61,66 @@ function DashBoardPage() {
     fetchTotalStatistics();
   }, []);
 
+  //revenue
+  // const [revenueStatistics, setRevenue] = useState([]);
+  // const [filterRevenueStatistics, setFilterRevenueStatistics] = useState([]);
+  // const fectchRevenueStatistics = async () => {
+  //   try {
+  //     const response = await lotApi.get(`/lots/last7days?offsetWeeks=1`);
+  //     setRevenue(response.data);
+  //   } catch (error) {
+  //     message.error(error.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fectchRevenueStatistics();
+  // }, []);
+
+  const [revenueStatistics, setRevenueStatistics] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Revenue",
+        data: [],
+        borderColor: "#3a6df0",
+        backgroundColor: "rgba(58, 109, 240, 0.2)",
+        pointBackgroundColor: "#3a6df0",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  });
+
+  const fetchRevenueStatistics = async (offsetWeeks = 0) => {
+    try {
+      const response = await lotApi.get(
+        `/lots/last7days?offsetWeeks=${offsetWeeks}`
+      );
+      const revenueData = response.data;
+      console.log(revenueData);
+      setRevenueStatistics({
+        labels: revenueData.map((item) => item.dayName),
+        datasets: [
+          {
+            label: "Revenue",
+            data: revenueData.map((item) => item.revenue),
+            borderColor: "#3a6df0",
+            backgroundColor: "rgba(58, 109, 240, 0.2)",
+            pointBackgroundColor: "#3a6df0",
+            tension: 0.4,
+            fill: true,
+          },
+        ],
+      });
+    } catch (error) {
+      message.error("Error fetching revenue data: " + error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRevenueStatistics();
+  }, []);
   return (
     <div style={{ padding: "2% 4% 4% 4%" }}>
       <h1>DashBoard</h1>
@@ -77,12 +138,16 @@ function DashBoardPage() {
           <LineChartComponent />
         </Col>
       </Row> */}
-      {/* 
+
       <Row gutter={20}>
         <Col span={24}>
-          <MainLineChartComponent />
+          <MainLineChartComponent
+            data={revenueStatistics}
+            fetchData={fetchRevenueStatistics}
+            title="Total Revenue"
+          />
         </Col>
-      </Row> */}
+      </Row>
 
       <Row gutter={20} style={{ marginTop: "3%" }}>
         <Col span={16}>
