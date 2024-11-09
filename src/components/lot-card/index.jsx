@@ -139,7 +139,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             )}
           </Col>
           <Col xs={4} sm={4} md={4} lg={4} xl={4}>
-            {lotStatusId > 5 && (
+            {lot?.lotStatusId > 5 && (
               <>
                 <DollarOutlined style={{ fontSize: '20px' }} />
                 <span style={{ marginLeft: '5px' }}>{finalPrice || "..."} VND</span>
@@ -163,7 +163,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
               <Button type="primary" shape="round" size="large" onClick={showModal}>
                 Detail
               </Button>
-              {userRoleId > 2 && finalPrice && statusId == 6 && (
+              {userRoleId > 2 && finalPrice && lot?.lotStatusId == 6 && (
                 <>
                   <Button type="primary" shape="round" size="large" onClick={handleLotDeliveryOpen}>
                     Delivery
@@ -173,7 +173,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
                   </Button>
                 </>
               )}
-              {userRoleId > 2 && finalPrice && statusId == 7 && (
+              {userRoleId > 2 && finalPrice && lot?.lotStatusId == 7 && (
                 <>
                   <Button type="primary" shape="round" size="large" onClick={handleLotComplete}>
                     Complete
@@ -186,7 +186,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             </div>
 
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
-            {userRoleId === 2 && statusId < 3 && (
+            {userRoleId === 2 && lot?.lotStatusId < 3 && (
               <Popconfirm title="Are you sure to delete this item?" onConfirm={handleLotDelete} okText="Yes" cancelText="No">
                 <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
               </Popconfirm>

@@ -22,22 +22,17 @@ export default function CreateAuctionPage() {
   const handleCreate = async (auctionData, atoiList) => {
     try {
       const response = await lotApi.post("auctions", auctionData);
-      console.log("response", response);
       let cnt = 0;
       let newAuctionLotList = atoiList.map(
         (item) =>
-          (item = {
-            // auctionId: 5,
-            auctionId: response.data.auctionId,
-            auctionLotId: item.lotId,
-            orderInAuction: ++cnt,
-            duration: convertToTimeFormat(item.duration),
-            stepPercent: item.stepPercent,
-          })
+        (item = {
+          auctionId: response.data.auctionId,
+          auctionLotId: item.lotId,
+          orderInAuction: ++cnt,
+          duration: convertToTimeFormat(item.duration),
+          stepPercent: item.stepPercent,
+        })
       );
-      console.log(auctionData);
-      console.log("list gui di", newAuctionLotList);
-
       const auctionLotRespone = await lotApi.post(
         "auction-lots/listAuctionLot",
         newAuctionLotList
@@ -66,9 +61,3 @@ export default function CreateAuctionPage() {
     </>
   );
 }
-
-/*
-1. call api tạo mới 1 auction vào Auction
-
-2. call api thêm các lot trong auction vào AuctionLot
-*/
