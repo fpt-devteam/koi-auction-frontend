@@ -20,7 +20,6 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
   const [winnerId, setWinnerId] = useState(null);
   const handleLotCancel = () => {
     setIsCancelModalOpen(true);
-    console.log("cancel", lot);
   }
   const handleLotDeliveryOpen = () => {
     setDeliveryModalVisible(true);
@@ -139,10 +138,9 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             )}
           </Col>
           <Col xs={4} sm={4} md={4} lg={4} xl={4}>
-            {lot?.lotStatusId > 5 && (
+            {userRoleId > 2 && finalPrice && lotStatusId > 5 && (
               <>
-                <DollarOutlined style={{ fontSize: '20px' }} />
-                <span style={{ marginLeft: '5px' }}>{finalPrice || "..."} VND</span>
+                <span style={{ color: 'red', fontWeight: 'bold', marginLeft: '5px' }}>{finalPrice?.toLocaleString() || "..."} VND</span>
               </>
             )}
           </Col>
