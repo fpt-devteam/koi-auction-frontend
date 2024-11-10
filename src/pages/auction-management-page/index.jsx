@@ -160,7 +160,7 @@ const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
                             marginTop: '20px',
                         }}
                     >
-                        <Button
+                        {/* <Button
                             type="primary"
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -170,7 +170,7 @@ const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
                             }}
                         >
                             Update
-                        </Button>
+                        </Button> */}
                         <Popconfirm
                             title="Are you sure?"
                             onConfirm={(e) => {

@@ -9,6 +9,7 @@ const { Text } = Typography;
 import { DollarOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import userApi from '../../config/userApi';
+import paymentApi from '../../config/paymentApi';
 
 const LotCard = ({ lotStatusId, lot, refetch }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,6 +19,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [winnerId, setWinnerId] = useState(null);
+
   const handleLotCancel = () => {
     setIsCancelModalOpen(true);
   }
@@ -31,7 +33,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
     handleComplete();
   }
   useEffect(() => {
-    if (lotStatusId > 4) {
+    if (lotStatusId > 5) {
       const fetchSoldLot = async () => {
         try {
           const response = await soldLotApi.get(`${lot.lotId}`);
@@ -78,10 +80,19 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
 
   const handleComplete = async () => {
     try {
-      await lotApi.put(`lots/${lot.lotId}/status`, {
-        lotStatusName: "Completed"
-      });
-      message.success('Completed successfully!');
+      await Promise.all([
+        lotApi.put(`lots/${lot.lotId}/status`, {
+          lotStatusName: "Completed"
+        }),
+        paymentApi.post(`payout`, {
+          Amount: lot.finalPrice,
+          BreederId: lot.breederId
+        })])
+        .then(([response, paymentResponse]) => {
+          console.log("response", response.data);
+          console.log("paymentResponse", paymentResponse.data);
+          // message.success('Completed successfully!');
+        });
       refetch();
     } catch (error) {
       message.error('Failed to complete lot: ' + error.message);
@@ -161,7 +172,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
               <Button type="primary" shape="round" size="large" onClick={showModal}>
                 Detail
               </Button>
-              {userRoleId > 2 && finalPrice && lot?.lotStatusId == 6 && (
+              {userRoleId > 2 && lotStatusId == 6 && (
                 <>
                   <Button type="primary" shape="round" size="large" onClick={handleLotDeliveryOpen}>
                     Delivery
@@ -171,7 +182,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
                   </Button>
                 </>
               )}
-              {userRoleId > 2 && finalPrice && lot?.lotStatusId == 7 && (
+              {userRoleId > 2 && lotStatusId == 8 && (
                 <>
                   <Button type="primary" shape="round" size="large" onClick={handleLotComplete}>
                     Complete
@@ -184,7 +195,7 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             </div>
 
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
-            {userRoleId === 2 && lot?.lotStatusId < 3 && (
+            {userRoleId === 2 && lotStatusId < 3 && (
               <Popconfirm title="Are you sure to delete this item?" onConfirm={handleLotDelete} okText="Yes" cancelText="No">
                 <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
               </Popconfirm>
