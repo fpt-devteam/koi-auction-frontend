@@ -37,14 +37,14 @@ const WalletPage = () => {
         break;
       case "Withdraw":
         if (trans.status === "Success") {
-          trans.balanceAfter = trans.amount - trans.balanceBefore;
+          trans.balanceAfter = trans.balanceBefore - trans.amount;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }
         break;
       case "Payment":
         if (trans.status === "Success") {
-          trans.balanceAfter = trans.amount - trans.balanceBefore;
+          trans.balanceAfter = trans.balanceBefore - trans.amount;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }

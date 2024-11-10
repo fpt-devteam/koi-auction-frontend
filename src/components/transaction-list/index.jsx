@@ -61,14 +61,14 @@ const TransactionList = ({ transactions }) => {
       dataIndex: "balanceBefore",
       key: "balanceBefore",
       align: "left",
-      render: (balanceBefore) => <Text strong>{balanceBefore.toLocaleString()} VND</Text>,
+      render: (balanceBefore) => <Text strong>{balanceBefore?.toLocaleString()} VND</Text>,
     },
     {
       title: "BALANCE AFTER",
       dataIndex: "balanceAfter",
       key: "balanceAfter",
       align: "left",
-      render: (balanceAfter) => <Text strong>{balanceAfter.toLocaleString()} VND</Text>,
+      render: (balanceAfter) => <Text strong>{balanceAfter?.toLocaleString()} VND</Text>,
     },
   ];
 
