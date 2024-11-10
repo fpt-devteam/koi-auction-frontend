@@ -15,8 +15,9 @@ const WinnerPrice = ({ winnerPrice }) => {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         padding: "5px", // Giảm kích thước padding
         borderRadius: "8px", // Bo góc mềm mại
-        marginTop: "auto",
+        marginTop: "95px",
         minHeight: "100px",
+        marginBottom: "20px",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>

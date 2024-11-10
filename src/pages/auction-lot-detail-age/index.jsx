@@ -153,7 +153,7 @@ const AuctionLotDetailPage = () => {
             {/* Starting Price || Step Price || Auction Method */}
             <Col span={16}>
               {/* Starting price*/}
-              {auctionMethodId != 2 && <PriceDisplayComponent text="Starting price" value={startingPrice} size="small" />}
+              {<PriceDisplayComponent text="Starting price" value={startingPrice} size="small" />}
               {/* Step price */}
               {auctionMethodId > 2 && <PriceDisplayComponent text="Step price" value={stepPrice} size="small" />}
               {/* Auction Method */}
@@ -165,6 +165,9 @@ const AuctionLotDetailPage = () => {
             <Col span={24}>
               {/* Current Bid */}
               {auctionMethodId == 3 && auctionLotStatusId == 3 && <CurrentBid currentBid={winner != null ? winner.bidAmount : null} />}
+
+              {/* Winner Price */}
+              {auctionLotStatusId == 4 && <WinnerPrice winnerPrice={winnerPrice} />}
             </Col>
           </Row>
         </Col>
@@ -189,11 +192,11 @@ const AuctionLotDetailPage = () => {
           {/* Price Buy Method 4*/}
           {userId && auctionMethodId == 4 && auctionLotStatusId == 3 && <PriceBuy price={priceDesc} onBuySubmit={handleBid} />}
 
+          {/* Winner Price
+          {auctionLotStatusId == 4 && <WinnerPrice winnerPrice={winnerPrice} />} */}
+
           {/* Suggest Login */}
           {!userId && <SuggestLogin />}
-
-          {/* Winner Price */}
-          {userId && auctionLotStatusId == 4 && <WinnerPrice winnerPrice={winnerPrice} />}
         </Col>
       </Row>
 

@@ -10,6 +10,7 @@ import {
   HomeOutlined,
   ShoppingOutlined,
   InfoCircleOutlined,
+  ShopOutlined 
 } from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
@@ -80,7 +81,7 @@ function Header() {
             <ShoppingOutlined className="nav-icon"/> Auctions
           </li>
           <li onClick={() => handleNavigation("/breeder")}>
-            <InfoCircleOutlined className="nav-icon"/> Breeders
+            <ShopOutlined     className="nav-icon"/> Breeders
           </li>
           <li onClick={() => handleNavigation("/about")}>
             <InfoCircleOutlined className="nav-icon"/> About

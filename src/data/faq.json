@@ -2,39 +2,33 @@
   "faqs": [
     {
       "id": "1",
-      "icon": "🇯🇵",
-      "title": "How do Breeder/Japan auctions work?",
-      "content": "Explanation for how Breeder/Japan auctions work."
+      "icon": "🔨",
+      "title": "How can I participate in an auction?",
+      "content": "You need to deposit money into your wallet. If the amount in your wallet is greater than the bid amount you place, your bid will be valid. However, you will not be charged if you do not win the auction."
     },
     {
       "id": "2",
-      "icon": "🇺🇸",
-      "title": "How do In-House/USA auctions work?",
-      "content": "Explanation for how In-House/USA auctions work."
+      "icon": "💰",
+      "title": "How can I withdraw my money?",
+      "content": "You need to submit a withdrawal request. However, if you are currently participating in an auction, your request will be temporarily held until the auction ends."
     },
     {
       "id": "3",
       "icon": "📦",
-      "title": "How does shipping work and how much does it cost?",
-      "content": "Explanation for how shipping works and its costs."
+      "title": "Can I cancel my bid after placing it?",
+      "content": "No, all bids placed on Koi Auction are considered final and binding. Please ensure you are prepared to complete the purchase if your bid wins."
     },
     {
       "id": "4",
       "icon": "💔",
-      "title": "What happens if my Koi passes away in transit?",
-      "content": "Details on policies regarding Koi passing away during transit."
+      "title": "Are there any guarantees or refunds after delivery?",
+      "content": "If there is an issue during transportation, a 100% refund will be provided."
     },
     {
       "id": "5",
       "icon": "💸",
-      "title": "When are payments due after an auction?",
-      "content": "Information on payment deadlines after an auction."
-    },
-    {
-      "id": "6",
-      "icon": "⏳",
-      "title": "How long can I expect to wait before my Koi is shipped?",
-      "content": "Expected waiting time before shipment of Koi."
+      "title": "What happens if I win an auction?",
+      "content": "If you win the auction, the system will automatically complete the payment through your wallet."
     }
   ]
-} 
+}

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined, UserOutlined, DashboardOutlined } from "@ant-design/icons";
+import { FormOutlined, HistoryOutlined, UserOutlined, DashboardOutlined, DashboardFilled, DashboardTwoTone, MoneyCollectOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 function getItem(label, key, icon, children = null, url = "/management") {
@@ -20,30 +20,9 @@ function MngSider() {
   const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
   let counter = 1; // Biến đếm bắt đầu từ 1
 
-  // Danh sách các items cơ bản, sử dụng biến đếm counter
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
-  if (userRoleId == 1) {
-    items.push(
-      getItem(
-        "Order Management",
-        counter++, // Tăng counter
-        <FormOutlined />,
-        null,
-        "/order"
-      )
-    );
-  }
-  // Chỉ thêm mục "Create a lot" nếu statusId === 2, và tăng counter
   if (userRoleId == 2) {
-    items.push(
-      getItem(
-        "Create a lot",
-        counter++, // Tăng counter
-        <FormOutlined />,
-        null,
-        "/management/create-lot-request"
-      )
-    );
+    items.push(getItem("Dashboard ", counter++, <DashboardTwoTone />, null, "/management/breeder-dashboard"));
   }
   if (userRoleId > 2) {
     items.push(
@@ -59,13 +38,13 @@ function MngSider() {
       getItem(
         "Withdraw Management ",
         counter++, // Tăng counter
-        <FormOutlined />,
+        <MoneyCollectOutlined />,
         null,
         "/management/withdraw"
       )
     );
   }
-  if (userRoleId === 4) {
+  if (userRoleId == 4) {
     const accountDropdownItems = [
       {
         label: "User Management",
@@ -91,10 +70,10 @@ function MngSider() {
       children: accountDropdownItems,
     },
     {
-      label: "Dash Board",
+      label: "Dashboard",
       icon: <DashboardOutlined />,
       key: "dashboard",
-      onClick: () => navigate("/management/dashboard"),
+      onClick: () => navigate("/management/admin-dashboard"),
     },
   );
   }

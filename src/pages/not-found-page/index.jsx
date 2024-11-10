@@ -11,7 +11,7 @@ const NotFoundPage = () => {
       <Result
         status="404"
         title="404"
-        subTitle="Sorry, you are not authorized to access this page."
+        subTitle="Sorry, the page you visited does not exist."
         extra={
           <div style={{display: "flex", justifyContent: "space-between"}}>
             <Button type="primary" onClick={() => navigate('/login')}>
