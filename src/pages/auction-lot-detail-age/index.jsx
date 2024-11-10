@@ -118,6 +118,7 @@ const AuctionLotDetailPage = () => {
     auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName }
   } = auctionLot;
   const stepPrice = stepPercent != null ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100 : stepPercent;
+  const softCap = startingPrice / 2;
   // console.log("auctionLot", auctionLot);
   return (
     <div style={{ padding: '20px 120px' }}>
@@ -154,6 +155,8 @@ const AuctionLotDetailPage = () => {
             <Col span={16}>
               {/* Starting price*/}
               {<PriceDisplayComponent text="Starting price" value={startingPrice} size="small" />}
+              {/* Soft cap */}
+              {auctionMethodId == 4 && <PriceDisplayComponent text="Soft cap" value={softCap} size="small" />}
               {/* Step price */}
               {auctionMethodId > 2 && <PriceDisplayComponent text="Step price" value={stepPrice} size="small" />}
               {/* Auction Method */}
