@@ -1,8 +1,9 @@
-import { Card, Carousel, Image, Row, Col, Button } from "antd";
+import { Card, Carousel, Image, Row, Col, Button, message } from "antd";
 import { ReadOutlined, LikeOutlined } from "@ant-design/icons";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 const imageList = [
   { image: "src/assets/login/koibanner.jpg", title: "FIND YOUR PERFECT KOI FROM TOP BREEDERS" },
   { image: "src/assets/login/koibanner2.jpg", title: "BID ON RARE AND BEAUTIFUL KOI VARIETIES" },
@@ -19,6 +20,7 @@ function HomePage() {
       navigate("/login");
     }
   }
+ 
   return (
     <>
       <div style={{ width: "100vw" }}>
@@ -75,7 +77,7 @@ function HomePage() {
           </Row>
         </Card>
       </div>
-
+      
       {/* second section */}
       <div className="container" style={{ padding: "0px" }}>
         <Card style={{ width: "100%" }}>
