@@ -12,6 +12,10 @@ import useFetchLots from '../../hooks/useFetchLots';
 
 const LotList = ({ lotStatusId, breederId = null }) => {
   const { lots, loading, refetch } = useFetchLots(lotStatusId, 'UpdatedAt', false, breederId);
+  const [statusId, setStatusId] = useState(0);
+  useEffect(() => {
+    setStatusId(lotStatusId);
+  }, [lots]);
   return loading ? (
     <Spin />
   ) : (
@@ -24,7 +28,7 @@ const LotList = ({ lotStatusId, breederId = null }) => {
       <Row gutter={[16, 16]}>
         {lots.map((lot) => (
           <Col key={lot.lotId} xs={24} sm={24} md={24} lg={24}>
-            <LotCard lotStatusId={lotStatusId} lot={lot} refetch={refetch} />
+            <LotCard lotStatusId={statusId} lot={lot} refetch={refetch} />
           </Col>
         ))}
       </Row>

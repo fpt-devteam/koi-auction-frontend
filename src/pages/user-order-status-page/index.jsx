@@ -7,7 +7,6 @@ import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate } from "react-router-dom";
 import './index.css';
 import paymentApi from "../../config/paymentApi";
-import internalPaymentApi from "../../config/internalPaymentApi";
 const { Text } = Typography;
 export default function UserOrderStatusPage() {
     const [tabsData, setTabsData] = useState([]);
@@ -92,12 +91,10 @@ export default function UserOrderStatusPage() {
 }
 
 const OrderList = ({ auctionLotList, soldLotList, lotStatusId, lotStatusName, userId }) => {
-    // console.log("auctionLotList1", auctionLotList);
-    // console.log("soldLotList1", soldLotList);
     const [orderList, setOrderList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [seed, setSeed] = useState(1);
-    const handleReset = () => setSeed(Math.random());
+    const handleReset = () => setSeed(seed + 1);
     useEffect(() => {
         const fetchOrderData = async () => {
             try {
@@ -163,9 +160,9 @@ const LotCard = ({ lot, refresh }) => {
                 .then(([response, paymentResponse]) => {
                     console.log("response", response.data);
                     console.log("paymentResponse", paymentResponse.data);
-                    refresh();
                     message.success('Delivery confirmed successfully');
                 });
+            refresh();
         } catch (error) {
             message.error(error.message);
         }
