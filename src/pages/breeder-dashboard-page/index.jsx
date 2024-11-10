@@ -34,6 +34,10 @@ function BreederDashboardPage() {
         `/breeder/statistics/get-sum-of-payout?userId=${user.UserId}&dayAmount=${offsetWeeks}`
       );
       const revenueData = response.data;
+
+      // Sort revenueData by date in ascending order
+      revenueData.sort((a, b) => new Date(a.dateFormatted) - new Date(b.dateFormatted));
+
       console.log("revenue data", revenueData);
       setRevenueStatistics({
         labels: revenueData.map((item) => item.dateFormatted),

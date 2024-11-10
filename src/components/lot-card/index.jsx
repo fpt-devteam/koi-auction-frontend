@@ -1,15 +1,27 @@
-import { Button, Card, Col, Image, message, Modal, Popconfirm, Row, Spin, Table, Typography } from 'antd';
-import { useEffect, useState } from 'react';
-import LotDetailPage from '../../pages/lot-detail-page';
-import lotApi from '../../config/lotApi';
-import { DeleteOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import soldLotApi from '../../config/soldLotApi';
+import {
+  Button,
+  Card,
+  Col,
+  Image,
+  message,
+  Modal,
+  Popconfirm,
+  Row,
+  Spin,
+  Table,
+  Typography,
+} from "antd";
+import { useEffect, useState } from "react";
+import LotDetailPage from "../../pages/lot-detail-page";
+import lotApi from "../../config/lotApi";
+import { DeleteOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import soldLotApi from "../../config/soldLotApi";
 const { Text } = Typography;
-import { DollarOutlined } from '@ant-design/icons';
-import TextArea from 'antd/es/input/TextArea';
-import userApi from '../../config/userApi';
-import paymentApi from '../../config/paymentApi';
+import { DollarOutlined } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
+import userApi from "../../config/userApi";
+import paymentApi from "../../config/paymentApi";
 
 const LotCard = ({ lotStatusId, lot, refetch }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -17,21 +29,21 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
   const userRoleId = useSelector((store) => store.user.user?.UserRoleId);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const [cancelReason, setCancelReason] = useState('');
+  const [cancelReason, setCancelReason] = useState("");
   const [winnerId, setWinnerId] = useState(null);
 
   const handleLotCancel = () => {
     setIsCancelModalOpen(true);
-  }
+  };
   const handleLotDeliveryOpen = () => {
     setDeliveryModalVisible(true);
-  }
+  };
   const handleLotDeliveryClose = () => {
     setDeliveryModalVisible(false);
-  }
+  };
   const handleLotComplete = () => {
     handleComplete();
-  }
+  };
   useEffect(() => {
     if (lotStatusId > 5) {
       const fetchSoldLot = async () => {
@@ -59,56 +71,61 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
     try {
       await lotApi.put(`lots/${lot.lotId}/status`, {
         lotStatusName: "Canceled",
-        description: cancelReason
+        description: cancelReason,
       });
-      message.success('Canceled successfully!');
+      message.success("Canceled successfully!");
       refetch();
     } catch (error) {
-      message.error('Failed to cancel lot: ' + error.message);
+      message.error("Failed to cancel lot: " + error.message);
     }
-  }
+  };
   const handleLotDelete = async () => {
     try {
       await lotApi.delete(`lots/${lot.lotId}`);
-      message.success('Deleted successfully!');
+      message.success("Deleted successfully!");
       refetch();
     } catch (error) {
-      message.error('Failed to delete lot: ' + error.message);
+      message.error("Failed to delete lot: " + error.message);
     }
   };
   const statusId = useSelector((state) => state.status.statusId);
 
   const handleComplete = async () => {
     try {
+      console.log(lot);
       await Promise.all([
         lotApi.put(`lots/${lot.lotId}/status`, {
-          lotStatusName: "Completed"
+          lotStatusName: "Completed",
         }),
         paymentApi.post(`payout`, {
-          Amount: lot.finalPrice,
-          BreederId: lot.breederId
-        })])
-        .then(([response, paymentResponse]) => {
-          console.log("response", response.data);
-          console.log("paymentResponse", paymentResponse.data);
-          // message.success('Completed successfully!');
-        });
+          Amount: finalPrice,
+          BreederId: lot.breederId,
+        }),
+      ]).then(([response, paymentResponse]) => {
+        console.log("response", response.data);
+        console.log("paymentResponse", paymentResponse.data);
+        // message.success('Completed successfully!');
+      });
       refetch();
     } catch (error) {
-      message.error('Failed to complete lot: ' + error.message);
+      message.error("Failed to complete lot: " + error.message);
     }
-  }
+  };
 
   return (
     <>
       <Card
         style={{
           //shadow
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           //background color
-          backgroundColor: '#fafafa'
+          backgroundColor: "#fafafa",
         }}
-        title={<div style={{ textAlign: 'left' }}>{`${lot.koiFishDto.variety} #${lot.sku}`}</div>}
+        title={
+          <div
+            style={{ textAlign: "left" }}
+          >{`${lot.koiFishDto.variety} #${lot.sku}`}</div>
+        }
       >
         <Row gutter={[16, 16]}>
           <Col
@@ -118,32 +135,39 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             lg={4}
             xl={4}
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Image src={lot.koiFishDto.koiMedia?.[0]?.filePath || 'default-placeholder.png'} width={80} height={80} />
+            <Image
+              src={
+                lot.koiFishDto.koiMedia?.[0]?.filePath ||
+                "default-placeholder.png"
+              }
+              width={80}
+              height={80}
+            />
           </Col>
 
           {/* Details Section */}
           <Col xs={8} sm={8} md={8} lg={8} xl={8}>
             <Text strong>Starting Price: </Text>
-            <span>{lot.startingPrice || '...'}</span>
+            <span>{lot.startingPrice || "..."}</span>
             <br />
 
             <Text strong>Varitey: </Text>
-            <span>{lot.koiFishDto.variety || '...'}</span>
+            <span>{lot.koiFishDto.variety || "..."}</span>
             <br />
 
             <Text strong>Method: </Text>
-            <span>{lot.auctionMethod.auctionMethodName || '...'}</span>
+            <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
             <br />
 
             {userRoleId > 2 && (
               <>
                 <Text strong>By: </Text>
-                <span>{lot.breederDetailDto?.farmName || 'Unknown'}</span>
+                <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
                 <br />
               </>
             )}
@@ -151,7 +175,15 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
           <Col xs={4} sm={4} md={4} lg={4} xl={4}>
             {userRoleId > 2 && finalPrice && lotStatusId > 5 && (
               <>
-                <span style={{ color: 'red', fontWeight: 'bold', marginLeft: '5px' }}>{finalPrice?.toLocaleString() || "..."} VND</span>
+                <span
+                  style={{
+                    color: "red",
+                    fontWeight: "bold",
+                    marginLeft: "5px",
+                  }}
+                >
+                  {finalPrice?.toLocaleString() || "..."} VND
+                </span>
               </>
             )}
           </Col>
@@ -163,31 +195,58 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
             lg={4}
             xl={4}
             style={{
-              display: 'flex',
-              justifyContent: 'space-around',
-              alignItems: 'center'
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
           >
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <Button type="primary" shape="round" size="large" onClick={showModal}>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Button
+                type="primary"
+                shape="round"
+                size="large"
+                onClick={showModal}
+              >
                 Detail
               </Button>
               {userRoleId > 2 && lotStatusId == 6 && (
                 <>
-                  <Button type="primary" shape="round" size="large" onClick={handleLotDeliveryOpen}>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={handleLotDeliveryOpen}
+                  >
                     Delivery
                   </Button>
-                  <Button type="primary" shape="round" size="large" onClick={handleLotCancel} danger>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={handleLotCancel}
+                    danger
+                  >
                     Cancel
                   </Button>
                 </>
               )}
-              {userRoleId > 2 && lotStatusId == 8 && (
+              {userRoleId > 2 && lotStatusId == 7 && (
                 <>
-                  <Button type="primary" shape="round" size="large" onClick={handleLotComplete}>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={handleLotComplete}
+                  >
                     Complete
                   </Button>
-                  <Button type="primary" shape="round" size="large" onClick={handleLotCancel} danger>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={handleLotCancel}
+                    danger
+                  >
                     Cancel
                   </Button>
                 </>
@@ -196,8 +255,18 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
 
             {/* Nút Delete với Popconfirm để xác nhận xóa */}
             {userRoleId === 2 && lotStatusId < 3 && (
-              <Popconfirm title="Are you sure to delete this item?" onConfirm={handleLotDelete} okText="Yes" cancelText="No">
-                <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
+              <Popconfirm
+                title="Are you sure to delete this item?"
+                onConfirm={handleLotDelete}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  type="primary"
+                  danger
+                  shape="circle"
+                  icon={<DeleteOutlined />}
+                />
               </Popconfirm>
             )}
           </Col>
@@ -211,7 +280,11 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
         width={1200} // Đặt chiều rộng modal tùy ý
       >
         {/* Render trang UpdateLotPage */}
-        <LotDetailPage lotData={lot} refetch={refetch} handleModalCancel={handleModalCancel} />
+        <LotDetailPage
+          lotData={lot}
+          refetch={refetch}
+          handleModalCancel={handleModalCancel}
+        />
       </Modal>
       <Modal
         open={deliveryModalVisible}
@@ -220,7 +293,11 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
         width={1200}
         style={{ top: 0 }}
       >
-        <DeliveryModal lotInfoData={lot} refresh={refetch} winnerId={winnerId} />
+        <DeliveryModal
+          lotInfoData={lot}
+          refresh={refetch}
+          winnerId={winnerId}
+        />
       </Modal>
       <Modal
         title="Cancel Lot"
@@ -241,15 +318,15 @@ const LotCard = ({ lotStatusId, lot, refetch }) => {
 };
 const DeliveryModal = ({ lotInfoData, refresh, winnerId }) => {
   const mockData = {
-    "UserId": winnerId,
-    "phone": "0784904003",
-    "firstName": "Thang",
-    "lastName": "Tran",
-    "ProvinceCode": null,
-    "DistrictCode": null,
-    "WardCode": null,
-    "address": "123 Main St, Anytown, USA"
-  }
+    UserId: winnerId,
+    phone: "0784904003",
+    firstName: "Thang",
+    lastName: "Tran",
+    ProvinceCode: null,
+    DistrictCode: null,
+    WardCode: null,
+    address: "123 Main St, Anytown, USA",
+  };
   const [loading, setLoading] = useState(true);
 
   const [winnerInfoData, setWinnerInfoData] = useState(null);
@@ -261,24 +338,37 @@ const DeliveryModal = ({ lotInfoData, refresh, winnerId }) => {
         setWinnerInfoData(response.data);
         setLoading(false);
       }
-    }
+    };
     fetchWinnerInfoData();
     setLoading(false);
     // setWinnerInfoData(mockData);
   }, [lotInfoData]);
 
   const tableDataSource = [
-    { key: 'name', label: 'Name', value: winnerInfoData?.FirstName + " " + winnerInfoData?.LastName || 'N/A' },
-    { key: 'phone', label: 'Contact Number', value: winnerInfoData?.Phone || 'N/A' },
-    { key: 'address', label: 'Delivery Address', value: winnerInfoData?.Address || 'N/A' },
+    {
+      key: "name",
+      label: "Name",
+      value:
+        winnerInfoData?.FirstName + " " + winnerInfoData?.LastName || "N/A",
+    },
+    {
+      key: "phone",
+      label: "Contact Number",
+      value: winnerInfoData?.Phone || "N/A",
+    },
+    {
+      key: "address",
+      label: "Delivery Address",
+      value: winnerInfoData?.Address || "N/A",
+    },
   ];
 
   const handleApprove = async () => {
     try {
       const response = await lotApi.put(`lots/${lotInfoData.lotId}/status`, {
-        lotStatusName: "To Receive"
+        lotStatusName: "To Receive",
       });
-      message.success('Delivery approved');
+      message.success("Delivery approved");
       refresh();
       // handleLotDeliveryClose();
     } catch (error) {
@@ -295,23 +385,23 @@ const DeliveryModal = ({ lotInfoData, refresh, winnerId }) => {
         dataSource={tableDataSource}
         columns={[
           {
-            title: 'Property',
-            dataIndex: 'label',
-            key: 'label',
-            width: '40%',
-            render: (text) => <Text strong>{text}</Text>
+            title: "Property",
+            dataIndex: "label",
+            key: "label",
+            width: "40%",
+            render: (text) => <Text strong>{text}</Text>,
           },
           {
-            title: 'Value',
-            dataIndex: 'value',
-            key: 'value',
-          }
+            title: "Value",
+            dataIndex: "value",
+            key: "value",
+          },
         ]}
         pagination={false}
         size="middle"
         bordered
       />
-      <div style={{ marginTop: 20, textAlign: 'right' }}>
+      <div style={{ marginTop: 20, textAlign: "right" }}>
         <Button
           type="primary"
           style={{ marginRight: 8 }}
@@ -323,6 +413,5 @@ const DeliveryModal = ({ lotInfoData, refresh, winnerId }) => {
     </div>
   );
 };
-
 
 export default LotCard;

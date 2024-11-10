@@ -1,38 +1,42 @@
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import AppLayout from './components/app-layout';
-import MngLayout from './components/mng-layout';
-import LotManagementPage from './pages/lot-management-page';
-import CreateLotPage from './pages/create-lot-page';
-import HomePage from './pages/home-page';
-import Register from './pages/register-page';
-import PrivateRoute from './components/private-route'; // Import component PrivateRoute
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import CreateAuctionPage from './pages/create-auction-page';
-import AuctionList from './pages/auction-list-page';
-import Login from './pages/login-page';
-import AuctionDetailPage from './pages/auction-detail-page';
-import AuctionLotDetailPage from './pages/auction-lot-detail-age';
-import UserList from './pages/user-list-page';
-import UserDetail from './pages/user-detail-page';
-import AuctionManagementPage from './pages/auction-management-page';
-import UpdateAuctionPage from './pages/update-auction-page';
-import ProfileFormPage from './pages/profile-form-page';
-import PaymentCallBackPage from './pages/payment-callback-page';
-import WalletPage from './pages/wallet-page';
-import OrderStatusPage from './pages/order-status-page';
-import AboutPage from './pages/about-page';
-import UnauthorizedPage from './pages/unauthorized-page';
-import PolicyPage from './pages/policy-page';
-import TermPage from './pages/term-page';
-import DashBoardPage from './pages/admin-dashboard-page';
-import BreederPage from './pages/breeder-page';
-import BreederDetailPage from './pages/breeder-detail-page';
-import Roles from './helpers/role';
-import UserOrderStatusPage from './pages/user-order-status-page';
-import StaffWithdrawStatusPage from './pages/staff-withdraw-page';
-import StaffOrderStatusPage from './pages/staff-delivery-lot-page';
-import NotFoundPage from './pages/not-found-page';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+import AppLayout from "./components/app-layout";
+import MngLayout from "./components/mng-layout";
+import LotManagementPage from "./pages/lot-management-page";
+import CreateLotPage from "./pages/create-lot-page";
+import HomePage from "./pages/home-page";
+import Register from "./pages/register-page";
+import PrivateRoute from "./components/private-route"; // Import component PrivateRoute
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import CreateAuctionPage from "./pages/create-auction-page";
+import AuctionList from "./pages/auction-list-page";
+import Login from "./pages/login-page";
+import AuctionDetailPage from "./pages/auction-detail-page";
+import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
+import UserList from "./pages/user-list-page";
+import UserDetail from "./pages/user-detail-page";
+import AuctionManagementPage from "./pages/auction-management-page";
+import UpdateAuctionPage from "./pages/update-auction-page";
+import ProfileFormPage from "./pages/profile-form-page";
+import PaymentCallBackPage from "./pages/payment-callback-page";
+import WalletPage from "./pages/wallet-page";
+import OrderStatusPage from "./pages/order-status-page";
+import AboutPage from "./pages/about-page";
+import UnauthorizedPage from "./pages/unauthorized-page";
+import PolicyPage from "./pages/policy-page";
+import TermPage from "./pages/term-page";
+import DashBoardPage from "./pages/admin-dashboard-page";
+import BreederPage from "./pages/breeder-page";
+import BreederDetailPage from "./pages/breeder-detail-page";
+import Roles from "./helpers/role";
+import UserOrderStatusPage from "./pages/user-order-status-page";
+import StaffWithdrawStatusPage from "./pages/staff-withdraw-page";
+import StaffOrderStatusPage from "./pages/staff-delivery-lot-page";
+import NotFoundPage from "./pages/not-found-page";
 import AdminDashboardPage from "./pages/admin-dashboard-page";
 import BreederDashboardPage from "./pages/breeder-dashboard-page";
 
@@ -172,16 +176,6 @@ function App() {
     },
 
     {
-      path: "/management/breeder-dashboard",
-      element: (
-        <PrivateRoute allowedRoles={[Roles.BREEDER]}>
-          <MngLayout />
-        </PrivateRoute>
-      ),
-      children: [{ path: "", element: <DashBoardPage /> }],
-    },
-
-    {
       path: "/management",
       element: (
         <PrivateRoute allowedRoles={[Roles.BREEDER, Roles.STAFF, Roles.ADMIN]}>
@@ -273,8 +267,7 @@ function App() {
         { path: "profile", element: <ProfileFormPage /> },
       ],
     },
-    { path: "*", element: <NotFoundPage />}
-
+    { path: "*", element: <NotFoundPage /> },
   ]);
 
   return <RouterProvider router={router} />;

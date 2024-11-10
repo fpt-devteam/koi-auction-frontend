@@ -62,7 +62,13 @@ function Header() {
       key: "3",
       icon: <WalletOutlined />,
       label: "Wallet",
-      extra: "⌘B",
+      extra: "⌘W",
+    },
+    {
+      key: "4",
+      icon: <ShoppingOutlined />,
+      label: "Order",
+      extra: "⌘O",
     },
   ];
 
@@ -117,6 +123,8 @@ function Header() {
                     handleNavigation("/profile");
                   } else if (key === "3") {
                     handleNavigation("/wallet");
+                  } else if (key === "4") {
+                    handleNavigation("/order");
                   }
                 },
               }}
