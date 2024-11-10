@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Typography, Row, Col } from "antd";
+import PropTypes from "prop-types";
 import {
   LineChart,
   Line,
@@ -8,75 +9,79 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Text,
 } from "recharts";
 import { UserOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import { count } from "firebase/firestore/lite";
+import { formatCurrency } from "../../helpers/formatCurrency";
 
 const { Title } = Typography;
 
-const monthlyNewUsers = [
-  { month: "January", newUser: 100 },
-  { month: "February", newUser: 200 },
-  { month: "March", newUser: 250 },
-  { month: "April", newUser: 300 },
-  { month: "May", newUser: 400 },
-  { month: "June", newUser: 350 },
-  { month: "July", newUser: 450 },
-  { month: "August", newUser: 500 },
-  { month: "September", newUser: 600 },
-  { month: "October", newUser: 650 },
-  { month: "November", newUser: 700 },
-  { month: "December", newUser: 800 },
-];
-
-const LineChartComponent = ({ color = "#f3e7fc" }) => {
+const LineChartComponent = ({
+  data,
+  title = "",
+  icon,
+  currency,
+  timeLabel,
+}) => {
   return (
     <Card
       style={{
-        borderRadius: 12,
-        // backgroundColor: "#f3e7fc",
-        backgroundColor: color,
+        width: "100%",
+        borderRadius: "12px",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         padding: "20px",
-        textAlign: "left",
-        // margin: "2%",
-        height: "100%",
+        position: "relative", // To position the label
       }}
-      bordered={false}
     >
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <UserOutlined style={{ fontSize: "24px", color: "#8884d8" }} />
-            <Title level={4} style={{ marginLeft: 10, marginBottom: 0 }}>
-              New Users
-            </Title>
-          </div>
-          <Title level={2} style={{ margin: 0 }}>
-            1.35m
-          </Title>
-          <div style={{ display: "flex", alignItems: "center", color: "red" }}>
-            <ArrowDownOutlined style={{ marginRight: 5 }} />
-            <span>-0.1%</span>
-          </div>
-        </Col>
-        <Col span={12}>
-          <ResponsiveContainer width="100%" height={100}>
-            <LineChart data={monthlyNewUsers}>
-              <Line
-                type="monotone"
-                dataKey="newUser"
-                stroke="#8884d8"
-                strokeWidth={2}
-                dot={false}
-              />
-              <XAxis dataKey="month" hide />
-              <YAxis hide />
-              <Tooltip />
-            </LineChart>
-          </ResponsiveContainer>
-        </Col>
-      </Row>
+      {/* Time Label */}
+      {timeLabel && (
+        <Text
+          type="secondary"
+          style={{
+            position: "absolute",
+            top: "5%",
+            right: "5%",
+            fontSize: "12px",
+            color: "#999",
+            // Positioning to the right
+          }}
+        >
+          {timeLabel}
+        </Text>
+      )}
+      {/* Icon */}
+      <div
+        style={{
+          fontSize: "32px",
+          color: "#3366ff",
+          marginBottom: "10px",
+        }}
+      >
+        {icon || <UserOutlined />}
+      </div>
+
+      {/* Title */}
+      <Text type="secondary" style={{ fontSize: "14px" }}>
+        {title}
+      </Text>
+
+      {/* Formatted Count */}
+      <Title level={3} style={{ margin: "5px 0", color: "#333" }}>
+        {formatCurrency(data, currency)}
+      </Title>
     </Card>
   );
 };
-
+LineChartComponent.propTypes = {
+  data: PropTypes.number,
+  title: PropTypes.string,
+  icon: PropTypes.string,
+  currency: PropTypes.string,
+};
 export default LineChartComponent;

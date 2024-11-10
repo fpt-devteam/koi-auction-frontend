@@ -19,7 +19,9 @@ function BreederDetailPage() {
 
   const fetchBreederInfo = async () => {
     try {
-      const response = await userApi.get(`/manage/breeder/profile/${breederId}`);
+      const response = await userApi.get(
+        `/manage/breeder/profile/${breederId}`
+      );
       console.log("breeder", response.data);
       setBreeder(response.data);
     } catch (error) {

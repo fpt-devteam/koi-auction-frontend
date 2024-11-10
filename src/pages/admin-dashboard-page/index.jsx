@@ -1,15 +1,21 @@
 import { Col, message, Row } from "antd";
-import React, { useEffect, useState } from "react";
-import LineChartComponent from "../../components/child-line-chart-dashboard";
+import { useEffect, useState } from "react";
 import PieChartComponent from "../../components/pie-chart-dashboard";
-import ColumnChartComponent from "../../components/column-chart-dashboard";
 import MainLineChartComponent from "../../components/main-line-chart-dashboard";
-import axios from "axios";
 import TableComponent from "../../components/table-dashboard";
 import lotApi from "../../config/lotApi";
 import TotalHistoryComponent from "../../components/total-lot";
+import LineChartComponent from "../../components/child-line-chart-dashboard";
+import userApi from "../../config/userApi";
+import paymentApi from "../../config/paymentApi";
+import {
+  UserAddOutlined,
+  UserOutlined,
+  DollarCircleOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 
-function DashBoardPage() {
+function AdminDashboardPage() {
   // Pie-chart thống kê tỉ lệ auction method được breeder lựa chọn cho lot
   const [auctionMethodData, setAuctionMethodData] = useState([]);
   const fetchAuctionMetodData = async () => {
@@ -61,21 +67,49 @@ function DashBoardPage() {
     fetchTotalStatistics();
   }, []);
 
-  //revenue
-  // const [revenueStatistics, setRevenue] = useState([]);
-  // const [filterRevenueStatistics, setFilterRevenueStatistics] = useState([]);
-  // const fectchRevenueStatistics = async () => {
-  //   try {
-  //     const response = await lotApi.get(`/lots/last7days?offsetWeeks=1`);
-  //     setRevenue(response.data);
-  //   } catch (error) {
-  //     message.error(error.message);
-  //   }
-  // };
+  //user statistic
+  const [userStatistics, setUserStatistics] = useState([]);
+  const fetchUserStatistic = async (dayAmount = 30) => {
+    try {
+      const response = await userApi.get(
+        `/statistics/users?dayAmount=${dayAmount}`
+      );
+      setUserStatistics(response.data);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
 
-  // useEffect(() => {
-  //   fectchRevenueStatistics();
-  // }, []);
+  useEffect(() => {
+    fetchUserStatistic();
+  }, []);
+
+  const WITHDRAW = 1;
+  const DEPOSIT = 3;
+  const PAYOUT = 4;
+  //payment-service statistics
+  const [withdrawStatistic, setWithdrawStatistic] = useState([]);
+  const [depositStatistic, setDepositStatistic] = useState([]);
+  const [payoutStatistic, setPayoutStatistic] = useState([]);
+  const fetchStatisticByTransTypeId = async (dayAmount = 30, transType) => {
+    try {
+      const response = await paymentApi.get(
+        `/admin/statistics/get-sum-of-success-trans-by-type?dayAmount=${dayAmount}&transTypeId=${transType}`
+      );
+      if (transType == WITHDRAW) setWithdrawStatistic(response.data);
+      else if (transType == DEPOSIT) setDepositStatistic(response.data);
+      else if (transType == PAYOUT) setPayoutStatistic(response.data);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+  useEffect(() => {
+    fetchStatisticByTransTypeId(30, WITHDRAW);
+    fetchStatisticByTransTypeId(30, DEPOSIT);
+    fetchStatisticByTransTypeId(30, PAYOUT);
+  }, []);
+
+  //revenue
 
   const [revenueStatistics, setRevenueStatistics] = useState({
     labels: [],
@@ -121,23 +155,39 @@ function DashBoardPage() {
   useEffect(() => {
     fetchRevenueStatistics();
   }, []);
+
   return (
     <div style={{ padding: "2% 4% 4% 4%" }}>
       <h1>DashBoard</h1>
-      {/* <Row gutter={20}>
-        <Col span={6}>
-          <LineChartComponent color={"lightblue"} />
+      <Row gutter={20} style={{ marginTop: "3%", marginBottom: "3%" }}>
+        <Col span={8}>
+          <LineChartComponent
+            title="Total Payout of all breeders"
+            data={payoutStatistic.totalAmount}
+            icon={<DollarCircleOutlined />} // Custom icon for "Deposit"
+            currency="VND"
+            timeLabel="1 Month"
+          />
         </Col>
-        <Col span={6}>
-          <LineChartComponent />
+        <Col span={8}>
+          <LineChartComponent
+            title="Total Deposit"
+            data={depositStatistic.totalAmount}
+            icon={<DollarCircleOutlined />} // Custom icon for "Deposit"
+            currency="VND"
+            timeLabel="1 Month"
+          />
         </Col>
-        <Col span={6}>
-          <LineChartComponent />
+        <Col span={8}>
+          <LineChartComponent
+            title="Total Withdraw"
+            data={withdrawStatistic.totalAmount}
+            icon={<MinusCircleOutlined />}
+            currency="VND"
+            timeLabel="1 Month"
+          />
         </Col>
-        <Col span={6}>
-          <LineChartComponent />
-        </Col>
-      </Row> */}
+      </Row>
 
       <Row gutter={20}>
         <Col span={24}>
@@ -145,6 +195,7 @@ function DashBoardPage() {
             data={revenueStatistics}
             fetchData={fetchRevenueStatistics}
             title="Total Revenue"
+            extra="Last 7 Days"
           />
         </Col>
       </Row>
@@ -174,4 +225,4 @@ function DashBoardPage() {
     </div>
   );
 }
-export default DashBoardPage;
+export default AdminDashboardPage;

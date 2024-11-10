@@ -142,7 +142,7 @@
 //   title: PropTypes.string,
 // };
 // export default MainLineChartComponent;
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Card, Button, Space } from "antd";
 import PropTypes from "prop-types";
@@ -167,7 +167,13 @@ ChartJS.register(
   Legend
 );
 
-const MainLineChartComponent = ({ data, fetchData, title = "" }) => {
+const MainLineChartComponent = ({
+  data,
+  fetchData,
+  title = "",
+  numBack = 1,
+  extra = "",
+}) => {
   const [offset, setOffset] = useState(0);
 
   // Gọi hàm fetchData khi offset thay đổi
@@ -176,10 +182,10 @@ const MainLineChartComponent = ({ data, fetchData, title = "" }) => {
   }, [offset]);
 
   // Xử lý khi nhấn nút Back
-  const handleBack = () => setOffset((prev) => prev + 1);
+  const handleBack = () => setOffset((prev) => prev + numBack);
 
   // Xử lý khi nhấn nút Next
-  const handleNext = () => setOffset((prev) => (prev > 0 ? prev - 1 : 0));
+  const handleNext = () => setOffset((prev) => (prev > 0 ? prev - numBack : 0));
 
   const options = {
     responsive: true,
@@ -218,12 +224,12 @@ const MainLineChartComponent = ({ data, fetchData, title = "" }) => {
   return (
     <Card
       title={title}
-      extra={<span>Last 7 Days</span>}
+      extra={<span>{extra}</span>}
       style={{
         width: "100%",
         maxWidth: "100%",
         height: "auto",
-        margin: "20px auto",
+        // margin: "20px auto",
         borderRadius: 10,
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         display: "flex",
@@ -235,28 +241,30 @@ const MainLineChartComponent = ({ data, fetchData, title = "" }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "600px",
-          padding: "10px",
+          height: "410px",
+          // padding: "10px",
         }}
       >
         <div style={{ width: "80%", height: "100%" }}>
-          <Line data={data} options={options} />
+          <Line data={data} options={options} style={{ width: "100%" }} />
         </div>
       </div>
-      <Space
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "10px",
-        }}
-      >
-        <Button type="primary" onClick={handleBack}>
-          Back
-        </Button>
-        <Button type="primary" onClick={handleNext} disabled={offset === 0}>
-          Next
-        </Button>
-      </Space>
+      {numBack == 1 && (
+        <Space
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <Button type="primary" onClick={handleBack}>
+            Back
+          </Button>
+          <Button type="primary" onClick={handleNext} disabled={offset === 0}>
+            Next
+          </Button>
+        </Space>
+      )}
     </Card>
   );
 };
