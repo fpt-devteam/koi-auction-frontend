@@ -51,6 +51,7 @@ function YourWallet({ balance, refresh, user }) {
       console.log(error);
     }
     setDepositModal(false);
+    refresh();
   };
   const handleWithdrawalSubmit = async (values) => {
     try {
@@ -101,11 +102,13 @@ function YourWallet({ balance, refresh, user }) {
         open={depositModal}
         onCancel={handleDepositCancel}
         footer={null}
+        centered
+        width={600}
       >
         <Form
           onFinish={handleDepositSubmit}
           layout="vertical"
-          style={{ maxWidth: '100%' }}
+          style={{ maxWidth: '100%', padding: '20px' }}
         >
           <Form.Item
             label="Deposit Amount"
@@ -127,11 +130,10 @@ function YourWallet({ balance, refresh, user }) {
                 },
               }),
             ]}
-
           >
             <InputNumber
               placeholder="Enter amount"
-              style={{ width: "100%" }}
+              style={{ width: "100%", borderRadius: '4px', borderColor: '#d9d9d9' }}
               size="large"
               formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
@@ -162,6 +164,7 @@ function YourWallet({ balance, refresh, user }) {
               <Button
                 onClick={handleDepositCancel}
                 size="large"
+                style={{ backgroundColor: '#f0f0f0', borderColor: '#d9d9d9' }}
               >
                 Cancel
               </Button>
@@ -169,6 +172,7 @@ function YourWallet({ balance, refresh, user }) {
                 type="primary"
                 htmlType="submit"
                 size="large"
+                style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
               >
                 Submit
               </Button>
@@ -182,11 +186,13 @@ function YourWallet({ balance, refresh, user }) {
         open={withdrawalModal}
         onCancel={handleWithdrawalCancel}
         footer={null}
+        centered
+        width={600}
       >
         <Form
           onFinish={handleWithdrawalSubmit}
           layout="vertical"
-          style={{ maxWidth: '100%' }}
+          style={{ maxWidth: '100%', padding: '20px' }}
         >
           <Form.Item
             label="Withdrawal Amount"
@@ -219,7 +225,7 @@ function YourWallet({ balance, refresh, user }) {
           >
             <InputNumber
               placeholder="Enter amount"
-              style={{ width: "100%" }}
+              style={{ width: "100%", borderRadius: '4px', borderColor: '#d9d9d9' }}
               size="large"
               formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
@@ -234,6 +240,7 @@ function YourWallet({ balance, refresh, user }) {
             <Input
               placeholder="Enter Bank Name"
               size="large"
+              style={{ borderRadius: '4px', borderColor: '#d9d9d9' }}
             />
           </Form.Item>
 
@@ -245,6 +252,7 @@ function YourWallet({ balance, refresh, user }) {
             <Input
               placeholder="Enter Bank Account"
               size="large"
+              style={{ borderRadius: '4px', borderColor: '#d9d9d9' }}
             />
           </Form.Item>
 
@@ -256,8 +264,10 @@ function YourWallet({ balance, refresh, user }) {
             <Input
               placeholder="Enter Account Holder"
               size="large"
+              style={{ borderRadius: '4px', borderColor: '#d9d9d9' }}
             />
           </Form.Item>
+
           <Form.Item
             name="isAcceptPolicy"
             valuePropName="checked"
@@ -278,19 +288,20 @@ function YourWallet({ balance, refresh, user }) {
             </Checkbox>
           </Form.Item>
 
-
           <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
             <Space size="middle">
               <Button
                 onClick={handleWithdrawalCancel}
                 size="large"
+                style={{ backgroundColor: '#f0f0f0', borderColor: '#d9d9d9' }}
               >
                 Cancel
               </Button>
               <Button
                 type="primary"
                 htmlType="submit"
-                size="large"
+                size="large" 
+                style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
               >
                 Submit
               </Button>

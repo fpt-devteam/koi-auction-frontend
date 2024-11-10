@@ -27,8 +27,10 @@ const checkStatus = (status) => {
   // }
   return status;
 };
+
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 const TransactionList = ({ transactions }) => {
+  console.log("transaction nek: ", transactions);
   const columns = [
     {
       title: "ID",
@@ -51,18 +53,34 @@ const TransactionList = ({ transactions }) => {
       title: "AMOUNT",
       dataIndex: "amount",
       key: "amount",
-      align: "right",
+      align: "left",
       render: (amount) => <Text strong>{amount?.toLocaleString()} VND</Text>,
     },
     {
       title: "BALANCE BEFORE",
       dataIndex: "balanceBefore",
       key: "balanceBefore",
-      align: "right",
+      align: "left",
       render: (balanceBefore) => <Text strong>{balanceBefore.toLocaleString()} VND</Text>,
     },
-  
+    {
+      title: "BALANCE AFTER",
+      dataIndex: "balanceAfter",
+      key: "balanceAfter",
+      align: "left",
+      render: (balanceAfter) => <Text strong>{balanceAfter.toLocaleString()} VND</Text>,
+    },
   ];
+
+  // Conditionally add the description column if transType is 'Withdraw'
+  if (transactions.some(trans => trans.transType === 'Withdraw')) {
+    columns.push({
+      title: "DESCRIPTION",
+      dataIndex: "description",
+      key: "description",
+      render: (description) => <Text>{description}</Text>,
+    }); // {{ edit_2 }}: Push description column into columns array
+  }
 
   return (
     <Table
@@ -70,6 +88,7 @@ const TransactionList = ({ transactions }) => {
       dataSource={transactions}
       pagination={false}
       showHeader={true}
+      scroll={{y: 400 }}
     />
   );
 };
