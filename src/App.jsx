@@ -39,6 +39,7 @@ import StaffOrderStatusPage from "./pages/staff-delivery-lot-page";
 import NotFoundPage from "./pages/not-found-page";
 import AdminDashboardPage from "./pages/admin-dashboard-page";
 import BreederDashboardPage from "./pages/breeder-dashboard-page";
+import BreederRegister from "./pages/breeder-register-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,6 +63,11 @@ function App() {
     {
       path: "/unauthorized",
       element: <UnauthorizedPage />,
+    },
+    {
+      path: "/breeder-register",
+      element: <AppLayout />,
+      children: [{ path: "", element: <BreederRegister /> }]
     },
 
     {

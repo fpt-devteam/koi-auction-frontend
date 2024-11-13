@@ -13,16 +13,16 @@ export default function ProfileFormPage() {
     const [loading, setLoading] = useState(!user);
     const handleReset = () => {
         window.location.reload();
-        // setSeed(Math.random());
+        //setSeed(Math.random());
     }
     useEffect(() => {
-        if (user) {
-            setLoading(false);
+        if (!user) {
+            setLoading(true);
             console.log(user);
         }
     }, [user]);
 
-    return loading ? <Spin /> : (
+    return (loading && !user )? <Spin /> : (
         <>
             <div key={seed}>
                 <Button style={{ marginTop: "20px", marginLeft: "20px" }} type="primary" onClick={() => window.history.back()}>Back</Button >

@@ -28,7 +28,6 @@ const checkStatus = (status) => {
   return status;
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 const TransactionList = ({ transactions }) => {
   console.log("transaction nek: ", transactions);
   const columns = [
@@ -36,18 +35,25 @@ const TransactionList = ({ transactions }) => {
       title: "ID",
       dataIndex: "transId",
       key: "transId",
+      width: "5em",
     },
     {
       title: "TYPE",
       dataIndex: "transType",
       key: "transType",
       render: (transType) => <Text strong>{checkTransType(transType)}</Text>,
+      width: "12em",
     },
     {
       title: "STATUS",
       dataIndex: "status",
       key: "status",
-      render: (status) => <Text strong className={checkStatus(status)}>{checkStatus(status)}</Text>,
+      render: (status) => (
+        <Text strong className={checkStatus(status)}>
+          {checkStatus(status)}
+        </Text>
+      ),
+      width: "10em",
     },
     {
       title: "AMOUNT",
@@ -55,25 +61,33 @@ const TransactionList = ({ transactions }) => {
       key: "amount",
       align: "left",
       render: (amount) => <Text strong>{amount?.toLocaleString()} VND</Text>,
+      width: "15em",
     },
     {
       title: "BALANCE BEFORE",
       dataIndex: "balanceBefore",
       key: "balanceBefore",
       align: "left",
-      render: (balanceBefore) => <Text strong>{balanceBefore?.toLocaleString()} VND</Text>,
+      render: (balanceBefore) => (
+        <Text strong>{balanceBefore?.toLocaleString()} VND</Text>
+      ),
+      width: "15em",
     },
     {
       title: "BALANCE AFTER",
       dataIndex: "balanceAfter",
       key: "balanceAfter",
       align: "left",
-      render: (balanceAfter) => <Text strong>{balanceAfter?.toLocaleString()} VND</Text>,
+      render: (balanceAfter) => (
+        <Text strong>{balanceAfter?.toLocaleString()} VND</Text>
+      ),
+      width: "15em",
     },
+
   ];
 
   // Conditionally add the description column if transType is 'Withdraw'
-  if (transactions.some(trans => trans.transType === 'Withdraw')) {
+  if (transactions.some((trans) => trans.transType === "Withdraw")) {
     columns.push({
       title: "DESCRIPTION",
       dataIndex: "description",
@@ -81,6 +95,14 @@ const TransactionList = ({ transactions }) => {
       render: (description) => <Text>{description}</Text>,
     }); // {{ edit_2 }}: Push description column into columns array
   }
+  columns.push({
+    title: "TIME",
+    dataIndex: "time",
+    key: "time",
+    align: "left",
+    render: (time) => <Text strong>{time?.toLocaleString()} VND</Text>,
+    width: "15em",
+  });
 
   return (
     <Table
@@ -88,7 +110,7 @@ const TransactionList = ({ transactions }) => {
       dataSource={transactions}
       pagination={false}
       showHeader={true}
-      scroll={{y: 400 }}
+      scroll={{ y: 400 }}
     />
   );
 };
