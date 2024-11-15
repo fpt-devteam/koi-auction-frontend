@@ -17,7 +17,7 @@ import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
 import AuctionDetailPage from "./pages/auction-detail-page";
 import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
-import UserList from "./pages/user-list-page";
+import UserListPage from "./pages/user-list-page";
 import UserDetail from "./pages/user-detail-page";
 import AuctionManagementPage from "./pages/auction-management-page";
 import UpdateAuctionPage from "./pages/update-auction-page";
@@ -250,17 +250,22 @@ function App() {
         //admin
         {
           path: "user-list",
-          element: <UserList number={Roles.MEMBER} />,
+          element: <UserListPage number={Roles.MEMBER} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "breeder-list",
-          element: <UserList number={Roles.BREEDER} />,
+          element: <UserListPage number={Roles.BREEDER} />,
+          allowedRoles: [Roles.ADMIN],
+        },
+        {
+          path: "request-list",
+          element: <UserListPage number={Roles.BREEDER} isRequest={true}/>,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "staff-list",
-          element: <UserList number={Roles.STAFF} />,
+          element: <UserListPage number={Roles.STAFF} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
