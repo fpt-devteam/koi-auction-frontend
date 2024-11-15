@@ -212,6 +212,11 @@ function App() {
 
         //breeder and staff
         {
+          path: "lots/:LotStatusId",
+          element: <LotManagementPage />,
+          allowedRoles: [Roles.BREEDER, Roles.STAFF],
+        },
+        {
           path: "lots",
           element: <LotManagementPage />,
           allowedRoles: [Roles.BREEDER, Roles.STAFF],

@@ -13,46 +13,10 @@ import { useSelector } from 'react-redux';
 import SoldLotCard from '../sold-lot-card';
 import soldLotApi from '../../config/soldLotApi';
 
-const LotList = ({ breederId = null, tabData }) => {
+const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
   const user = useSelector((store) => store.user.user);
-  const [lotList, setLotList] = useState([]);
-  const { lots, loading, refetch } = useFetchLots(tabData?.lotStatusId, 'UpdatedAt', false, breederId);
-  const [isLoading, setIsLoading] = useState(loading);
-  console.log("asdfasdf")
-  useEffect(() => {
-    if (tabData.lotStatusId > 5) {
-      async function fetchLotData() {
-        try {
-          await Promise.all([
-            soldLotApi.get("", {
-              params: {
-                BreederId: breederId
-              }
-            })
-          ]).then(([soldLotResponse]) => {
-            const soldLotByTabList = [];
-            soldLotResponse.data?.forEach((lot) => {
-              if (lot.lotStatus.lotStatusId == tabData.lotStatusId) {
-                soldLotByTabList.push(lot);
-              }
-            })
-            setLotList(soldLotByTabList);
-            setIsLoading(false);
-            console.log("soldLotResponse", "tab", soldLotResponse)
-          })
-        } catch (error) {
-          message.error(error.message);
-        }
-      };
-      fetchLotData();
-    } else {
-      setLotList(lots);
-    }
-  }, [lots]);
-
-  return loading && isLoading ? (
-    <Spin />
-  ) : (
+  console.log("first,", tabData)
+  return (
     <div
       className="lot-list"
       style={{

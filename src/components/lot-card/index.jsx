@@ -391,7 +391,6 @@ const LotCard = ({ tabData, lot, refetch, userRoleId }) => {
   const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
   const handleClickViewOrderModal = () => setIsViewOrderModalVisible(!isViewOrderModalVisible);
 
-
   const handleLotCancel = async () => {
     try {
       await lotApi.put(`lots/${lot.lotId}/status`, {

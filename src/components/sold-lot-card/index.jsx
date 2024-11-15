@@ -17,7 +17,7 @@ const formatDateTime = (dateString) => {
     return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
 };
 const formartMoney = (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-const SoldLotCard = ({ soldLot, refresh, tabData, user }) => {
+const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
     const [isOrderModalVisible, setIsOrderModalVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [soldLotList, setSoldLotList] = useState([]);
@@ -27,6 +27,17 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user }) => {
     const toggleLotInfoModal = () => setIsLotInfoModalVisible(!isLotInfoModalVisible);
     const toggleOrderModal = () => setIsOrderModalVisible(!isOrderModalVisible);
 
+
+    const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+    const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(false);
+    const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+    const [isViewOrderModalVisible, setIsViewOrderModalVisible] = useState(false);
+    const [cancelReason, setCancelReason] = useState("");
+
+    const handleClickDetailModal = () => setIsDetailModalVisible(!isDetailModalVisible);
+    const handleClickDeliveryModal = () => setIsDeliveryModalVisible(!isDeliveryModalVisible);
+    const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
+    const handleClickViewOrderModal = () => setIsViewOrderModalVisible(!isViewOrderModalVisible);
     // const soldLot = {
     //     lotDto: {
     //         lotId: soldLot?.soldLotId,
@@ -45,6 +56,37 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user }) => {
     //     updatedAt: soldLot?.updatedAt,
     //     expTime: soldLot?.expTime
     // };
+
+    const handleLotDelete = async () => {
+        try {
+            await lotApi.delete(`lots/${soldLot?.lotDto?.lotId}`);
+            message.success("Deleted successfully!");
+            refetch();
+        } catch (error) {
+            message.error("Failed to delete lot: " + error.message);
+        }
+    };
+    const handleLotComplete = async () => {
+        try {
+            console.log(soldLot);
+            await Promise.all([
+                lotApi.put(`lots/${soldLot?.lotDto?.lotId}/status`, {
+                    lotStatusName: "Completed",
+                }),
+                paymentApi.post(`payout`, {
+                    Amount: soldLot?.finalPrice,
+                    BreederId: soldLot?.breederId,
+                }),
+            ]).then(([response, paymentResponse]) => {
+                console.log("response", response.data);
+                console.log("paymentResponse", paymentResponse.data);
+                message.success('Completed successfully!');
+            });
+            refetch();
+        } catch (error) {
+            message.error("Failed to complete lot: " + error.message);
+        }
+    };
 
     const handleOperation = async () => {
         try {
@@ -99,6 +141,71 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user }) => {
                     }}>
                         <Button type="primary" size="large" key="view-order" onClick={toggleOrderModal}>View Order</Button>
                         <Button size="large" key="view-lot" onClick={toggleLotInfoModal}>View Lot</Button>
+                        {user?.userRoleId == 2 && tabData.lotStatusId < 3 && (
+                            <Popconfirm
+                                title="Are you sure to delete this item?"
+                                onConfirm={handleLotDelete}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Button
+                                    type="primary"
+                                    size="large"
+                                    danger
+                                >
+                                    Delete
+                                </Button>
+
+                            </Popconfirm>
+                        )}
+                        {user?.userRoleId > 2 && tabData.lotStatusId == 7 && (
+                            <>
+                                <h1>logb</h1>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    size="large"
+                                    onClick={handleClickDeliveryModal}
+                                >
+                                    Delivery
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    size="large"
+                                    onClick={handleClickCancelModal}
+                                    danger
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                        )}
+                        {tabData.lotStatusId > 5 && (
+                            <>
+                                <Button type="primary" size="large" key="view-order" onClick={handleClickViewOrderModal}>View Order</Button>
+                            </>
+                        )}
+                        {user?.userRoleId > 2 && tabData.lotStatusId == 8 && (
+                            <>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    size="large"
+                                    onClick={handleLotComplete}
+                                >
+                                    Complete
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    size="large"
+                                    onClick={handleClickCancelModal}
+                                    danger
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                        )}
                     </div>,
                 ]}
             >

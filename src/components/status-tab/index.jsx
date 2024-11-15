@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { Tabs, Spin, Image } from "antd";
+import { useEffect, useState } from "react";
+import { Tabs, Spin, Image, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setStatusId } from "../../redux/features/statusSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import useFetchLots from '../../hooks/useFetchLots';
+import soldLotApi from "../../config/soldLotApi";
 
-const tabsData = [
+const staticTabsData = [
   { lotStatusId: 1, lotStatusName: "Pending", lotStatusIconLink: "src/assets/icon/pending.png" },
   { lotStatusId: 2, lotStatusName: "Approved", lotStatusIconLink: "src/assets/icon/accept.png" },
   { lotStatusId: 3, lotStatusName: "Rejected", lotStatusIconLink: "src/assets/icon/rejected.png" },
@@ -23,11 +26,56 @@ const StatusTab = ({ LotList }) => {
   const dispatch = useDispatch(); // Sử dụng dispatch từ Redux
   const { user } = useSelector((store) => store.user); // Lấy user từ Redux
   const breederId = user.UserRoleId == 2 ? user.UserId : null;
+  const [lotList, setLotList] = useState([]);
+  const navigate = useNavigate();
+  let { LotStatusId } = useParams();
+
+  const { lots, refetch } = useFetchLots(LotStatusId || 1, 'UpdatedAt', false, breederId);
+
+  useEffect(() => {
+    setActiveTab(LotStatusId);
+    setLoading(true);
+    async function fetchLotDataByStatus() {
+      try {
+        await Promise.all([
+          soldLotApi.get("", {
+            params: {
+              BreederId: breederId,
+              LotStatusId: LotStatusId,
+            }
+          })
+        ]).then(([soldLotResponse]) => {
+          const soldLotList = soldLotResponse?.data?.map((soldLot) => ({
+            lotDto: {
+              lotId: soldLot?.soldLotId,
+              sku: soldLot?.sku,
+              koiFishDto: soldLot?.koiFish,
+            },
+            lotStatusDto: soldLot?.lotStatus,
+            breederDetailDto: soldLot?.breederDetailDto,
+            address: soldLot?.address,
+            winnerDto: soldLot?.winnerDto,
+            finalPrice: soldLot?.finalPrice,
+            auctionDeposit: soldLot?.auctionDepositDto?.amount,
+            createdAt: soldLot?.createdAt,
+            updatedAt: soldLot?.updatedAt,
+            expTime: soldLot?.expTime
+          }));
+          setLotList(soldLotList);
+          setLoading(false);
+          console.log("soldLotLishadfdst", soldLotList);
+        })
+      } catch (error) {
+        message.error(error.message);
+      }
+    };
+    if (LotStatusId > 5) fetchLotDataByStatus();
+    else setLotList(lots);
+    setLoading(false);
+  }, [LotStatusId, lots]);
 
   const handleTabChange = (key) => {
-    dispatch(setStatusId(key));
-    console.log("tab key", key);
-    setActiveTab(key);
+    navigate(`/management/lots/${key}`);
   };
 
   if (user == null) {
@@ -39,10 +87,10 @@ const StatusTab = ({ LotList }) => {
   ) : (
     <>
       <Tabs
-        defaultActiveKey="{activeTab}"
+        defaultActiveKey={activeTab}
         onChange={handleTabChange}
         type="card"
-        items={tabsData.map((tab) => ({
+        items={staticTabsData.map((tab) => ({
           key: String(tab.lotStatusId),
           label:
             <div
@@ -54,7 +102,7 @@ const StatusTab = ({ LotList }) => {
               <span className="tab-name">{tab.lotStatusName}</span>
             </div>,
           children: (
-            <LotList breederId={breederId} tabData={tab} />
+            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={refetch} />
           ),
         }))}
       />

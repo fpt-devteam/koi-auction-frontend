@@ -34,6 +34,7 @@ export default function UserOrderStatusPage() {
         setActiveTab(LotStatusId);
         setLoading(true);
         console.log(staticTabsData)
+        console.log(LotStatusId)
         async function fetchLotDataByStatus() {
             try {
                 await Promise.all([
