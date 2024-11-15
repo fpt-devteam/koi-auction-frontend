@@ -122,6 +122,15 @@ function App() {
     },
     //member
     {
+      path: "/order/:LotStatusId",
+      element: (
+        <PrivateRoute allowedRoles={[Roles.MEMBER]}>
+          <AppLayout />
+        </PrivateRoute>
+      ),
+      children: [{ path: "", element: <UserOrderStatusPage /> }],
+    },
+    {
       path: "/order",
       element: (
         <PrivateRoute allowedRoles={[Roles.MEMBER]}>
@@ -130,7 +139,6 @@ function App() {
       ),
       children: [{ path: "", element: <UserOrderStatusPage /> }],
     },
-
     //member
     {
       path: "/wallet",
