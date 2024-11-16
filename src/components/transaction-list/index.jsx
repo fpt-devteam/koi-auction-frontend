@@ -28,7 +28,6 @@ const checkStatus = (status) => {
   return status;
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 const TransactionList = ({ transactions }) => {
   console.log("transaction nek: ", transactions);
   const columns = [
@@ -47,7 +46,11 @@ const TransactionList = ({ transactions }) => {
       title: "STATUS",
       dataIndex: "status",
       key: "status",
-      render: (status) => <Text strong className={checkStatus(status)}>{checkStatus(status)}</Text>,
+      render: (status) => (
+        <Text strong className={checkStatus(status)}>
+          {checkStatus(status)}
+        </Text>
+      ),
     },
     {
       title: "AMOUNT",
@@ -61,19 +64,23 @@ const TransactionList = ({ transactions }) => {
       dataIndex: "balanceBefore",
       key: "balanceBefore",
       align: "left",
-      render: (balanceBefore) => <Text strong>{balanceBefore?.toLocaleString()} VND</Text>,
+      render: (balanceBefore) => (
+        <Text strong>{balanceBefore?.toLocaleString()} VND</Text>
+      ),
     },
     {
       title: "BALANCE AFTER",
       dataIndex: "balanceAfter",
       key: "balanceAfter",
       align: "left",
-      render: (balanceAfter) => <Text strong>{balanceAfter?.toLocaleString()} VND</Text>,
+      render: (balanceAfter) => (
+        <Text strong>{balanceAfter?.toLocaleString()} VND</Text>
+      ),
     },
   ];
 
   // Conditionally add the description column if transType is 'Withdraw'
-  if (transactions.some(trans => trans.transType === 'Withdraw')) {
+  if (transactions.some((trans) => trans.transType === "Withdraw")) {
     columns.push({
       title: "DESCRIPTION",
       dataIndex: "description",
@@ -88,7 +95,7 @@ const TransactionList = ({ transactions }) => {
       dataSource={transactions}
       pagination={false}
       showHeader={true}
-      scroll={{y: 400 }}
+      scroll={{ y: 400 }}
     />
   );
 };

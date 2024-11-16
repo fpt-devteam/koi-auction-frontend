@@ -107,9 +107,7 @@ const PieChartComponent = ({
             innerRadius={90}
             outerRadius={150}
             paddingAngle={4}
-            label={({ [nameKey]: value1, [dataKey]: value2 }) =>
-              `${value1} : ${value2}%`
-            }
+            label={({ [dataKey]: value2 }) => ` ${value2}%`}
             labelLine={true}
             dataKey={dataKey}
             nameKey={nameKey}
