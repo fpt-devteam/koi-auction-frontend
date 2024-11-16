@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  message,
-  Spin,
-} from "antd";
+import { Form, message, Spin } from "antd";
 import userApi from "../../config/userApi";
 import UserDetailCard from "../../components/user-detail-card";
 import "./index.css";
 import ProfileForm from "../../components/profile-form-modal";
+import { useLocation } from "react-router-dom";
 
 const UserDetail = () => {
   const [user, setUser] = useState(null);
@@ -15,10 +12,18 @@ const UserDetail = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  //nhan gia tri isRequesting tu user-list-management qua navigate
+  const { isRequesting } = location.state || false;
+
+  console.log("isRequesting", isRequesting);
+
   const fetchUser = async (userId) => {
     try {
       const response = await userApi.get(`manage/detail-profile/${userId}`);
       setUser(response.data);
+
       console.log(response.data);
       setLoading(false);
     } catch (error) {
@@ -87,6 +92,7 @@ const UserDetail = () => {
         loading={loading}
         openModal={() => setIsModalVisible(true)}
         title={`Information Details`}
+        isRequesting={isRequesting}
       />
 
       <ProfileForm
@@ -108,6 +114,7 @@ const UserDetail = () => {
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         handleFormSubmit={handleFormSubmit}
+        isRequesting={isRequesting}
       />
     </>
   );

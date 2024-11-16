@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 import "./index.css";
 import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
+import UserListMng from "../../components/user-list-management";
+import emailApi from "../../config/emailApi";
+import axios from "axios";
+import { ref } from "firebase/storage";
 
-export default function UserList({ number }) {
+export default function UserListPage({ number, isRequest }) {
   console.log(number);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +30,61 @@ export default function UserList({ number }) {
   const handleCloseModal = () => {
     setIsModalVisible(false);
     form.resetFields();
+  };
+  const fetchUsers = async () => {
+    try {
+      const response = await userApi.get("manage/profile");
+      const users = response.data;
+      console.log(users);
+      setUsers(users);
+      const members = (users) => {
+        return users.filter((user) => user.UserRoleId === number);
+      };
+      setUsers(members(users));
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch auctions:", error);
+      message.error("Failed to load auction data.");
+      setLoading(false);
+    }
+  };
+
+  const handleApprove = async (userId, email) => {
+    try {
+      console.log("userId: ", userId);
+      console.log("email: ", email);
+      message.loading({ content: "Approving user...", key: "updatable" });
+
+      const response = await userApi.patch(`verify-breeder/${userId}`);
+      console.log(response.status);
+      if (response.status === 201) {
+        const emailResponse = await emailApi.post(
+          "send-email",
+          {
+            Email: email,
+            Subject: "Your Farm Auction Account has been approved",
+            Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
+          }
+        );
+        console.log("da gui email", emailResponse);
+        if (emailResponse.status === 200) {
+          message.success({
+            content: "User approved successfully!",
+            key: "updatable",
+            duration: 2,
+          });
+          fetchUsers();
+          handleReset();
+        }
+      }
+    } catch (error) {
+      console.error("Error approving user:", error);
+      message.error({
+        content: "Failed to approve user",
+        key: "updatable",
+        duration: 2,
+      });
+    }
   };
 
   const handleFormSubmit = async () => {
@@ -56,96 +115,6 @@ export default function UserList({ number }) {
     }
   };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await userApi.get("manage/profile");
-      const users = response.data;
-      console.log(users);
-      setUsers(users);
-      const members = (users) => {
-        return users.filter((user) => user.UserRoleId === number);
-      };
-      setUsers(members(users));
-      setLoading(false);
-    } catch (error) {
-      console.error("Failed to fetch auctions:", error);
-      message.error("Failed to load auction data.");
-      setLoading(false);
-    }
-  };
-
-  const columns = [
-    {
-      title: <span className="titleName">User ID</span>,
-      dataIndex: "UserId",
-      key: "UserId",
-    },
-    {
-      title: <span className="titleName">Username</span>,
-      dataIndex: "Username",
-      key: "Username",
-    },
-    {
-      title: <span className="titleName">First Name</span>,
-      dataIndex: "FirstName",
-      key: "FirstName",
-    },
-    {
-      title: <span className="titleName">Last Name</span>,
-      dataIndex: "LastName",
-      key: "LastName",
-    },
-    {
-      title: <span className="titleName">Phone</span>,
-      dataIndex: "Phone",
-      key: "Phone",
-    },
-    {
-      title: <span className="titleName">Email</span>,
-      dataIndex: "Email",
-      key: "Email",
-    },
-    {
-      title: <span className="titleName">Active</span>,
-      dataIndex: "Active",
-      key: "Active",
-      render: (active) => (
-        <Tag color={active ? "green" : "red"} key={active}>
-          {active ? "Active" : "Inactive"}
-        </Tag>
-      ),
-    },
-    {
-      title: <span className="titleName">Role</span>,
-      dataIndex: "UserRoleId",
-      key: "UserRoleId",
-      render: (roleId) => (
-        <Tag
-          color={roleId === 1 ? "blue" : roleId === 2 ? "purple" : "orange"}
-          key={roleId}
-        >
-          {roleId === 3 ? "Staff" : roleId === 2 ? "Breeder" : "User"}
-        </Tag>
-      ),
-    },
-    {
-      title: <span className="titleName">Actions</span>,
-      key: "actions",
-      render: (_, record) => (
-        <Space>
-          <Button
-            className="viewButton"
-            onClick={() =>
-              navigate("/management/user-detail?id=" + record.UserId)
-            }
-          >
-            View Details
-          </Button>
-        </Space>
-      ),
-    },
-  ];
-
   return (
     <div key={seed}>
       <div
@@ -161,25 +130,47 @@ export default function UserList({ number }) {
         <h1 className="title">
           {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List
         </h1>
-        <Button
-          size="large"
-          type="primary"
-          onClick={() => {
-            setIsCreate(true);
-            setIsModalVisible(true);
-          }}
-        >
-          Create New{" "}
-          {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"}
-        </Button>
+        {number === 3 && (
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => {
+              setIsCreate(true);
+              setIsModalVisible(true);
+            }}
+          >
+            Create New Staff
+          </Button>
+        )}
+        {number === 2 && (
+          <div>
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => {
+                navigate("/management/breeder-list");
+              }}
+              style={{ marginRight: "10px" }}
+            >
+              Breeders List
+            </Button>
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => {
+                navigate("/management/request-list");
+              }}
+            >
+              Breeders Request List
+            </Button>
+          </div>
+        )}
       </div>
-      <Table
-        dataSource={users}
-        columns={columns}
-        rowKey="UserId" //rowKey để xác định mỗi hàng trong bảng
+      <UserListMng
+        users={users}
         loading={loading}
-        pagination={false}
-        scroll={{ y: 600 }}
+        onApprove={handleApprove}
+        isRequesting={isRequest}
       />
       <ProfileForm
         form={form}

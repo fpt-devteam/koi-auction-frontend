@@ -339,7 +339,7 @@ export default function GeneralInfoForm({ user, refresh }) {
               <Form.Item label="Address" name="Address">
                 <Input
                   placeholder="Enter your home address"
-                  disabled={!isEditing}
+                  disabled={true}
                 />
               </Form.Item>
             </Col>
@@ -348,7 +348,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                 <Select
                   placeholder="Select province"
                   onChange={handleSelectProvince}
-                  disabled={!isEditing}
+                  disabled={true}
                 >
                   {provinceList?.map((province) => (
                     <Option key={province.code} value={province.code}>
@@ -363,7 +363,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                 <Select
                   placeholder="Select district"
                   onChange={handleSelectDistrict}
-                  disabled={!isEditing}
+                  disabled={true}
                 >
                   {districtList?.map((district) => (
                     <Option key={district.code} value={district.code}>
@@ -375,7 +375,7 @@ export default function GeneralInfoForm({ user, refresh }) {
             </Col>
             <Col span={6}>
               <Form.Item label="Ward" name="WardCode">
-                <Select placeholder="Select ward" disabled={!isEditing}>
+                <Select placeholder="Select ward" disabled={true}>
                   {wardList?.map((ward) => (
                     <Option key={ward.code} value={ward.code}>
                       {ward.name}
