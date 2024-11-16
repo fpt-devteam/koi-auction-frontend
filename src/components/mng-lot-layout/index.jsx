@@ -3,6 +3,7 @@ import LotInfo from "../lot-info";
 import UploadKoiMedia from "../upload-koi-media";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const LotLayout = ({
   title,
@@ -45,10 +46,12 @@ const LotLayout = ({
   };
 
   // const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
-
+  let statusId = useParams().LotStatusId;
+  statusId = (statusId) ? statusId : 1;
+  console.log("statusId", statusId);
   const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
-  const statusId = useSelector((state) => state.status.statusId);
-  if (statusId === null || userRoleId === null) {
+  // const statusId = useSelector((state) => state.status.statusId);
+  if (userRoleId === null) {
     return null;
   }
   // console.log("statusId", statusId);
