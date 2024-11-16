@@ -19,6 +19,7 @@ import PriceBuy from '../../components/price-buy';
 import WinnerPrice from '../../components/winner-price';
 import { placeBid } from '../../helpers/signalRHelper';
 import useSignalRConnection from '../../hooks/useSignalRConnection';
+import DepositButton from '../../components/deposit-button';
 
 const AuctionLotDetailPage = () => {
   const { user } = useSelector((state) => state.user);
@@ -33,10 +34,13 @@ const AuctionLotDetailPage = () => {
   const [predictEndTime, setPredictEndTime] = useState(null);
   const [winner, setWinner] = useState(null);
   const [priceDesc, setPriceDesc] = useState(null);
+  const [isRegistered, setIsRegistered] = useState(null);
 
   const fetchAuctionLot = async () => {
     try {
-      const response = await lotApi.get(`auction-lots/${auctionLotId}`);
+      const response = await lotApi.get(
+        `auction-lots/${auctionLotId}`
+      );
       const fetchedAuctionLot = response.data;
       console.log('fetchedAuctionLot', fetchedAuctionLot);
       setAuctionLot(fetchedAuctionLot);
@@ -51,7 +55,9 @@ const AuctionLotDetailPage = () => {
 
   const fetchBigLog = async () => {
     try {
-      const response = await lotApi.get(`bid-log?AuctionLotId=${auctionLotId}`);
+      const response = await lotApi.get(
+        `bid-log?AuctionLotId=${auctionLotId}`
+      );
       const fetchedBidLogs = response.data;
       setBidLogs(fetchedBidLogs);
     } catch (error) {
@@ -65,7 +71,9 @@ const AuctionLotDetailPage = () => {
 
   const fetchWinner = async () => {
     try {
-      const response = await lotApi.get(`bid-log/highest-bid/${auctionLotId}`);
+      const response = await lotApi.get(
+        `bid-log/highest-bid/${auctionLotId}`
+      );
       const fetchedData = response.data;
       console.log('fetchedWinner', fetchedData);
       setWinner(fetchedData);
@@ -84,7 +92,9 @@ const AuctionLotDetailPage = () => {
       console.warn(`auctionLotId: ${auctionLotId}`);
       const response = await lotApi.get(`/sold-lots/${auctionLotId}`);
       console.log('response', response.data);
-      console.log(`fetchedSoldLot.finalPrice: ${response.data.finalPrice}`);
+      console.log(
+        `fetchedSoldLot.finalPrice: ${response.data.finalPrice}`
+      );
       setWinnerPrice(response.data.finalPrice);
     } catch (error) {
       console.log('error', error.response.data);
@@ -94,11 +104,37 @@ const AuctionLotDetailPage = () => {
     fetchSoldLot();
   }, [auctionLotId]);
 
-  const handleBid = (bidAmount) => {
-    placeBid(connection, userId, auctionLotId, bidAmount);
+  //registered
+  const fetchDeposit = async () => {
+    try {
+      const response = await lotApi.get(
+        `auction-deposit?AuctionLotId=${auctionLotId}&UserId=${userId}`
+      );
+      const fetchedDeposit = response.data;
+      // setDeposit(fetchedDeposit);
+      console.log('fetchedDeposit', fetchedDeposit);
+      // if (!fetchedDeposit && fetchDeposit.amount > 0)
+      // setIsRegistered(true);
+      setIsRegistered(fetchedDeposit);
+    } catch (error) {
+      console.log('error', error.response.data);
+    }
   };
+  useEffect(() => {
+    fetchDeposit();
+  }, [auctionLotId]);
 
-  useSignalRConnection(auctionLotId, userId, setPredictEndTime, setWinner, setPriceDesc, setConnection, fetchAuctionLot, fetchBigLog, fetchSoldLot);
+  useSignalRConnection(
+    auctionLotId,
+    userId,
+    setPredictEndTime,
+    setWinner,
+    setPriceDesc,
+    setConnection,
+    fetchAuctionLot,
+    fetchBigLog,
+    fetchSoldLot
+  );
 
   if (!auctionLot) {
     return <Spin />;
@@ -111,15 +147,48 @@ const AuctionLotDetailPage = () => {
     lotDto: {
       sku,
       startingPrice,
-      auctionMethod: { auctionMethodId, auctionMethodName, description },
+      auctionMethod: {
+        auctionMethodId,
+        auctionMethodName,
+        description
+      },
       koiFishDto: { variety, sex, sizeCm, yearOfBirth, koiMedia },
       breederDetailDto
     },
     auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName }
   } = auctionLot;
-  const stepPrice = stepPercent != null ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100 : stepPercent;
+  const stepPrice =
+    stepPercent != null
+      ? (parseFloat(startingPrice) * parseFloat(stepPercent)) / 100
+      : stepPercent;
   const softCap = startingPrice / 2;
-  // console.log("auctionLot", auctionLot);
+  const depositRate = 0.2;
+  const depositAmount =
+    auctionLot.lotDto?.startingPrice * depositRate;
+
+  const handleBid = (bidAmount) => {
+    placeBid(connection, userId, auctionLotId, bidAmount);
+  };
+
+  const handleDeposit = async () => {
+    const depositDto = {
+      AucitonLotId: auctionLotId,
+      Amount: depositAmount
+    };
+    try
+    {
+      message.loading('Processing deposit...', 0);
+      await lotApi.post('auction-deposit', depositDto);
+      message.destroy();
+      message.success('Deposit successful');
+      fetchDeposit();
+    }
+    catch (error)
+    {
+      message.error(error.response.data);
+    }
+  };
+
   return (
     <div style={{ padding: '20px 120px' }}>
       {/* Row 1 - Auction Lot Detail */}
@@ -148,29 +217,60 @@ const AuctionLotDetailPage = () => {
             {/* Koi Info */}
             <Col span={8}>
               {/* Koi Info */}
-              <KoiInfo koi={auctionLot.lotDto.koiFishDto} breederDetailDto={breederDetailDto} />
+              <KoiInfo
+                koi={auctionLot.lotDto.koiFishDto}
+                breederDetailDto={breederDetailDto}
+              />
             </Col>
 
             {/* Starting Price || Step Price || Auction Method */}
             <Col span={16}>
               {/* Starting price*/}
-              {<PriceDisplayComponent text="Starting price" value={startingPrice} size="small" />}
+              {
+                <PriceDisplayComponent
+                  text="Starting price"
+                  value={startingPrice}
+                  size="small"
+                />
+              }
               {/* Soft cap */}
-              {auctionMethodId == 4 && <PriceDisplayComponent text="Soft cap" value={softCap} size="small" />}
+              {auctionMethodId == 4 && (
+                <PriceDisplayComponent
+                  text="Soft cap"
+                  value={softCap}
+                  size="small"
+                />
+              )}
               {/* Step price */}
-              {auctionMethodId > 2 && <PriceDisplayComponent text="Step price" value={stepPrice} size="small" />}
+              {auctionMethodId > 2 && (
+                <PriceDisplayComponent
+                  text="Step price"
+                  value={stepPrice}
+                  size="small"
+                />
+              )}
               {/* Auction Method */}
-              <AuctionMethod auctionMethod={auctionLot.lotDto.auctionMethod} />
+              <AuctionMethod
+                auctionMethod={auctionLot.lotDto.auctionMethod}
+              />
             </Col>
           </Row>
           {/* Current Bid */}
           <Row gutter={(0, 20)}>
             <Col span={24}>
               {/* Current Bid */}
-              {auctionMethodId == 3 && auctionLotStatusId == 3 && <CurrentBid currentBid={winner != null ? winner.bidAmount : null} />}
+              {auctionMethodId == 3 && auctionLotStatusId == 3 && (
+                <CurrentBid
+                  currentBid={
+                    winner != null ? winner.bidAmount : null
+                  }
+                />
+              )}
 
               {/* Winner Price */}
-              {auctionLotStatusId == 4 && <WinnerPrice winnerPrice={winnerPrice} />}
+              {auctionLotStatusId == 4 && (
+                <WinnerPrice winnerPrice={winnerPrice} />
+              )}
             </Col>
           </Row>
         </Col>
@@ -181,22 +281,57 @@ const AuctionLotDetailPage = () => {
         {/* Time countdown */}
         <Col span={11}>
           {/* Time countdown */}
-          <Countdown startTime={startTime} endTime={endTime} predictEndTime={predictEndTime} statusName={auctionLotStatusName} />
+          <Countdown
+            startTime={startTime}
+            endTime={endTime}
+            predictEndTime={predictEndTime}
+            statusName={auctionLotStatusName}
+          />
         </Col>
 
         {/* Bid Form || Price Buy || Suggest Login || Winner Price */}
         <Col span={13}>
           {/* Bid Form */}
-          {userId && (auctionMethodId == 3 || auctionMethodId == 2) && auctionLotStatusId == 3 && <BidForm currentBid={winner != null ? winner.bidAmount : null} onBidSubmit={handleBid} />}
+          {userId &&
+            (auctionMethodId == 3 || auctionMethodId == 2) &&
+            auctionLotStatusId == 3 && isRegistered != null && (
+              <BidForm
+                currentBid={winner != null ? winner.bidAmount : null}
+                onBidSubmit={handleBid}
+              />
+            )}
 
           {/* Price Buy Method 1*/}
-          {userId && auctionMethodId == 1 && auctionLotStatusId == 3 && <PriceBuy price={startingPrice} onBuySubmit={handleBid} />}
+          {userId &&
+            auctionMethodId == 1 &&
+            auctionLotStatusId == 3 && isRegistered != null && (
+              <PriceBuy
+                price={startingPrice}
+                onBuySubmit={handleBid}
+              />
+            )}
 
           {/* Price Buy Method 4*/}
-          {userId && auctionMethodId == 4 && auctionLotStatusId == 3 && <PriceBuy price={priceDesc} onBuySubmit={handleBid} />}
+          {userId &&
+            auctionMethodId == 4 &&
+            auctionLotStatusId == 3 && isRegistered != null &&(
+              <PriceBuy price={priceDesc} onBuySubmit={handleBid} />
+            )}
 
-          {/* Winner Price
+          {/* Winner Price di chuyen di len cho o tren
           {auctionLotStatusId == 4 && <WinnerPrice winnerPrice={winnerPrice} />} */}
+
+          {/* Deposit */}
+          {userId && !(auctionLotStatusId == 3 && isRegistered != null) && (
+            <DepositButton
+              onDepositSubmit={handleDeposit}
+              depositAmount={depositAmount}
+              depositRate={depositRate}
+              lotDto={auctionLot.lotDto}
+              isOpen={auctionLotStatusId == 2}
+              isRegistered={isRegistered != null}
+            />
+          )}
 
           {/* Suggest Login */}
           {!userId && <SuggestLogin />}
@@ -207,7 +342,11 @@ const AuctionLotDetailPage = () => {
       <Row gutter={(0, 20)}>
         <Col span={24}>
           {/* Bid History Table */}
-          {(auctionMethodId == 1 || auctionMethodId == 3 || auctionLotStatusId == 4) && <BidHistoryTable data={bidLogs} />}
+          {(auctionMethodId == 1 ||
+            auctionMethodId == 3 ||
+            auctionLotStatusId == 4) && (
+            <BidHistoryTable data={bidLogs} />
+          )}
           <BackButton />
         </Col>
       </Row>

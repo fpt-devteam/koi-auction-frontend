@@ -71,18 +71,20 @@ const useSignalRConnection = (auctionLotId, userId, setPredictEndTime, setWinner
                     message.error(exceptionMessage);
                 });
 
-                newConnection.on(signalRMess.RECEIVE_SUCCESS_PAYMENT, (paymentDto) => {
+                newConnection.on(signalRMess.RECEIVE_PENDING_PAYMENT, (soldLot) => {
                     //make a modal to show payment success OK button
                     //modal antd
-                    const { amount } = paymentDto;
-                    console.log(paymentDto)
+                    const { finalPrice, expTime } = soldLot;
+                    console.log(soldLot)
+                    const formattedExpTime = new Date(expTime).toLocaleString();
                     Modal.success({
                         title: 'Congratulations!',
                         content: (
                             <div>
                                 <p>You are the winner of the auction!</p>
-                                <p>The auction item has been successfully paid for.</p>
-                                <p>You have paid <strong>{amount.toLocaleString()} VND</strong> for this item.</p>
+                                <p>Please check your order to pay on time</p>
+                                <p>Expire time: <strong>{formattedExpTime}</strong></p>
+                                <p>Final Price: <strong>{finalPrice} VND</strong></p>
                             </div>
                         ),
                         onOk() {},

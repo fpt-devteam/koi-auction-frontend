@@ -23,16 +23,35 @@ const BidForm = ({ onBidSubmit }) => {
 
   const handleBidSubmit = () => {
     //modal are you sure you want to place this bid?
-    Modal.confirm({
-      title: "Confirm Bid",
-      content: "Are you sure you want to place this bid?",
-      onOk() {
-        onBidSubmit(bidAmount);
-      },
-      onCancel() {
-        console.log("Cancel");
-      },
-    });
+    // Modal.confirm({
+    //   title: "Confirm Bid",
+    //   content: "Are you sure you want to place this bid?",
+    //   onOk() {
+    //     onBidSubmit(bidAmount);
+    //   },
+    //   onCancel() {
+    //     console.log("Cancel");
+    //   },
+    // });
+    console.log("Bid amount: ", bidAmount);
+    if (bidAmount && bidAmount > 0) {
+      //modal are you sure you want to place this bid?
+      Modal.confirm({
+        title: "Confirm Bid",
+        content: "Are you sure you want to place this bid?",
+        onOk() {
+          onBidSubmit(bidAmount);
+        },
+        onCancel() {
+          console.log("Cancel");
+        },
+      });
+    } else {
+      Modal.error({
+        title: "Invalid Bid",
+        content: "Bid amount must be greater than 0.",
+      });
+    }
   };
 
   return (
