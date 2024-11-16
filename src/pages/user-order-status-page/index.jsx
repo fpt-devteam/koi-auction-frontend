@@ -41,7 +41,7 @@ export default function UserOrderStatusPage() {
                     soldLotApi.get("", {
                         params: {
                             UserID: user.UserId,
-                            LotStatusId: LotStatusId,
+                            LotStatusId: LotStatusId || 6,
                         }
                     })
                 ]).then(([soldLotResponse]) => {

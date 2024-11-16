@@ -5,6 +5,7 @@ import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchLots from '../../hooks/useFetchLots';
 import soldLotApi from "../../config/soldLotApi";
+import lotApi from "../../config/lotApi";
 
 const staticTabsData = [
   { lotStatusId: 1, lotStatusName: "Pending", lotStatusIconLink: "src/assets/icon/pending.png" },
@@ -21,7 +22,7 @@ const staticTabsData = [
 ];
 
 const StatusTab = ({ LotList }) => {
-  const [loading, setLoading] = useState(false); // Lưu trữ danh sách tab từ API
+  const [loading, setLoading] = useState(true); // Lưu trữ danh sách tab từ API
   const [activeTab, setActiveTab] = useState("1"); // Tab đang được chọn
   const dispatch = useDispatch(); // Sử dụng dispatch từ Redux
   const { user } = useSelector((store) => store.user); // Lấy user từ Redux
@@ -30,49 +31,58 @@ const StatusTab = ({ LotList }) => {
   const navigate = useNavigate();
   let { LotStatusId } = useParams();
 
-  const { lots, refetch } = useFetchLots(LotStatusId || 1, 'UpdatedAt', false, breederId);
-
   useEffect(() => {
     setActiveTab(LotStatusId);
     setLoading(true);
     async function fetchLotDataByStatus() {
       try {
-        await Promise.all([
-          soldLotApi.get("", {
-            params: {
-              BreederId: breederId,
-              LotStatusId: LotStatusId,
-            }
+        if (LotStatusId <= 5) {
+          await Promise.all([
+            await lotApi.get("/lots", {
+              params: {
+                BreederId: breederId,
+                LotStatusId: LotStatusId,
+              }
+            })
+          ]).then(([lotResponse]) => {
+            setLotList(lotResponse?.data);
+          });
+        } else {
+          await Promise.all([
+            await soldLotApi.get("", {
+              params: {
+                BreederId: breederId,
+                LotStatusId: LotStatusId,
+              }
+            })
+          ]).then(([soldLotResponse]) => {
+            const soldLotList = soldLotResponse?.data?.map((soldLot) => ({
+              lotDto: {
+                lotId: soldLot?.soldLotId,
+                sku: soldLot?.sku,
+                koiFishDto: soldLot?.koiFish,
+              },
+              lotStatusDto: soldLot?.lotStatus,
+              breederDetailDto: soldLot?.breederDetailDto,
+              address: soldLot?.address,
+              winnerDto: soldLot?.winnerDto,
+              finalPrice: soldLot?.finalPrice,
+              auctionDeposit: soldLot?.auctionDepositDto?.amount,
+              createdAt: soldLot?.createdAt,
+              updatedAt: soldLot?.updatedAt,
+              expTime: soldLot?.expTime
+            }));
+            setLotList(soldLotList);
+            console.log("soldLotLishadfdst", soldLotList);
           })
-        ]).then(([soldLotResponse]) => {
-          const soldLotList = soldLotResponse?.data?.map((soldLot) => ({
-            lotDto: {
-              lotId: soldLot?.soldLotId,
-              sku: soldLot?.sku,
-              koiFishDto: soldLot?.koiFish,
-            },
-            lotStatusDto: soldLot?.lotStatus,
-            breederDetailDto: soldLot?.breederDetailDto,
-            address: soldLot?.address,
-            winnerDto: soldLot?.winnerDto,
-            finalPrice: soldLot?.finalPrice,
-            auctionDeposit: soldLot?.auctionDepositDto?.amount,
-            createdAt: soldLot?.createdAt,
-            updatedAt: soldLot?.updatedAt,
-            expTime: soldLot?.expTime
-          }));
-          setLotList(soldLotList);
-          setLoading(false);
-          console.log("soldLotLishadfdst", soldLotList);
-        })
+        }
       } catch (error) {
         message.error(error.message);
       }
+      setLoading(false);
     };
-    if (LotStatusId > 5) fetchLotDataByStatus();
-    else setLotList(lots);
-    setLoading(false);
-  }, [LotStatusId, lots]);
+    fetchLotDataByStatus();
+  }, [LotStatusId]);
 
   const handleTabChange = (key) => {
     navigate(`/management/lots/${key}`);
@@ -102,7 +112,7 @@ const StatusTab = ({ LotList }) => {
               <span className="tab-name">{tab.lotStatusName}</span>
             </div>,
           children: (
-            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={refetch} />
+            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={() => {}} />
           ),
         }))}
       />

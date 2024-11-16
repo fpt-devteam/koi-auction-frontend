@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Spin, message, Card, List, Button, Col, Row, Image, Typography, Modal, Table, Popconfirm, Statistic } from "antd";
+import { Tabs, Spin, message, Card, List, Button, Col, Row, Image, Typography, Modal, Table, Popconfirm, Statistic, Descriptions } from "antd";
 import lotApi from "../../config/lotApi";
 import './index.css';
 const { Text } = Typography;
 
 import paymentApi from "../../config/paymentApi";
 import soldLotApi from "../../config/soldLotApi";
+
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -357,8 +358,30 @@ const LotInfoModal = ({ lotInfoData }) => {
 };
 const OrderInfoModal = ({ soldlotInfoData, onCancel, user }) => {
     const winner = soldlotInfoData.winnerDto;
-    const handlePayment = () => {
-        message.success("Click Payment");
+    const handlePayment = async () => {
+        message.loading({ content: 'Loading...', key: 'payment' });
+        console.log("soldlotInfoData", soldlotInfoData);
+        try {
+            await Promise.all([await paymentApi.post("/payment", {
+                Amount: soldlotInfoData.finalPrice - soldlotInfoData.auctionDeposit,
+                SoldLotId: soldlotInfoData.lotId,
+                Description: `Payment for lot ${soldlotInfoData.lotId} - ${soldlotInfoData.finalPrice - soldlotInfoData.auctionDeposit} VND`
+            }),
+            await lotApi.put(`lots/${soldlotInfoData.lotDto.lotId}/status`, {
+                lotStatusName: "To Ship"
+            })]).then(([paymentResponse, updateResponse]) => {
+                console.log("paymentResponse", paymentResponse.data);
+                console.log("updateResponse", updateResponse.data);
+                if (paymentResponse.data) {
+                    message.success({ content: 'Payment success', key: 'payment' });
+                    onCancel();
+                } else {
+                    message.error({ content: `${paymentResponse.data?.message}`, key: 'payment' });
+                }
+            });
+        } catch (error) {
+            message.error({ content: `${error.message}`, key: 'payment' });
+        }
     };
     return (
         <>
