@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchLots from '../../hooks/useFetchLots';
-import soldLotApi from "../../config/soldLotApi";
 import lotApi from "../../config/lotApi";
 
 const staticTabsData = [
@@ -49,7 +48,7 @@ const StatusTab = ({ LotList }) => {
           });
         } else {
           await Promise.all([
-            await soldLotApi.get("", {
+            await lotApi.get("/sold-lots", {
               params: {
                 BreederId: breederId,
                 LotStatusId: LotStatusId,
@@ -112,7 +111,7 @@ const StatusTab = ({ LotList }) => {
               <span className="tab-name">{tab.lotStatusName}</span>
             </div>,
           children: (
-            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={() => {}} />
+            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={() => { }} />
           ),
         }))}
       />

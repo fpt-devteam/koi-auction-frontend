@@ -5,7 +5,7 @@ import './index.css';
 const { Text } = Typography;
 
 import paymentApi from "../../config/paymentApi";
-import soldLotApi from "../../config/soldLotApi";
+import TextArea from "antd/es/input/TextArea";
 
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -20,44 +20,30 @@ const formatDateTime = (dateString) => {
 const formartMoney = (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
     const [isOrderModalVisible, setIsOrderModalVisible] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [soldLotList, setSoldLotList] = useState([]);
-
     const [isLotInfoModalVisible, setIsLotInfoModalVisible] = useState(false);
 
     const toggleLotInfoModal = () => setIsLotInfoModalVisible(!isLotInfoModalVisible);
     const toggleOrderModal = () => setIsOrderModalVisible(!isOrderModalVisible);
 
-
-    const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
     const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(false);
     const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
-    const [isViewOrderModalVisible, setIsViewOrderModalVisible] = useState(false);
     const [cancelReason, setCancelReason] = useState("");
 
-    const handleClickDetailModal = () => setIsDetailModalVisible(!isDetailModalVisible);
     const handleClickDeliveryModal = () => setIsDeliveryModalVisible(!isDeliveryModalVisible);
     const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
-    const handleClickViewOrderModal = () => setIsViewOrderModalVisible(!isViewOrderModalVisible);
-    // const soldLot = {
-    //     lotDto: {
-    //         lotId: soldLot?.soldLotId,
-    //         sku: soldLot?.sku,
-    //         breederId: 17,
-    //         koiFishDto: soldLot?.koiFish,
 
-    //     },
-    //     lotStatusDto: soldLot?.lotStatus,
-    //     breederDetailDto: soldLot?.breederDetailDto,
-    //     address: soldLot?.address,
-    //     winnerDto: soldLot?.winnerDto,
-    //     finalPrice: soldLot?.finalPrice,
-    //     auctionDeposit: soldLot?.auctionDepositDto?.amount,
-    //     createdAt: soldLot?.createdAt,
-    //     updatedAt: soldLot?.updatedAt,
-    //     expTime: soldLot?.expTime
-    // };
-
+    const handleLotCancel = async () => {
+        try {
+            await lotApi.put(`lots/${soldLot?.lotDto?.lotId}/status`, {
+                lotStatusName: "Canceled",
+                description: cancelReason,
+            });
+            //refund 
+            message.success("Canceled successfully!");
+        } catch (error) {
+            message.error("Failed to cancel lot: " + error.message);
+        }
+    };
     const handleLotDelete = async () => {
         try {
             await lotApi.delete(`lots/${soldLot?.lotDto?.lotId}`);
@@ -76,39 +62,30 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                 }),
                 paymentApi.post(`payout`, {
                     Amount: soldLot?.finalPrice,
-                    BreederId: soldLot?.breederId,
+                    BreederId: soldLot?.breederDetailDto?.breederId,
+                    Description: `Payout for lot ${soldLot?.lotDto?.lotId}, total ${soldLot?.finalPrice} but 90% for breeder ${soldLot?.breederDetailDto?.breederId} is ${0.9 * soldLot?.finalPrice}`,
                 }),
             ]).then(([response, paymentResponse]) => {
                 console.log("response", response.data);
                 console.log("paymentResponse", paymentResponse.data);
+                console.log(`Payout for lot ${soldLot?.lotDto?.lotId}, total ${soldLot?.finalPrice} but 90% for breeder ${soldLot?.breederDetailDto?.breederId} is ${0.9 * soldLot?.finalPrice}`)
                 message.success('Completed successfully!');
             });
-            refetch();
         } catch (error) {
             message.error("Failed to complete lot: " + error.message);
         }
     };
-
-    const handleOperation = async () => {
+    const handleLotDelivery = async () => {
         try {
-            await Promise.all([
-                lotApi.put(`lots/${soldLot.lotId}/status`, {
-                    lotStatusName: "Completed"
-                }),
-                paymentApi.post(`payout`, {
-                    Amount: soldLot.finalPrice,
-                    BreederId: soldLot.breederId
-                })])
-                .then(([response, paymentResponse]) => {
-                    console.log("response", response.data);
-                    console.log("paymentResponse", paymentResponse.data);
-                    message.success('Delivery confirmed successfully');
-                });
-            refresh();
+            await lotApi.put(`lots/${soldLot?.lotDto?.lotId}/status`, {
+                lotStatusName: "To Receive",
+            });
+            message.success("Delivery approved");
         } catch (error) {
             message.error(error.message);
         }
     };
+
     return (
         <>
             <Card
@@ -142,7 +119,7 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                     }}>
                         <Button type="primary" size="large" key="view-order" onClick={toggleOrderModal}>View Order</Button>
                         <Button size="large" key="view-lot" onClick={toggleLotInfoModal}>View Lot</Button>
-                        {user?.userRoleId == 2 && tabData.lotStatusId < 3 && (
+                        {user?.UserRoleId == 2 && tabData.lotStatusId < 3 && (
                             <Popconfirm
                                 title="Are you sure to delete this item?"
                                 onConfirm={handleLotDelete}
@@ -159,12 +136,10 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
 
                             </Popconfirm>
                         )}
-                        {user?.userRoleId > 2 && tabData.lotStatusId == 7 && (
+                        {user?.UserRoleId > 2 && tabData.lotStatusId == 7 && (
                             <>
-                                <h1>logb</h1>
                                 <Button
                                     type="primary"
-                                    shape="round"
                                     size="large"
                                     onClick={handleClickDeliveryModal}
                                 >
@@ -172,7 +147,6 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                                 </Button>
                                 <Button
                                     type="primary"
-                                    shape="round"
                                     size="large"
                                     onClick={handleClickCancelModal}
                                     danger
@@ -181,16 +155,10 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                                 </Button>
                             </>
                         )}
-                        {tabData.lotStatusId > 5 && (
-                            <>
-                                <Button type="primary" size="large" key="view-order" onClick={handleClickViewOrderModal}>View Order</Button>
-                            </>
-                        )}
-                        {user?.userRoleId > 2 && tabData.lotStatusId == 8 && (
+                        {user?.UserRoleId > 2 && tabData.lotStatusId == 8 && (
                             <>
                                 <Button
                                     type="primary"
-                                    shape="round"
                                     size="large"
                                     onClick={handleLotComplete}
                                 >
@@ -198,7 +166,6 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                                 </Button>
                                 <Button
                                     type="primary"
-                                    shape="round"
                                     size="large"
                                     onClick={handleClickCancelModal}
                                     danger
@@ -269,6 +236,82 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
                         soldlotInfoData={soldLot}
                         onCancel={toggleOrderModal}
                         user={user}
+                    />
+                </Modal>
+                <Modal
+                    open={isDeliveryModalVisible}
+                    onCancel={handleClickDeliveryModal}
+                    footer={null}
+                    width={1200}
+                    style={{ top: 0 }}
+                >
+                    <div className="delivery-modal">
+                        <h2>Delivery Information</h2>
+                        <Table
+                            dataSource={[
+                                {
+                                    key: "name",
+                                    label: "Name",
+                                    value:
+                                        soldLot?.winnerDto?.firstName + " " + soldLot?.winnerDto?.lastName || "N/A",
+                                },
+                                {
+                                    key: "phone",
+                                    label: "Contact Number",
+                                    value: soldLot?.winnerDto?.phone || "N/A",
+                                },
+                                {
+                                    key: "email",
+                                    label: "Email",
+                                    value: soldLot?.winnerDto?.email || "N/A",
+                                },
+                                {
+                                    key: "address",
+                                    label: "Delivery Address",
+                                    value: soldLot?.address || "N/A",
+                                },
+                            ]}
+                            columns={[
+                                {
+                                    title: "Property",
+                                    dataIndex: "label",
+                                    key: "label",
+                                    width: "40%",
+                                    render: (text) => <Text strong>{text}</Text>,
+                                },
+                                {
+                                    title: "Value",
+                                    dataIndex: "value",
+                                    key: "value",
+                                },
+                            ]}
+                            pagination={false}
+                            size="middle"
+                            bordered
+                        />
+                        <div style={{ marginTop: 20, textAlign: "right" }}>
+                            <Button
+                                type="primary"
+                                style={{ marginRight: 8 }}
+                                onClick={handleLotDelivery}
+                            >
+                                Approve
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+                <Modal
+                    title="Reason why cancel this lot"
+                    open={isCancelModalVisible}
+                    onCancel={() => {
+                        setIsCancelModalVisible(false);
+                    }}
+                    onOk={handleLotCancel}
+                >
+                    <TextArea
+                        placeholder="Reason"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
                     />
                 </Modal>
             </Card >

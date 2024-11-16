@@ -11,12 +11,16 @@ import React from 'react';
 import useFetchLots from '../../hooks/useFetchLots';
 import { useSelector } from 'react-redux';
 import SoldLotCard from '../sold-lot-card';
-import soldLotApi from '../../config/soldLotApi';
 
 const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
   const user = useSelector((store) => store.user.user);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(false);
+    console.log("qwreqer", user)
+  }, [user])
   console.log("first,", tabData)
-  return (
+  return loading ? <Spin /> : (
     <div
       className="lot-list"
       style={{
@@ -29,7 +33,6 @@ const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
             <Col key={lot.lotId || index} xs={24} sm={24} md={24} lg={24}>
               {tabData?.lotStatusId > 5 ? (
                 <>
-                  <h1>ehehehe</h1>
                   <SoldLotCard soldLot={lot} tabData={tabData} user={user} />
                 </>
               ) : (

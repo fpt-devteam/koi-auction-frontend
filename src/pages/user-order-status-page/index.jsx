@@ -6,7 +6,6 @@ import { setStatusId } from "../../redux/features/statusSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import './index.css';
 import paymentApi from "../../config/paymentApi";
-import soldLotApi from "../../config/soldLotApi";
 import SoldLotCard from "../../components/sold-lot-card";
 
 const { Text } = Typography;
@@ -38,7 +37,7 @@ export default function UserOrderStatusPage() {
         async function fetchLotDataByStatus() {
             try {
                 await Promise.all([
-                    soldLotApi.get("", {
+                    lotApi.get("/sold-lots", {
                         params: {
                             UserID: user.UserId,
                             LotStatusId: LotStatusId || 6,
