@@ -9,6 +9,7 @@ import paymentApi from "../../config/paymentApi";
 import lotApi from "../../config/lotApi";
 import LineChartComponent from "../../components/child-line-chart-dashboard";
 import { DollarCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import DateRangeCard from "../../components/date-card";
 
 function BreederDashboardPage() {
   //breeder revenue
@@ -36,7 +37,9 @@ function BreederDashboardPage() {
       const revenueData = response.data;
 
       // Sort revenueData by date in ascending order
-      revenueData.sort((a, b) => new Date(a.dateFormatted) - new Date(b.dateFormatted));
+      revenueData.sort(
+        (a, b) => new Date(a.dateFormatted) - new Date(b.dateFormatted)
+      );
 
       console.log("revenue data", revenueData);
       setRevenueStatistics({
@@ -103,6 +106,11 @@ function BreederDashboardPage() {
   return (
     <div style={{ padding: "2% 4% 4% 4%" }}>
       <h1>Dashboard</h1>
+      <Row gutter={20} style={{ marginTop: "3%" }}>
+        <Col span={8}>
+          <DateRangeCard></DateRangeCard>
+        </Col>
+      </Row>
 
       {/* First Row: Deposit and Withdraw */}
       <Row gutter={20} style={{ marginTop: "3%" }}>

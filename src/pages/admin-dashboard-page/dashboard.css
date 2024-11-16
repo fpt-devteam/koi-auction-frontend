@@ -1,0 +1,23 @@
+.icon-blue {
+  font-size: 24px;
+  color: #3a6df0; /* Màu xanh dương */
+}
+
+.icon-green {
+  font-size: 24px;
+  color: #52c41a; /* Màu xanh lá */
+}
+
+.icon-red {
+  font-size: 24px;
+  color: #f5222d; /* Màu đỏ */
+}
+
+.icon-orange {
+  font-size: 24px;
+  color: #faad14; /* Màu cam */
+}
+
+.custom-card {
+  padding: 20px;
+}

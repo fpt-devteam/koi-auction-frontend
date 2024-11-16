@@ -19,6 +19,7 @@ const { Title } = Typography;
 
 const LineChartComponent = ({
   data,
+  fetchData,
   title = "",
   icon,
   currency,
@@ -80,8 +81,9 @@ const LineChartComponent = ({
 };
 LineChartComponent.propTypes = {
   data: PropTypes.number,
+  fetchData: PropTypes.func,
   title: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.node,
   currency: PropTypes.string,
 };
 export default LineChartComponent;
