@@ -37,7 +37,7 @@ export const signalRMess = Object.freeze({
     RECEIVE_START_AUCTION_LOT: "ReceiveStartAuctionLot",
     RECEIVE_END_AUCTION_LOT: "ReceiveEndAuctionLot",
     RECEIVE_PRICE_DESC: "ReceivePriceDesc",
-    RECEIVE_SUCCESS_PAYMENT: "ReceiveSuccessPayment",
+    RECEIVE_PENDING_PAYMENT: "ReceivePendingPayment",
     RECEIVE_LOADING: "ReceiveLoading",
 
     JOIN_AUCTION_LOT: "JoinAuctionLot",

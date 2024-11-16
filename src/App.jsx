@@ -134,6 +134,15 @@ function App() {
     },
     //member
     {
+      path: "/order/:LotStatusId",
+      element: (
+        <PrivateRoute allowedRoles={[Roles.MEMBER]}>
+          <AppLayout />
+        </PrivateRoute>
+      ),
+      children: [{ path: "", element: <UserOrderStatusPage /> }],
+    },
+    {
       path: "/order",
       element: (
         <PrivateRoute allowedRoles={[Roles.MEMBER]}>
@@ -142,7 +151,6 @@ function App() {
       ),
       children: [{ path: "", element: <UserOrderStatusPage /> }],
     },
-
     //member
     {
       path: "/wallet",
@@ -215,6 +223,11 @@ function App() {
         },
 
         //breeder and staff
+        {
+          path: "lots/:LotStatusId",
+          element: <LotManagementPage />,
+          allowedRoles: [Roles.BREEDER, Roles.STAFF],
+        },
         {
           path: "lots",
           element: <LotManagementPage />,
