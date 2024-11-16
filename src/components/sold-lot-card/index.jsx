@@ -34,14 +34,24 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user, refetch }) => {
 
     const handleLotCancel = async () => {
         try {
-            await lotApi.put(`lots/${soldLot?.lotDto?.lotId}/status`, {
-                lotStatusName: "Canceled",
-                description: cancelReason,
+            message.loading({ content: 'Loading...', key: 'cancel' });
+            await Promise.all([
+                await lotApi.put(`lots/${soldLot?.lotDto?.lotId}/status`, {
+                    lotStatusName: "Canceled",
+                    description: cancelReason,
+                }),
+                await paymentApi.post(`/manage/refund`, {
+                    Amount: soldLot?.finalPrice,
+                    UserId: soldLot?.winnerDto?.userId,
+                    Description: `Refund for lot ${soldLot?.lotDto?.lotId}, total ${soldLot?.finalPrice} VND`
+                })
+            ]).then(([response, paymentResponse]) => {
+                console.log("response", response.data);
+                console.log("paymentResponse", paymentResponse.data);
+                message.success({ content: 'Canceled successfully!', key: 'cancel' });
             });
-            //refund 
-            message.success("Canceled successfully!");
         } catch (error) {
-            message.error("Failed to cancel lot: " + error.message);
+            message.error({ content: `${error.message}`, key: 'cancel' });
         }
     };
     const handleLotDelete = async () => {

@@ -35,12 +35,12 @@ const StatusTab = ({ LotList }) => {
     setLoading(true);
     async function fetchLotDataByStatus() {
       try {
-        if (LotStatusId <= 5) {
+        if (LotStatusId <= 5 || !LotStatusId) {
           await Promise.all([
             await lotApi.get("/lots", {
               params: {
                 BreederId: breederId,
-                LotStatusId: LotStatusId,
+                LotStatusId: LotStatusId || 1,
               }
             })
           ]).then(([lotResponse]) => {
@@ -51,7 +51,7 @@ const StatusTab = ({ LotList }) => {
             await lotApi.get("/sold-lots", {
               params: {
                 BreederId: breederId,
-                LotStatusId: LotStatusId,
+                LotStatusId: LotStatusId || 6,
               }
             })
           ]).then(([soldLotResponse]) => {
