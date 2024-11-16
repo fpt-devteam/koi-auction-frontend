@@ -175,6 +175,7 @@ const MainLineChartComponent = ({
 }) => {
   const [offset, setOffset] = useState(0);
 
+  console.log("data: ", data);
   // Gọi hàm fetchData khi offset thay đổi
   useEffect(() => {
     fetchData(offset);

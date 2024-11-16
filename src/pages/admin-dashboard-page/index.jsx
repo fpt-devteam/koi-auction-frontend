@@ -70,21 +70,6 @@ function AdminDashboardPage() {
     console.log("Updated auctionMethodData:", auctionMethodData);
   }, []);
 
-  // // table thống kê mỗi breeder đóng góp như thế nào cho cty
-  // const [breederStatistics, setBreederStatistic] = useState([]);
-  // const fetchBreederStatistics = async () => {
-  //   try {
-  //     const response = await lotApi.get(`/lots/breeder-statistics`);
-  //     setBreederStatistic(response.data);
-  //   } catch (error) {
-  //     message.error(error.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchBreederStatistics();
-  // }, []);
-
   //total lot
   const [totalStatistics, setTotal] = useState({
     total: 0,
@@ -185,7 +170,7 @@ function AdminDashboardPage() {
         ],
       });
     } catch (error) {
-      message.error("Error fetching revenue data: " + error.message);
+      // message.error("Error fetching revenue data: " + error.message);
     }
   };
 
@@ -243,7 +228,6 @@ function AdminDashboardPage() {
               justifyContent: "center",
               alignItems: "center",
               height: "100%", // Chiều cao toàn màn hình
-              // background: "linear-gradient(135deg, #3a6df0, #85a5ff)", // Nền gradient
             }}
           >
             <div
