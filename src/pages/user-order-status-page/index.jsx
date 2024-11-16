@@ -105,6 +105,7 @@ export default function UserOrderStatusPage() {
                                             tabData={tab}
                                             user={user}
                                             orderList={orderList}
+                                            refresh={handleReset}
                                         />
                                     </>
                                 ),
@@ -116,14 +117,14 @@ export default function UserOrderStatusPage() {
         );
 }
 
-const OrderList = ({ orderList, tabData, user }) => {
+const OrderList = ({ orderList, tabData, user, refresh }) => {
     return (
         <List
             itemLayout="vertical"
             dataSource={orderList}
             renderItem={(order) => (
                 <List.Item style={{ padding: "0px" }}>
-                    <SoldLotCard soldLot={order} tabData={tabData} user={user} />
+                    <SoldLotCard soldLot={order} tabData={tabData} user={user} refresh={refresh} />
                 </List.Item>
             )}
             locale={{ emptyText: `No ${tabData.lotStatusName} orders` }}

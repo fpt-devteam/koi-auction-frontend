@@ -29,6 +29,9 @@ const StatusTab = ({ LotList }) => {
   const [lotList, setLotList] = useState([]);
   const navigate = useNavigate();
   let { LotStatusId } = useParams();
+  const [seed, setSeed] = useState(1);
+
+  const handleReset = () => setSeed(seed + 1);
 
   useEffect(() => {
     setActiveTab(LotStatusId);
@@ -72,7 +75,7 @@ const StatusTab = ({ LotList }) => {
               expTime: soldLot?.expTime
             }));
             setLotList(soldLotList);
-            console.log("soldLotLishadfdst", soldLotList);
+            // console.log("soldLotLishadfdst", soldLotList);
           })
         }
       } catch (error) {
@@ -81,7 +84,7 @@ const StatusTab = ({ LotList }) => {
       setLoading(false);
     };
     fetchLotDataByStatus();
-  }, [LotStatusId]);
+  }, [LotStatusId, seed]);
 
   const handleTabChange = (key) => {
     navigate(`/management/lots/${key}`);
@@ -111,7 +114,7 @@ const StatusTab = ({ LotList }) => {
               <span className="tab-name">{tab.lotStatusName}</span>
             </div>,
           children: (
-            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={() => { }} />
+            <LotList breederId={breederId} tabData={tab} lotList={lotList} refetch={handleReset} />
           ),
         }))}
       />
