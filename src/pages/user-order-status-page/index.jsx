@@ -7,17 +7,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import './index.css';
 import paymentApi from "../../config/paymentApi";
 import SoldLotCard from "../../components/sold-lot-card";
-
 const { Text } = Typography;
 const staticTabsData = [
-    { lotStatusId: 6, lotStatusName: "To Pay", lotStatusIconLink: "src/assets/icon/payment-method.png" },
-    { lotStatusId: 7, lotStatusName: "To Ship", lotStatusIconLink: "src/assets/icon/shipping.png" },
-    { lotStatusId: 8, lotStatusName: "To Receive", lotStatusIconLink: "src/assets/icon/receiver.png" },
-    { lotStatusId: 9, lotStatusName: "Completed", lotStatusIconLink: "src/assets/icon/completed.png" },
-    { lotStatusId: 10, lotStatusName: "Canceled", lotStatusIconLink: "src/assets/icon/cancel.png" },
-    { lotStatusId: 11, lotStatusName: "Payment Overdue", lotStatusIconLink: "src/assets/icon/cancel.png" },
-];
+    { lotStatusId: 6, lotStatusName: "To Pay", lotStatusIconLink: "/src/assets/icon/payment-method.png" },
+    { lotStatusId: 7, lotStatusName: "To Ship", lotStatusIconLink: "/src/assets/icon/shipping.png" },
+    { lotStatusId: 8, lotStatusName: "To Receive", lotStatusIconLink: "/src/assets/icon/receiver.png" },
+    { lotStatusId: 9, lotStatusName: "Completed", lotStatusIconLink: "/src/assets/icon/completed.png" },
+    { lotStatusId: 10, lotStatusName: "Canceled", lotStatusIconLink: "/src/assets/icon/cancel.png" },
+    { lotStatusId: 11, lotStatusName: "Payment Overdue", lotStatusIconLink: "/src/assets/icon/cancel.png" },
 
+];
 export default function UserOrderStatusPage() {
     const [activeTab, setActiveTab] = useState("1");
     const [loading, setLoading] = useState(true);
@@ -28,7 +27,12 @@ export default function UserOrderStatusPage() {
     const { user } = useSelector((store) => store.user);
 
     let { LotStatusId } = useParams();
-
+    // staticTabsData.forEach((tab) => {
+    //     if (tab.lotStatusId == LotStatusId) {
+    //         console.log("here", LotStatusId);
+    //         console.log("here", tab.lotStatusIconLink);
+    //     }
+    // })
     useEffect(() => {
         setActiveTab(LotStatusId);
         setLoading(true);
@@ -112,7 +116,7 @@ export default function UserOrderStatusPage() {
                             }))}
                         className="order-tabs"
                     />
-                </div>
+                </div >
             </>
         );
 }

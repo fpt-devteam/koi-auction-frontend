@@ -171,7 +171,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               {
                 type: 'number',
                 min: 0.2,
-                max: 15,
+                max: 50,
                 message: 'Weight must be between 0.2 and 15 kg'
               }
             ]}
