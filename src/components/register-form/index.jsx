@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import addressApi from "../../config/addressApi";
 import UploadAvatar from "../upload-avatar";
+import emailApi from "../../config/emailApi";
 
 const RegisterForm = ({ isBreeder }) => {
   const [loading, setLoading] = useState(false);
@@ -110,12 +111,17 @@ const RegisterForm = ({ isBreeder }) => {
 
     try {
       const response = await userApi.post("/register", formValues);
+      const email = values.email;
       setLoading(false);
       if (response.status >= 200 && response.status < 300) {
         if (isBreeder) {
           message.success(
             "Register successful! Please wait for admin approval."
           );
+          sendMail(email);
+          setTimeout(() => {
+            navigate("/success-register");
+          }, 1000);
         } else {
           message.success("Registration successful! Please log in.");
           setTimeout(() => {
@@ -128,6 +134,23 @@ const RegisterForm = ({ isBreeder }) => {
         setLoading(false);
         message.error(
           error.response.data.message || "Register failed. Please try again."
+        );
+      }
+    }
+  };
+  const sendMail = async (email) => {
+    try {
+      const response = await emailApi.post("/send-email", {
+        Email: email,
+        Subject: "Thank you for registering to become our Breeders!",
+        Text: "Please wait for our admin to verify your farm for 1 to 7 days. <br /> We will send you an email notification once your farm is verified.",
+      });
+      console.log(response.data);
+      message.success(response.data.message);
+    } catch (error) {
+      if (error.response) {
+        message.error(
+          error.response.data.message || "Send Email failed. Please try again."
         );
       }
     }

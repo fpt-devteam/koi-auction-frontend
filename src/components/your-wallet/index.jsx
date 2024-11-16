@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Card,
+  Descriptions,
 } from "antd";
 import {
   SmileOutlined
@@ -53,6 +54,7 @@ function YourWallet({ balance, refresh, user }) {
     try {
       const response = await paymentApi.post("/deposit", {
         Amount: values.depositAmount,
+        Description: "Deposit to wallet " + values.depositAmount,
       });
       console.log(response.data.order_url);
 

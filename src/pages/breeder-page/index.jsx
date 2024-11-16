@@ -14,8 +14,8 @@ function BreederPage() {
     setIsLoading(true);
     try {
       const response = await userApi.get("/manage/breeder/profile");
-      setBreeders(response.data);
-
+      setBreeders(response.data.filter((breeder) => breeder.Verified === true && breeder.Active === true));
+      //setBreeders(breeders.filter((breeder) => breeder.Active === true));
     } catch (error) {
       message.error("Failed to load breeder information");
       console.log(error);
@@ -45,7 +45,8 @@ function BreederPage() {
             <Spin tip="Loading breeders..." />
           </div>
         ) : (
-          breeders.map((breeder) => (
+          breeders
+          .map((breeder) => (
             <Card.Grid
               style={styles.gridStyle}
               key={breeder.BreederId}

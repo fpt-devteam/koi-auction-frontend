@@ -11,6 +11,7 @@ function ProfileForm({
   isBreeder,
   isCreate,
   roleId,
+  isRequesting,
 }) {
   const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
   const noLeadingTrailingSpacesRule = {
@@ -102,8 +103,9 @@ function ProfileForm({
               { type: "email", message: "Please enter a valid email!" },
               noSpacesRule,
             ]}
+            readOnly={true}
           >
-            <Input size="small" />
+            <Input size="small" disabled={true} />
           </Form.Item>
           <Form.Item
             label="Phone"
@@ -116,12 +118,19 @@ function ProfileForm({
               },
               noSpacesRule,
             ]}
+            readOnly={true}
           >
-            <Input size="small" />
+            <Input size="small" disabled={true} />
           </Form.Item>
-          <Form.Item label="Active" name="Active" valuePropName="checked">
+          {isRequesting ? ( 
+            <Form.Item hidden={true} label="Active" name="Active" valuePropName="checked">
             <Switch size="middle" />
           </Form.Item>
+          ) : (
+            <Form.Item hidden={true} label="Active" name="Active" valuePropName="checked">
+            <Switch size="middle" />
+          </Form.Item>
+          )}
           {isBreeder && (
             <>
               <Form.Item

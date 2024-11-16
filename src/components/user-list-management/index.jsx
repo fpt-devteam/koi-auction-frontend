@@ -9,6 +9,7 @@ function UserListMng({ users, loading, isRequesting, onApprove }) {
   } else {
     users = users.filter((user) => user.Verified === true);
   }
+  console.log("isRequesting", isRequesting);
   const columns = [
     {
       title: <span className="titleName">User ID</span>,
@@ -76,7 +77,7 @@ function UserListMng({ users, loading, isRequesting, onApprove }) {
           <Button
             className="viewButton"
             onClick={() =>
-              navigate("/management/user-detail?id=" + record.UserId)
+              navigate("/management/user-detail?id=" + record.UserId, {state: {isRequesting: isRequesting}})
             }
           >
             Details

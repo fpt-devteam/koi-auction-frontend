@@ -40,6 +40,7 @@ import NotFoundPage from "./pages/not-found-page";
 import AdminDashboardPage from "./pages/admin-dashboard-page";
 import BreederDashboardPage from "./pages/breeder-dashboard-page";
 import BreederRegister from "./pages/breeder-register-page";
+import SuccessRegisterPage from "./pages/success-register-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -68,6 +69,11 @@ function App() {
       path: "/breeder-register",
       element: <AppLayout />,
       children: [{ path: "", element: <BreederRegister /> }]
+    },
+    {
+      path: "/success-register",
+      element: <AppLayout />,
+      children: [{ path: "", element: <SuccessRegisterPage /> }]
     },
 
     {
@@ -250,12 +256,12 @@ function App() {
         //admin
         {
           path: "user-list",
-          element: <UserListPage number={Roles.MEMBER} />,
+          element: <UserListPage number={Roles.MEMBER} isRequest={false} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "breeder-list",
-          element: <UserListPage number={Roles.BREEDER} />,
+          element: <UserListPage number={Roles.BREEDER} isRequest={false} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
@@ -265,7 +271,7 @@ function App() {
         },
         {
           path: "staff-list",
-          element: <UserListPage number={Roles.STAFF} />,
+          element: <UserListPage number={Roles.STAFF} isRequest={false} />,
           allowedRoles: [Roles.ADMIN],
         },
         {

@@ -7,6 +7,7 @@ import ProfileForm from "../../components/profile-form-modal";
 import UserListMng from "../../components/user-list-management";
 import emailApi from "../../config/emailApi";
 import axios from "axios";
+import { ref } from "firebase/storage";
 
 export default function UserListPage({ number, isRequest }) {
   console.log(number);
@@ -53,29 +54,33 @@ export default function UserListPage({ number, isRequest }) {
       console.log("userId: ", userId);
       console.log("email: ", email);
       message.loading({ content: "Approving user...", key: "updatable" });
-      // const response = await userApi.patch(`manage/profile/${userId}`,
-      // {
-      //   Verified: "true",
-      // });
-      const response = await axios.post(`http://localhost:3005/api/send-email`, 
-      {
-        Email: email,
-        Subject: "Dieu Vi gui mail cho Trung math",
-        Text: "cak",
-      });
+
+      const response = await userApi.patch(`verify-breeder/${userId}`);
       console.log(response.status);
-      if (response.status === 200) {
-        message.success({
-          content: "User approved successfully!",
-          key: "updatable",
-          duration: 2,
-        });
-        fetchUsers();
+      if (response.status === 201) {
+        const emailResponse = await emailApi.post(
+          "send-email",
+          {
+            Email: email,
+            Subject: "Your Farm Auction Account has been approved",
+            Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
+          }
+        );
+        console.log("da gui email", emailResponse);
+        if (emailResponse.status === 200) {
+          message.success({
+            content: "User approved successfully!",
+            key: "updatable",
+            duration: 2,
+          });
+          fetchUsers();
+          handleReset();
+        }
       }
     } catch (error) {
-      console.error("Failed to approve user:", error);
+      console.error("Error approving user:", error);
       message.error({
-        content: error.response.data.message,
+        content: "Failed to approve user",
         key: "updatable",
         duration: 2,
       });
@@ -154,10 +159,6 @@ export default function UserListPage({ number, isRequest }) {
               type="primary"
               onClick={() => {
                 navigate("/management/request-list");
-                // setIsRequesting(true);
-                // setIsCreate(true);
-                // setIsModalVisible(true);
-                //cho nay navigate toi trang request list
               }}
             >
               Breeders Request List

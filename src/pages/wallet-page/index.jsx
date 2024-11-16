@@ -84,6 +84,7 @@ const WalletPage = () => {
             transType: trans.TransType,
             description: trans.Description,
             balanceAfter: 0,
+            time: trans.CreatedAt,
           };
           checkTrans(formattedTrans);
           return formattedTrans;
@@ -102,6 +103,7 @@ const WalletPage = () => {
             amount: trans.Amount,
             transType: trans.TransType,
             description: trans.Description,
+            time: trans.CreatedAt,
           };
           checkTrans(formattedTrans);
           return formattedTrans;
