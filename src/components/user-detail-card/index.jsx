@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Col, Descriptions, Image, Row } from "antd";
 import React from "react";
+import BreederRequestModal from "../confirmation-modal";
 
 function UserDetailCard({ data, loading, openModal, title, isRequesting, onApprove, onReject }) {
   // const getAddress = async (address) => {
@@ -12,6 +13,17 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
   //   }
     
   // };
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const showModal = () => {
+    setIsVisible(true);
+  }
+  const handleOk = () => {
+    setIsVisible(false);
+  }
+  const handleCancel = () => {
+    setIsVisible(false);
+  }
 
   return (
     <>
@@ -99,6 +111,7 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
               type="primary"
               className="update-button"
               onClick={() => onReject()}
+              // onClick={showModal}
               style={{ marginTop: "20px" }}
             >
               Reject
@@ -118,6 +131,7 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
           </Col> */}
         </Row>
       </Card>
+      {/* <BreederRequestModal visible={isVisible} handleOk={handleOk} handleCancel={handleCancel} /> */}
     </>
   );
 }
