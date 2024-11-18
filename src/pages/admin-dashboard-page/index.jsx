@@ -156,11 +156,11 @@ function AdminDashboardPage() {
       console.log(revenueData);
       console.log("total", revenueData.total);
       setRevenueStatistics({
-        labels: revenueData.map((item) => item.dayName),
+        labels: revenueData.map((item) => item.date),
         datasets: [
           {
             label: "Revenue",
-            data: revenueData.map((item) => item.revenue),
+            data: revenueData.map((item) => item.totalAmount),
             borderColor: "#3a6df0",
             backgroundColor: "rgba(58, 109, 240, 0.2)",
             pointBackgroundColor: "#3a6df0",
