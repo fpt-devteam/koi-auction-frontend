@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Typography, Space } from "antd";
 import "./index.css";
 
@@ -26,6 +26,54 @@ const checkStatus = (status) => {
   //     return "Failed";
   // }
   return status;
+};
+const checkTrans = (trans) => {
+  let isPositive;
+  switch (trans.transType) {
+    case "Deposit":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Withdraw":
+      if (trans.status === "Success") {
+        //- Amount va mau do
+        isPositive = false;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Payment":
+      if (trans.status === "Success") {
+        //- Amount va mau do
+        isPositive = false;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Payout":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Refund":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    default:
+      isPositive = null;
+  }
+  return isPositive;
 };
 
 const formatDate = (isoString) => {
@@ -65,7 +113,18 @@ const TransactionList = ({ transactions }) => {
       dataIndex: "amount",
       key: "amount",
       align: "left",
-      render: (amount) => <Text strong>{amount?.toLocaleString()} VND</Text>,
+      render: (amount, record) => {
+        const isPositive = checkTrans(record);
+        if (isPositive === null) {
+          return <Text strong>{`${amount?.toLocaleString()} VND`}</Text>;
+        }
+        const sign = isPositive ? "+" : "-";
+        const color = isPositive ? "green" : "red";
+        return (
+          <Text strong style={{ color }}>
+            {`${sign} ${amount?.toLocaleString()} VND`}
+          </Text> );
+      },
       width: "15em",
     },
     {
