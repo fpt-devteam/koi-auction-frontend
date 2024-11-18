@@ -6,8 +6,7 @@ import userApi from "../../config/userApi";
 import ProfileForm from "../../components/profile-form-modal";
 import UserListMng from "../../components/user-list-management";
 import emailApi from "../../config/emailApi";
-import axios from "axios";
-import { ref } from "firebase/storage";
+
 
 export default function UserListPage({ number, isRequest }) {
   console.log(number);
@@ -49,23 +48,23 @@ export default function UserListPage({ number, isRequest }) {
     }
   };
 
-  const handleApprove = async (userId, email) => {
+  const handleApprove = async (userId, email, status) => {
     try {
       console.log("userId: ", userId);
       console.log("email: ", email);
+      console.log("status: ", status);
       message.loading({ content: "Approving user...", key: "updatable" });
 
-      const response = await userApi.patch(`verify-breeder/${userId}`);
+      const response = await userApi.patch(`verify-breeder/${userId}`, {
+        Verified: status,
+      });
       console.log(response.status);
       if (response.status === 201) {
-        const emailResponse = await emailApi.post(
-          "send-email",
-          {
-            Email: email,
-            Subject: "Your Farm Auction Account has been approved",
-            Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
-          }
-        );
+        const emailResponse = await emailApi.post("send-email", {
+          Email: email,
+          Subject: "Your Farm Auction Account has been approved",
+          Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
+        });
         console.log("da gui email", emailResponse);
         if (emailResponse.status === 200) {
           message.success({
@@ -125,9 +124,10 @@ export default function UserListPage({ number, isRequest }) {
           margin: "0",
           marginRight: "20px",
           marginBottom: "20px",
+          // backgroundColor: "red",
         }}
       >
-        <h1 className="title">
+        <h1 className="title" style={{fontSize: "30px"}}>
           {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List
         </h1>
         {number === 3 && (
@@ -142,30 +142,47 @@ export default function UserListPage({ number, isRequest }) {
             Create New Staff
           </Button>
         )}
-        {number === 2 && (
-          <div>
-            <Button
-              size="large"
-              type="primary"
-              onClick={() => {
-                navigate("/management/breeder-list");
-              }}
-              style={{ marginRight: "10px" }}
-            >
-              Breeders List
-            </Button>
-            <Button
-              size="large"
-              type="primary"
-              onClick={() => {
-                navigate("/management/request-list");
-              }}
-            >
-              Breeders Request List
-            </Button>
-          </div>
-        )}
       </div>
+      {number === 2 && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            // backgroundColor: "blue",
+          }}
+        >
+          <Button
+            style={{  color: "black", borderColor: "black" }}
+            size="large"
+            type="link"
+            onClick={() => {
+              navigate("/management/request-list");
+            }}
+          >
+            Pending
+          </Button>
+          <Button
+            style={{ color: "black", borderColor: "black" }}
+            size="large"
+            type="link"
+            onClick={() => {
+              navigate("/management/breeder-list");
+            }}
+          >
+            Approve
+          </Button>
+          <Button
+            style={{ color: "black", borderColor: "black" }}
+            size="large"
+            type="link"
+            onClick={() => {
+              navigate("/management/rejected-breeder-list");
+            }}
+          >
+            Rejected
+          </Button>
+        </div>
+      )}
       <UserListMng
         users={users}
         loading={loading}
