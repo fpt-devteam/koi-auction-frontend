@@ -1,7 +1,7 @@
 import { Badge, Button, Card, Col, Descriptions, Image, Row } from "antd";
 import React from "react";
 
-function UserDetailCard({ data, loading, openModal, title, isRequesting }) {
+function UserDetailCard({ data, loading, openModal, title, isRequesting, onApprove }) {
   // const getAddress = async (address) => {
   //   try {
   //     const response = await addressApi.get(`address/${address}`);
@@ -59,7 +59,7 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting }) {
           {/* <Descriptions.Item label="Address">
             {getAddress(data.Address)}{" "}
           </Descriptions.Item> */}
-          {!isRequesting && (
+          {isRequesting == 1 && (
             <Descriptions.Item label="Active">
               <Badge
                 status={data.Active ? "success" : "error"}
@@ -82,6 +82,18 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting }) {
               Update
             </Button>
           </Col>
+          {isRequesting == 0 && ( 
+            <Col span={12}>
+              <Button
+                type="primary"
+                className="update-button"
+                onClick={() => onApprove()}
+                style={{ marginTop: "20px" }}
+              >
+                Approve
+              </Button>
+            </Col>
+          )}
           {/* <Col span={8}>
             <Button
               type="primary"

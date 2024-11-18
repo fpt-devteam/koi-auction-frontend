@@ -127,7 +127,7 @@ function ProfileForm({
             <Switch size="middle" />
           </Form.Item>
           ) : (
-            <Form.Item hidden={true} label="Active" name="Active" valuePropName="checked">
+            <Form.Item label="Active" name="Active" valuePropName="checked">
             <Switch size="middle" />
           </Form.Item>
           )}

@@ -125,7 +125,6 @@ const TransactionList = ({ transactions }) => {
       pagination={false}
       showHeader={true}
       scroll={{ y: 400 }}
-      scroll={{ y: 400 }}
     />
   );
 };

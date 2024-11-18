@@ -269,22 +269,27 @@ function App() {
         //admin
         {
           path: "user-list",
-          element: <UserListPage number={Roles.MEMBER} isRequest={false} />,
+          element: <UserListPage number={Roles.MEMBER} isRequest={1} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "breeder-list",
-          element: <UserListPage number={Roles.BREEDER} isRequest={false} />,
+          element: <UserListPage number={Roles.BREEDER} isRequest={1} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "request-list",
-          element: <UserListPage number={Roles.BREEDER} isRequest={true}/>,
+          element: <UserListPage number={Roles.BREEDER} isRequest={0}/>,
+          allowedRoles: [Roles.ADMIN],
+        },
+        {
+          path: "rejected-breeder-list",
+          element: <UserListPage number={Roles.BREEDER} isRequest={2}/>,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "staff-list",
-          element: <UserListPage number={Roles.STAFF} isRequest={false} />,
+          element: <UserListPage number={Roles.STAFF} isRequest={1} />,
           allowedRoles: [Roles.ADMIN],
         },
         {

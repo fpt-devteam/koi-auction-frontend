@@ -4,7 +4,8 @@ import userApi from "../../config/userApi";
 import UserDetailCard from "../../components/user-detail-card";
 import "./index.css";
 import ProfileForm from "../../components/profile-form-modal";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import emailApi from "../../config/emailApi";
 
 const UserDetail = () => {
   const [user, setUser] = useState(null);
@@ -13,11 +14,59 @@ const UserDetail = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-
+  const [seed, setSeed] = useState(0);
   //nhan gia tri isRequesting tu user-list-management qua navigate
   const { isRequesting } = location.state || false;
 
+  const handleReset = () => {
+    setSeed(seed + 1);
+  };
+
   console.log("isRequesting", isRequesting);
+
+  const handleApprove = async (userId, email, status) => {
+    try {
+      console.log("userId: ", userId);
+      console.log("email: ", email);
+      message.loading({ content: "Approving user...", key: "updatable" });
+
+      const response = await userApi.patch(`verify-breeder/${userId}`, {
+        Verified: 1,
+      });
+      console.log(response.status);
+      if (response.status === 201) {
+        const emailResponse = await emailApi.post(
+          "send-email",
+          {
+            Email: email,
+            Subject: "Your Farm Auction Account has been approved",
+            Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
+          }
+        );
+        console.log("da gui email", emailResponse);
+        if (emailResponse.status === 200) {
+          message.success({
+            content: "User approved successfully!",
+            key: "updatable",
+            duration: 2,
+          });
+            // Set isRequesting to false here
+          location.state.isRequesting = 1;
+
+          fetchUser(userId);
+          handleReset();
+          //useNavigate("/management/request-list");
+        }
+      }
+    } catch (error) {
+      console.error("Error approving user:", error);
+      message.error({
+        content: "Failed to approve user",
+        key: "updatable",
+        duration: 2,
+      });
+    }
+  };
 
   const fetchUser = async (userId) => {
     try {
@@ -93,6 +142,7 @@ const UserDetail = () => {
         openModal={() => setIsModalVisible(true)}
         title={`Information Details`}
         isRequesting={isRequesting}
+        onApprove={() => handleApprove(user.UserId, user.Email)}
       />
 
       <ProfileForm

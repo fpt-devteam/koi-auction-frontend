@@ -323,7 +323,16 @@ export default function GeneralInfoForm({ user, refresh }) {
           {isBreeder && (
             <Row gutter={16}>
               <Col span={24}>
-                <Form.Item label="About" name="About">
+                <Form.Item
+                  label="About"
+                  name="About"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your farm information",
+                    },
+                  ]}
+                >
                   <Input.TextArea
                     placeholder="Enter information about your farm"
                     disabled={!isEditing}
@@ -336,19 +345,37 @@ export default function GeneralInfoForm({ user, refresh }) {
 
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item label="Address" name="Address">
+              <Form.Item
+                label="Address"
+                name="Address"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your address",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="Enter your home address"
-                  disabled={true}
+                  disabled={!isEditing}
                 />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Province" name="ProvinceCode">
+              <Form.Item
+                label="Province"
+                name="ProvinceCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your province",
+                  },
+                ]}
+              >
                 <Select
                   placeholder="Select province"
                   onChange={handleSelectProvince}
-                  disabled={true}
+                  disabled={!isEditing}
                 >
                   {provinceList?.map((province) => (
                     <Option key={province.code} value={province.code}>
@@ -359,11 +386,20 @@ export default function GeneralInfoForm({ user, refresh }) {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="District" name="DistrictCode">
+              <Form.Item
+                label="District"
+                name="DistrictCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your district",
+                  },
+                ]}
+              >
                 <Select
                   placeholder="Select district"
                   onChange={handleSelectDistrict}
-                  disabled={true}
+                  disabled={!isEditing}
                 >
                   {districtList?.map((district) => (
                     <Option key={district.code} value={district.code}>
@@ -374,8 +410,17 @@ export default function GeneralInfoForm({ user, refresh }) {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Ward" name="WardCode">
-                <Select placeholder="Select ward" disabled={true}>
+              <Form.Item
+                label="Ward"
+                name="WardCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your ward",
+                  },
+                ]}
+              >
+                <Select placeholder="Select ward" disabled={!isEditing}>
                   {wardList?.map((ward) => (
                     <Option key={ward.code} value={ward.code}>
                       {ward.name}
