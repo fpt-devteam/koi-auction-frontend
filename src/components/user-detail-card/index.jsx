@@ -1,7 +1,7 @@
 import { Badge, Button, Card, Col, Descriptions, Image, Row } from "antd";
 import React from "react";
 
-function UserDetailCard({ data, loading, openModal, title, isRequesting, onApprove }) {
+function UserDetailCard({ data, loading, openModal, title, isRequesting, onApprove, onReject }) {
   // const getAddress = async (address) => {
   //   try {
   //     const response = await addressApi.get(`address/${address}`);
@@ -83,7 +83,8 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
             </Button>
           </Col>
           {isRequesting == 0 && ( 
-            <Col span={12}>
+            <>
+            <Col span={6}>
               <Button
                 type="primary"
                 className="update-button"
@@ -93,6 +94,17 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
                 Approve
               </Button>
             </Col>
+            <Col span={6}>
+            <Button
+              type="primary"
+              className="update-button"
+              onClick={() => onReject()}
+              style={{ marginTop: "20px" }}
+            >
+              Reject
+            </Button>
+          </Col>
+          </>
           )}
           {/* <Col span={8}>
             <Button
