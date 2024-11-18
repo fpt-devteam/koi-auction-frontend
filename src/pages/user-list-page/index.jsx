@@ -48,27 +48,36 @@ export default function UserListPage({ number, isRequest }) {
     }
   };
 
+
   const handleApprove = async (userId, email, status) => {
     try {
       console.log("userId: ", userId);
       console.log("email: ", email);
       console.log("status: ", status);
-      message.loading({ content: "Approving user...", key: "updatable" });
+      message.loading({ content: "Updating breeder...", key: "updatable" });
 
       const response = await userApi.patch(`verify-breeder/${userId}`, {
         Verified: status,
       });
       console.log(response.status);
       if (response.status === 201) {
+        let subject, text;
+        if (status == 1) {
+          subject = "Your Farm Auction Account has been approved";
+          text = "Your account has been approved by the admin. You can now login to your account and start using our services.";
+        } else if (status == 2) {
+          subject = "Your Farm Auction Account has been rejected";
+          text = "Your account has been rejected by the admin. Please contact support for more information.";
+        }
         const emailResponse = await emailApi.post("send-email", {
           Email: email,
-          Subject: "Your Farm Auction Account has been approved",
-          Text: "Your account has been approved by the admin. You can now login to your account and start using our services.",
+          Subject: subject,
+          Text: text,
         });
         console.log("da gui email", emailResponse);
         if (emailResponse.status === 200) {
           message.success({
-            content: "User approved successfully!",
+            content: "Breeder update successfully!",
             key: "updatable",
             duration: 2,
           });
@@ -77,9 +86,9 @@ export default function UserListPage({ number, isRequest }) {
         }
       }
     } catch (error) {
-      console.error("Error approving user:", error);
+      console.error("Error updating breeder:", error);
       message.error({
-        content: "Failed to approve user",
+        content: "Failed to updating breeder",
         key: "updatable",
         duration: 2,
       });
