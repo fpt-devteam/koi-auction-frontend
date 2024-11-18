@@ -23,7 +23,7 @@ import WalletAction from "../wallet-action";
 
 const { Title } = Typography;
 const MIN_DEPOSIT_AMOUNT = 1000;
-const MIN_WITHDRAWAL_AMOUNT = 1000;
+const MIN_WITHDRAWAL_AMOUNT = 50000;
 
 function YourWallet({ balance, refresh, user }) {
   console.log("user", user);

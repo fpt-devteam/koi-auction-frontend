@@ -245,7 +245,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                 await paymentApi.post(`/manage/refund`, {
                     Amount: soldlotInfoData?.finalPrice,
                     UserId: soldlotInfoData?.winnerDto?.userId,
-                    Description: `Refund for lot ${soldlotInfoData?.lotDto?.lotId}, total ${soldlotInfoData?.finalPrice} VND`
+                    Description: `Refund for lot ${soldlotInfoData?.lotDto?.lotId}, total ${soldlotInfoData?.finalPrice} VND due to cancelation ${cancelReason}`
                 })
             ]).then(([response, paymentResponse]) => {
                 console.log("response", response.data);
@@ -477,7 +477,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                     gap: "36px",
                     margin: "24px"
                 }}>
-                    {(user?.UserRoleId == 1 && soldlotInfoData?.lotStatusDto?.lotStatusId == 7) && (
+                    {(user?.UserRoleId == 1 && soldlotInfoData?.lotStatusDto?.lotStatusId == 6) && (
                         <Button type="primary" size="large" key="view-lot" onClick={handlePayment}>
                             Payment
                         </Button>

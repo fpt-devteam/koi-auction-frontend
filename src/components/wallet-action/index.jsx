@@ -96,11 +96,11 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
             </Col>
           </>
         ) : (
-          <Col span={8}>
+          <Col span={8} style={{margin: "0 auto"}}>
             <Card
               bordered={false}
               hoverable={true}
-              onClick={handleWithdrawal}
+              onClick={() => {onWithdrawal()}}
               style={{
                 height: "150px",
                 display: "flex",
