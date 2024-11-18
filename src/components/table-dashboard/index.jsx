@@ -14,7 +14,13 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         ...item,
         key: item.id || `row-${index}`, // Thêm key cho mỗi dòng
       }));
-      setTableData(dataWithKeys);
+
+      // Sắp xếp dữ liệu theo `updatedAt` (ngày gần nhất lên đầu)
+      const sortedData = dataWithKeys.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
+
+      setTableData(sortedData);
 
       const customColumns = [
         {
@@ -95,7 +101,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         },
 
         {
-          title: "Updated At",
+          title: "Date",
           dataIndex: "updatedAt",
           key: "updatedAt",
           align: "center",
