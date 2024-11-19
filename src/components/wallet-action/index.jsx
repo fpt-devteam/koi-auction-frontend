@@ -6,8 +6,10 @@ import {
   HistoryOutlined,
 } from "@ant-design/icons";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
+  const navigate = useNavigate();
   return (
     <div style={{ marginTop: "40px" }}>
       <Row gutter={24}>
@@ -18,7 +20,7 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                 bordered={false}
                 hoverable={true}
                 onClick={() => {
-                  onPayment();
+                   navigate("/order/6");
                 }}
                 style={{
                   height: "150px",

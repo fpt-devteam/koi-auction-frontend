@@ -49,7 +49,7 @@ export default function UserListPage({ number, isRequest }) {
   };
 
 
-  const handleApprove = async (userId, email, status) => {
+  const handleApprove = async (userId, email, status, reason) => {
     try {
       console.log("userId: ", userId);
       console.log("email: ", email);
@@ -64,10 +64,14 @@ export default function UserListPage({ number, isRequest }) {
         let subject, text;
         if (status == 1) {
           subject = "Your Farm Auction Account has been approved";
-          text = "Your account has been approved by the admin. You can now login to your account and start using our services.";
+          text =
+            "Your account has been approved by the admin. You can now login to your account and start using our services.";
         } else if (status == 2) {
           subject = "Your Farm Auction Account has been rejected";
-          text = "Your account has been rejected by the admin. Please contact support for more information.";
+          text = `
+            <p>Your account has been rejected by the admin. Please contact support for more information.</p>
+            <p><strong>Reason:</strong> ${reason}</p>
+            `;
         }
         const emailResponse = await emailApi.post("send-email", {
           Email: email,

@@ -1,29 +1,19 @@
 import { Badge, Button, Card, Col, Descriptions, Image, Row } from "antd";
-import React from "react";
-import BreederRequestModal from "../confirmation-modal";
+import React, { useState } from "react";
+import SendEmailModal from "../mail-modal";
+import RejectModal from "../reject-modal";
 
-function UserDetailCard({ data, loading, openModal, title, isRequesting, onApprove, onReject }) {
-  // const getAddress = async (address) => {
-  //   try {
-  //     const response = await addressApi.get(`address/${address}`);
-  //     console.log(address.data);
-  //     return address.data;
-  //   } catch (error) {
-  //     console.error("Failed to fetch address:", error);
-  //   }
-    
-  // };
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  const showModal = () => {
-    setIsVisible(true);
-  }
-  const handleOk = () => {
-    setIsVisible(false);
-  }
-  const handleCancel = () => {
-    setIsVisible(false);
-  }
+function UserDetailCard({
+  data,
+  loading,
+  openModal,
+  isRequesting,
+  onApprove,
+  onReject,
+  address,
+}) {
+  const [isEmailModalVisible, setEmailModalVisible] = useState(false);
+  const [isRejectModalVisible, setRejectModalVisible] = useState(false);
 
   return (
     <>
@@ -36,7 +26,7 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
         loading={loading}
         title={
           <span style={{ fontWeight: "600", fontSize: "2em" }}>
-            {data.UserRoleId == 2 ? data.FarmName : data.Username}
+            {data.UserRoleId === 2 ? data.FarmName : data.Username}
           </span>
         }
         style={{
@@ -47,31 +37,19 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
           alignItems: "center",
         }}
       >
-        {data.UserRoleId == 2 && (
-          <Image src={data.Certificate} width={"50em"} />
-        )}
+        {data.UserRoleId === 2 && <Image src={data.Certificate} width={"50em"} />}
         <Descriptions bordered column={1} style={{ width: "50em" }}>
           {data.UserRoleId === 2 && (
-            <Descriptions.Item label="Farm Name">
-              {data.FarmName}
-            </Descriptions.Item>
+            <Descriptions.Item label="Farm Name">{data.FarmName}</Descriptions.Item>
           )}
           <Descriptions.Item label="User ID">{data.UserId}</Descriptions.Item>
-          <Descriptions.Item label="Username">
-            {data.Username}
-          </Descriptions.Item>
-          <Descriptions.Item label="First Name">
-            {data.FirstName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Last Name">
-            {data.LastName}
-          </Descriptions.Item>
+          <Descriptions.Item label="Username">{data.Username}</Descriptions.Item>
+          <Descriptions.Item label="First Name">{data.FirstName}</Descriptions.Item>
+          <Descriptions.Item label="Last Name">{data.LastName}</Descriptions.Item>
           <Descriptions.Item label="Email">{data.Email}</Descriptions.Item>
           <Descriptions.Item label="Phone">{data.Phone}</Descriptions.Item>
-          {/* <Descriptions.Item label="Address">
-            {getAddress(data.Address)}{" "}
-          </Descriptions.Item> */}
-          {isRequesting == 1 && (
+          <Descriptions.Item label="Address">{address}</Descriptions.Item>
+          {isRequesting === 1 && (
             <Descriptions.Item label="Active">
               <Badge
                 status={data.Active ? "success" : "error"}
@@ -83,55 +61,50 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
             <Descriptions.Item label="About">{data.About}</Descriptions.Item>
           )}
         </Descriptions>
-        <Row gutter={24}>
-          <Col span={12}>
-            <Button
-              type="primary"
-              className="update-button"
-              onClick={openModal}
-              style={{ marginTop: "20px" }}
-            >
-              Update
-            </Button>
-          </Col>
-          {isRequesting == 0 && ( 
-            <>
+
+        <Row gutter={24} style={{ marginTop: 20 }}>
+          {isRequesting !== 2 && (
             <Col span={6}>
-              <Button
-                type="primary"
-                className="update-button"
-                onClick={() => onApprove()}
-                style={{ marginTop: "20px" }}
-              >
-                Approve
+              <Button style={{color: "green"}} onClick={openModal}>
+                Update
               </Button>
             </Col>
-            <Col span={6}>
-            <Button
-              type="primary"
-              className="update-button"
-              onClick={() => onReject()}
-              // onClick={showModal}
-              style={{ marginTop: "20px" }}
-            >
-              Reject
-            </Button>
-          </Col>
-          </>
           )}
-          {/* <Col span={8}>
-            <Button
-              type="primary"
-              className="update-button"
-              onClick={openModal}
-              style={{ marginTop: "20px" }}
-            >
+          {isRequesting === 0 && (
+            <>
+              <Col span={6}>
+                <Button style={{backgroundColor: "green"}} type="primary" onClick={onApprove}>
+                  Approve
+                </Button>
+              </Col>
+              <Col span={6}>
+                <Button type="primary" danger onClick={() => setRejectModalVisible(true)}>
+                  Reject
+                </Button>
+              </Col>
+            </>
+          )}
+          <Col span={6}>
+            <Button style={{color: "green"}} onClick={() => setEmailModalVisible(true)}>
               Send Mail
             </Button>
-          </Col> */}
+          </Col>
         </Row>
       </Card>
-      {/* <BreederRequestModal visible={isVisible} handleOk={handleOk} handleCancel={handleCancel} /> */}
+
+      {/* Modals */}
+      <SendEmailModal
+        email={data.Email}
+        visible={isEmailModalVisible}
+        onClose={() => setEmailModalVisible(false)}
+      />
+      <RejectModal
+        userId={data.UserId}
+        email={data.Email}
+        visible={isRejectModalVisible}
+        onClose={() => setRejectModalVisible(false)}
+        onReject={onReject}
+      />
     </>
   );
 }
