@@ -102,8 +102,8 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
 
         {
           title: "Date",
-          dataIndex: "updatedAt",
-          key: "updatedAt",
+          dataIndex: "updatedLot",
+          key: "updatedLot",
           align: "center",
           render: (date) => (
             <Text style={{ color: "#8c8c8c" }}>

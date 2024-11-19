@@ -44,7 +44,9 @@ const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
       fileList.map(async (file) => {
         if (file.originFileObj) {
           // Upload file từ local lên Firebase
+          message.loading("Uploading image...", 0);
           const firebaseUrl = await uploadToFirebase(file.originFileObj);
+          message.destroy();
           return {
             filePath: firebaseUrl, // Lưu lại URL từ Firebase sau khi upload
           };
@@ -73,7 +75,7 @@ const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
       >
         {!showOnly && (
           <>
-            <Button type="primary" icon={<UploadOutlined />}>
+            <Button type="primary" icon={<UploadOutlined />} disabled={fileList.length >= MAX_IMAGES}>
               Upload Images
             </Button>
             <span>
