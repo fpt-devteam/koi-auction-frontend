@@ -6,6 +6,7 @@ import "./index.css";
 import ProfileForm from "../../components/profile-form-modal";
 import { useLocation, useNavigate } from "react-router-dom";
 import emailApi from "../../config/emailApi";
+import addressApi from "../../config/addressApi";
 
 const UserDetail = () => {
   const [user, setUser] = useState(null);
@@ -17,14 +18,108 @@ const UserDetail = () => {
   const [seed, setSeed] = useState(0);
   //nhan gia tri isRequesting tu user-list-management qua navigate
   const { isRequesting } = location.state || false;
+  const [address, setAddress] = React.useState("");
+
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+
+  useEffect(() => {
+    if (provinceId) {
+      fetchDistricts(provinceId);
+    }
+  }, [provinceId]);
+
+  useEffect(() => {
+    if (districtId) {
+      fetchWards(districtId);
+    }
+  }, [districtId]);
 
   const handleReset = () => {
     setSeed(seed + 1);
   };
-
   console.log("isRequesting", isRequesting);
 
-  const handleApprove = async (userId, email, status) => {
+  const fetchAddress = async (userId) => {
+    try {
+      const response = await userApi.get(`manage/profile/address/${userId}`);
+      console.log(response.data.Address);
+      setAddress(response.data.Address);
+    } catch (error) {
+      console.error("Failed to fetch address:", error);
+    }
+  };
+
+
+  const fetchProvinces = async () => {
+    try {
+      const response = await addressApi.get("province");
+      setProvinceList(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching provinces:", error);
+      message.error("Failed to load provinces");
+    }
+  };
+
+  const fetchDistricts = async (provinceCode) => {
+    if (provinceCode) {
+      try {
+        const response = await addressApi.get(`district/${provinceCode}`);
+        setDistrictList(response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching districts:", error);
+        message.error("Failed to load districts");
+      }
+    }
+  };
+
+  const fetchWards = async (districtCode) => {
+    if (districtCode) {
+      try {
+        const response = await addressApi.get(`ward/${districtCode}`);
+        setWardList(response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching wards:", error);
+        message.error("Failed to load wards");
+      }
+    }
+  };
+
+  const initializeFormData = async () => {
+    try {
+      const [provinces, districts, wards] = await Promise.all([
+        fetchProvinces(),
+        fetchDistricts(user.ProvinceCode),
+        fetchWards(user.DistrictCode),
+      ]);
+      console.log(provinces, districts, wards);
+      setProvinceList(provinces);
+      setDistrictList(districts);
+      setWardList(wards);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error initializing form data:", error);
+     // message.error("Failed to load initial data");
+    }
+  };
+
+  const handleSelectProvince = (value) => {
+    form.setFieldsValue({ DistrictCode: undefined, WardCode: undefined });
+    setProvinceId(value);
+  };
+
+  const handleSelectDistrict = (value) => {
+    form.setFieldsValue({ WardCode: undefined });
+    setDistrictId(value);
+  };
+
+  const handleApprove = async (userId, email, status, reason) => {
     try {
       console.log("userId: ", userId);
       console.log("email: ", email);
@@ -42,8 +137,10 @@ const UserDetail = () => {
             "Your account has been approved by the admin. You can now login to your account and start using our services.";
         } else if (status == 2) {
           subject = "Your Farm Auction Account has been rejected";
-          text =
-            "Your account has been rejected by the admin. Please contact support for more information.";
+          text = `
+            <p>Your account has been rejected by the admin. Please contact support for more information.</p>
+            <p><strong>Reason:</strong> ${reason}</p>
+            `;
         }
         const emailResponse = await emailApi.post("send-email", {
           Email: email,
@@ -79,8 +176,8 @@ const UserDetail = () => {
     try {
       const response = await userApi.get(`manage/detail-profile/${userId}`);
       setUser(response.data);
-
-      console.log(response.data);
+      
+      console.log("user in card: ", response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -91,11 +188,13 @@ const UserDetail = () => {
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
+      initializeFormData();
+      fetchAddress(userId);
     } else {
       message.error("No user ID provided in the URL.");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  }, [seed, userId]);
 
   const handleFormSubmit = () => {
     // Show loading message
@@ -124,6 +223,7 @@ const UserDetail = () => {
           });
 
           // Close the modal
+          handleReset();
           setIsModalVisible(false);
         } catch (error) {
           console.error("Error updating user:", error);
@@ -145,12 +245,13 @@ const UserDetail = () => {
     <>
       <UserDetailCard
         data={user}
+        address={address}
         loading={loading}
         openModal={() => setIsModalVisible(true)}
         title={`Information Details`}
         isRequesting={isRequesting}
         onApprove={() => handleApprove(user.UserId, user.Email, 1)}
-        onReject={() => handleApprove(user.UserId, user.Email, 2)}
+        onReject={handleApprove}
       />
 
       <ProfileForm
@@ -167,12 +268,22 @@ const UserDetail = () => {
           FarmName: user.UserRoleId === 2 ? user.FarmName : undefined,
           Certificate: user.UserRoleId === 2 ? user.Certificate : undefined,
           About: user.UserRoleId === 2 ? user.About : undefined,
+          Address: user.Address,
+          ProvinceCode: user.ProvinceCode,
+          DistrictCode: user.DistrictCode,
+          WardCode: user.WardCode,
         }}
         isBreeder={user.UserRoleId === 2}
         isModalVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         handleFormSubmit={handleFormSubmit}
         isRequesting={isRequesting}
+        provinceList={provinceList}
+        districtList={districtList}
+        wardList={wardList}
+        onSelectProvince={handleSelectProvince}
+        onSelectDistrict={handleSelectDistrict}
+
       />
     </>
   );

@@ -14,7 +14,7 @@ function BreederPage() {
     setIsLoading(true);
     try {
       const response = await userApi.get("/manage/breeder/profile");
-      setBreeders(response.data.filter((breeder) => breeder.Verified === true && breeder.Active === true));
+      setBreeders(response.data.filter((breeder) => breeder.Verified === 1 && breeder.Active === true));
       //setBreeders(breeders.filter((breeder) => breeder.Active === true));
     } catch (error) {
       message.error("Failed to load breeder information");

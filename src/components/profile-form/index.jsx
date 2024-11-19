@@ -73,7 +73,7 @@ export default function GeneralInfoForm({ user, refresh }) {
   const fetchBreederData = async () => {
     try {
       const response = await userApi.get(`/breeder/profile`);
-      console.log(response);
+      console.log(response.data);
       form.setFieldsValue({
         BreederId: response.data.BreederId,
         FarmName: response.data.FarmName,
@@ -162,9 +162,9 @@ export default function GeneralInfoForm({ user, refresh }) {
     try {
       const values = await form.validateFields();
       console.log("Form data to submit:", values);
-      if (isBreeder) {
-        values.BreederId = values.BreederId;
-      }
+      // if (isBreeder) {
+      //   values.BreederId = values.BreederId;
+      // }
       const response = await userApi.patch(`update-profile`, values);
       console.log("Response:", response);
       refresh();
@@ -304,7 +304,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                   },
                 ]}
               >
-                <Input placeholder="example@gmail.com" disabled={!isEditing} />
+                <Input placeholder="example@gmail.com" disabled={true} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -313,6 +313,14 @@ export default function GeneralInfoForm({ user, refresh }) {
                 name="Phone"
                 rules={[
                   { required: true, message: "Please enter your phone number" },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Phone number must be numeric!",
+                  },
+                  {
+                    len: 10,
+                    message: "Phone number must be exactly 10 digits!",
+                  },
                 ]}
               >
                 <Input placeholder="+84 - 345 678 910" disabled={!isEditing} />
