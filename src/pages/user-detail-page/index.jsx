@@ -188,13 +188,17 @@ const UserDetail = () => {
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
-      initializeFormData();
       fetchAddress(userId);
     } else {
       message.error("No user ID provided in the URL.");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed, userId]);
+  useEffect(() => {
+    if (user) {
+      initializeFormData();
+    }
+  }, [user]);
 
   const handleFormSubmit = () => {
     // Show loading message
