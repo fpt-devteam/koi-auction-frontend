@@ -7,7 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // Hàm upload file
 const uploadToFirebase = async (file) => {
   try {
-    console.log(file); // In ra thông tin file để kiểm tra
+    //console.log(file); // In ra thông tin file để kiểm tra
 
     // Tạo một tham chiếu đến vị trí lưu trữ trên Firebase Storage
     const storageRef = ref(storage, file.name);

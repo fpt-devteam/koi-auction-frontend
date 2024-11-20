@@ -91,7 +91,7 @@ const formatDate = (isoString) => {
 
 
 const TransactionList = ({ transactions }) => {
-  console.log("transaction nek: ", transactions);
+  // //console.log("transaction nek: ", transactions);
   const columns = [
     {
       title: "ID",
@@ -123,7 +123,7 @@ const TransactionList = ({ transactions }) => {
         return (
           <Text strong style={{ color }}>
             {`${sign} ${amount?.toLocaleString()} VND`}
-          </Text> );
+          </Text>);
       },
       width: "15em",
     },

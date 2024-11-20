@@ -8,7 +8,7 @@ const MAX_IMAGE_SIZE_MB = 5; // 5MB cho mỗi ảnh
 const MAX_IMAGES = 4; // Tối đa 4 ảnh
 
 const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
-  // console.log("koiMedia", koiMedia);
+  // //console.log("koiMedia", koiMedia);
   const [koiMedia, setKoiMedia] = useState(initData || []);
   const fileList = koiMedia.map((file, index) => {
     // Nếu là file local (chưa upload lên Firebase) thì dùng createObjectURL

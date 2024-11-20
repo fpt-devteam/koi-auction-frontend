@@ -74,14 +74,14 @@ export default function UpdateAuctionPage({ auctionId }) {
       refetch();
       setSeed(Math.random());
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       message.error("Failed to update auction!");
     }
   };
   const updateAuction = async (auctionData) => {
     try {
       const response = await lotApi.put(`auctions/${auctionId}`, auctionData);
-      console.log(response);
+      //console.log(response);
     } catch (error) {
       throw new Error("Failed to update auction.");
     }
@@ -101,7 +101,7 @@ export default function UpdateAuctionPage({ auctionId }) {
     try {
       if (newAuctionLotList.length != 0) {
         const auctionLotResponse = await lotApi.post("auction-lots/listAuctionLot", newAuctionLotList);
-        console.log(auctionLotResponse.data);
+        //console.log(auctionLotResponse.data);
       }
     }
     catch (error) {
@@ -118,7 +118,7 @@ export default function UpdateAuctionPage({ auctionId }) {
         },
         data: JSON.stringify(itoaIDList)
       });
-      console.log(itoaResponse);
+      //console.log(itoaResponse);
     } catch (error) {
       throw new Error("Failed to change lot status.");
     }
@@ -132,12 +132,12 @@ export default function UpdateAuctionPage({ auctionId }) {
       auctionId: auctionId,
       auctionLotStatusId: 1
     }));
-    console.log(updateAuctionLotList)
+    // //console.log(updateAuctionLotList)
     try {
       await Promise.all(
         updateAuctionLotList.map(async (lot) => {
           const updateResponse = await lotApi.put(`auction-lots/${lot.lotId}`, lot);
-          console.log(updateResponse);
+          // //console.log(updateResponse);
         })
       );
     } catch (error) {

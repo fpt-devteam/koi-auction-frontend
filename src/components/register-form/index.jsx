@@ -41,7 +41,7 @@ const RegisterForm = ({ isBreeder }) => {
         const response = await addressApi.get("/province");
         setProvinceList(response.data);
       } catch (error) {
-        console.error("Error fetching provinces:", error);
+        // //console.error("Error fetching provinces:", error);
       }
     };
     fetchProvinces();
@@ -63,7 +63,7 @@ const RegisterForm = ({ isBreeder }) => {
       const response = await addressApi.get(`/district/${provinceId}`);
       setDistrictList(response.data);
     } catch (error) {
-      console.error("Error fetching districts:", error);
+      // //console.error("Error fetching districts:", error);
     }
   };
   const fetchWards = async () => {
@@ -71,7 +71,7 @@ const RegisterForm = ({ isBreeder }) => {
       const response = await addressApi.get(`/ward/${districtId}`);
       setWardList(response.data);
     } catch (error) {
-      console.error("Error fetching Wards:", error);
+      // //console.error("Error fetching Wards:", error);
     }
   };
 
@@ -145,7 +145,7 @@ const RegisterForm = ({ isBreeder }) => {
         Subject: "Thank you for registering to become our Breeders!",
         Text: "Please wait for our admin to verify your farm for 1 to 7 days. <br /> We will send you an email notification once your farm is verified.",
       });
-      console.log(response.data);
+      // //console.log(response.data);
       message.success(response.data.message);
     } catch (error) {
       if (error.response) {
@@ -166,20 +166,20 @@ const RegisterForm = ({ isBreeder }) => {
       const response = await userApi.post("/verify-email", {
         Email: email,
       });
-      console.log(response.data);
+      // //console.log(response.data);
       message.success(response.data.message);
     } catch (error) {
       if (error.response) {
         message.error(
           error.response.data.message ||
-            "Verification failed. Please try again."
+          "Verification failed. Please try again."
         );
       }
     }
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    // //console.log("Failed:", errorInfo);
   };
 
   return (
@@ -497,8 +497,8 @@ const RegisterForm = ({ isBreeder }) => {
                 value
                   ? Promise.resolve()
                   : Promise.reject(
-                      new Error("You must agree to our terms and policy!")
-                    ),
+                    new Error("You must agree to our terms and policy!")
+                  ),
             },
           ]}
         >

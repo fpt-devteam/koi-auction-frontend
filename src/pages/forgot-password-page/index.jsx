@@ -10,7 +10,7 @@ const ForgotPasswordPage = () => {
         setLoading(true);
         try {
             // TODO: Implement your forgot password API call here
-            console.log('Forgot password form values:', values);
+            //console.log('Forgot password form values:', values);
             message.success('Reset password instructions have been sent to your email');
         } catch (error) {
             message.error('Failed to process forgot password request');

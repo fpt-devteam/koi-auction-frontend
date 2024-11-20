@@ -22,10 +22,10 @@ function BreederDetailPage() {
       const response = await userApi.get(
         `/manage/breeder/profile/${breederId}`
       );
-      console.log("breeder", response.data);
+      // //console.log("breeder", response.data);
       setBreeder(response.data);
     } catch (error) {
-      console.log(error);
+      // //console.log(error);
     }
   };
 
@@ -63,12 +63,12 @@ function BreederDetailPage() {
   const fetchFilterLotData = async () => {
     try {
       const response = await lotApi.get(`/lots/search-koi?id=${breederId}`);
-      console.log("Nhe nhang va tinh cam", response.data);
+      // //console.log("Nhe nhang va tinh cam", response.data);
       setFilteredLots(response.data);
       setAlllots(response.data);
     } catch (error) {
       // message.error(error.message);
-      console.log(error.message);
+      // //console.log(error.message);
     }
   };
 

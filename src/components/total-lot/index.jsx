@@ -48,7 +48,7 @@ const TotalHistoryComponent = ({ data, fetchData, title = "" }) => {
   useEffect(() => {
     const dataArray = Array.isArray(data) ? data : [data];
     setTotalData(dataArray);
-    console.log("Data total received:", dataArray);
+    // //console.log("Data total received:", dataArray);
   }, [data]);
 
   if (!totalData || totalData.length === 0) {

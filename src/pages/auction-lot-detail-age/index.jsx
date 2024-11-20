@@ -42,11 +42,11 @@ const AuctionLotDetailPage = () => {
         `auction-lots/${auctionLotId}`
       );
       const fetchedAuctionLot = response.data;
-      console.log('fetchedAuctionLot', fetchedAuctionLot);
+      // //console.log('fetchedAuctionLot', fetchedAuctionLot);
       setAuctionLot(fetchedAuctionLot);
     } catch (error) {
       // message.error(error.message);
-      console.log('error', error.response.data);
+      // //console.log('error', error.response.data);
     }
   };
   useEffect(() => {
@@ -62,7 +62,7 @@ const AuctionLotDetailPage = () => {
       setBidLogs(fetchedBidLogs);
     } catch (error) {
       // message.error(error.message);
-      console.log('error', error);
+      // //console.log('error', error);
     }
   };
   useEffect(() => {
@@ -75,11 +75,11 @@ const AuctionLotDetailPage = () => {
         `bid-log/highest-bid/${auctionLotId}`
       );
       const fetchedData = response.data;
-      console.log('fetchedWinner', fetchedData);
+      // //console.log('fetchedWinner', fetchedData);
       setWinner(fetchedData);
     } catch (error) {
       // message.error(error.message);
-      console.log('error', error.response.data);
+      // //console.log('error', error.response.data);
     }
   };
   useEffect(() => {
@@ -89,15 +89,15 @@ const AuctionLotDetailPage = () => {
   //winner price
   const fetchSoldLot = async () => {
     try {
-      console.warn(`auctionLotId: ${auctionLotId}`);
+      // //console.warn(`auctionLotId: ${auctionLotId}`);
       const response = await lotApi.get(`/sold-lots/${auctionLotId}`);
-      console.log('response', response.data);
-      console.log(
-        `fetchedSoldLot.finalPrice: ${response.data.finalPrice}`
-      );
+      // //console.log('response', response.data);
+      // //console.log(
+      //   `fetchedSoldLot.finalPrice: ${response.data.finalPrice}`
+      // );
       setWinnerPrice(response.data.finalPrice);
     } catch (error) {
-      console.log('error', error.response.data);
+      // //console.log('error', error.response.data);
     }
   };
   useEffect(() => {
@@ -112,12 +112,12 @@ const AuctionLotDetailPage = () => {
       );
       const fetchedDeposit = response.data;
       // setDeposit(fetchedDeposit);
-      console.log('fetchedDeposit', fetchedDeposit);
+      // //console.log('fetchedDeposit', fetchedDeposit);
       // if (!fetchedDeposit && fetchDeposit.amount > 0)
       // setIsRegistered(true);
       setIsRegistered(fetchedDeposit);
     } catch (error) {
-      console.log('error', error.response.data);
+      // //console.log('error', error.response.data);
     }
   };
   useEffect(() => {
@@ -175,16 +175,14 @@ const AuctionLotDetailPage = () => {
       AucitonLotId: auctionLotId,
       Amount: depositAmount
     };
-    try
-    {
+    try {
       message.loading('Processing deposit...', 0);
       await lotApi.post('auction-deposit', depositDto);
       message.destroy();
       message.success('Deposit successful');
       fetchDeposit();
     }
-    catch (error)
-    {
+    catch (error) {
       message.error(error.response.data);
     }
   };
@@ -314,7 +312,7 @@ const AuctionLotDetailPage = () => {
           {/* Price Buy Method 4*/}
           {userId &&
             auctionMethodId == 4 &&
-            auctionLotStatusId == 3 && isRegistered != null &&(
+            auctionLotStatusId == 3 && isRegistered != null && (
               <PriceBuy price={priceDesc} onBuySubmit={handleBid} />
             )}
 
@@ -345,8 +343,8 @@ const AuctionLotDetailPage = () => {
           {(auctionMethodId == 1 ||
             auctionMethodId == 3 ||
             auctionLotStatusId == 4) && (
-            <BidHistoryTable data={bidLogs} />
-          )}
+              <BidHistoryTable data={bidLogs} />
+            )}
           <BackButton />
         </Col>
       </Row>

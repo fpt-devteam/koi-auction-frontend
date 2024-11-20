@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Loading from '../loading';
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useSelector((state) => state.user); 
+  const { user, loading } = useSelector((state) => state.user);
   //get url path
   const location = useLocation();
 
@@ -18,11 +18,11 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return children;
   }
 
-  console.log("user", user);
+  // //console.log("user", user);
   // Kiểm tra roleId của user
   if (!loading && !allowedRoles.includes(user.UserRoleId)) {
-    console.log("vgao day");
-    if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/' 
+    // //console.log("vgao day");
+    if (location.pathname == '/login' || location.pathname == '/register' || location.pathname == '/'
       || location.pathname == '/unauthorized') {
       switch (user.UserRoleId) {
         case 1:

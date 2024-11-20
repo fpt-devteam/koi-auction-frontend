@@ -22,9 +22,9 @@ import lotApi from "../../config/lotApi";
 
 const DATE_FORMAT = "YYYY-MM-DD", TIME_FORMAT = "HH:mm";
 const MIN_DURATION_MINUTES = 1;
-const MAX_DURATION_MINUTES = 500;
+const MAX_DURATION_MINUTES = 30;
 const MIN_STEP_PRECENT = 1;
-const MAX_STEP_PRECENT = 100;
+const MAX_STEP_PRECENT = 5;
 
 export default function AuctionForm({
   auctionId,
@@ -45,7 +45,6 @@ export default function AuctionForm({
       const updatedList = prevLots.map((lot) =>
         lot.lotId === lotId ? { ...lot, ...updatedValues } : lot
       );
-      console.log("Updated Auction Lot List:", updatedList);
       return updatedList;
     });
   };
@@ -54,7 +53,9 @@ export default function AuctionForm({
       const getAuction = async (auctionId) => {
         const auction = await lotApi
           .get(`auctions/${auctionId}`)
-          .catch((err) => { console.log(err) });
+          .catch((err) => {
+            message.error(err);
+          });
         setAuction(auction?.data);
       };
       getAuction(auctionId);
@@ -84,24 +85,6 @@ export default function AuctionForm({
       });
     }
   }, [auction, formVariable]);
-  // Disable past dates in form  
-  // const disabledDate = (current) => {
-  //     return current && current < dayjs().add(0, "day").endOf("day");
-  // };
-  // // Disable past time in form  
-  // const disabledPastTimes = () => {
-  //     const currentHour = moment().hour();
-  //     const currentMinute = moment().minute();
-  //     return {
-  //         disabledHours: () => Array.from({ length: 24 }, (_, i) => i).slice(0, currentHour),
-  //         disabledMinutes: (selectedHour) => {
-  //             if (selectedHour === currentHour) {
-  //                 return Array.from({ length: 60 }, (_, i) => i).slice(0, currentMinute);
-  //             }
-  //             return [];
-  //         },
-  //     };
-  // };
   const handleSubmit = async (values) => {
     const hostDate = values.hostDate ? dayjs(values.hostDate) : null;
     const startTime = values.startTime ? dayjs(values.startTime, TIME_FORMAT) : null;
@@ -117,10 +100,11 @@ export default function AuctionForm({
       startTime: combinedDateTime ? combinedDateTime.format(`${DATE_FORMAT} HH:mm:00`) : null,
     };
     const now = dayjs();
-    if (combinedDateTime.isBefore(now)) {
+    if (combinedDateTime.isBefore(now.add(1, 'millisecond'))) {
       message.error("The selected time is in the past");
       return;
     }
+
     let itoaList = [], atoiList = [], updateAuctionLotList = [];
     //Get the list of lot need to change status form InAuction to Approved
     if (approvedLotSource.length > 0) {
@@ -152,7 +136,6 @@ export default function AuctionForm({
       })
     }
     onSubmit(auctionData, atoiList, itoaList, updateAuctionLotList);
-    
   };
   const handleClick = () => {
     if (!auctionLotList.length) {
@@ -319,7 +302,6 @@ const LotTable = ({
   ];
 
   const handleOperation = (record) => {
-    console.log("Operation");
     if (!getLotSource) {
       setGetLotSource([record]);
     } else {
@@ -369,14 +351,10 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
           </div>
         }
       >
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} >
           {/* Image Placeholder */}
           <Col
-            xs={4}
-            sm={4}
-            md={4}
-            lg={4}
-            xl={4}
+            span={8}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -388,54 +366,153 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                 lot.koiFishDto.koiMedia?.[0]?.filePath ||
                 "default-placeholder.png"
               }
-              width={80}
-              height={80}
+              height={"100%"}
+              style={
+                {
+                  aspectRatio: "cover",
+                  borderRadius: "10px"
+                }
+              }
             />
           </Col>
 
           {/* Details Section */}
-          <Col xs={16} sm={16} md={16} lg={16} xl={16}>
-            <Text strong>Starting Price: </Text>
-            <span>{lot.startingPrice || "..."}</span>
-            <br />
+          <Col span={16}>
+            <div className="lot-details">
+              <div className="detail-item">
+                <Text strong>Starting Price: </Text>
+                <span>{lot.startingPrice || "..."}</span>
+              </div>
+              <div className="detail-item">
+                <Text strong>Variety: </Text>
+                <span>{lot.koiFishDto.variety || "..."}</span>
+              </div>
+              <div className="detail-item">
+                <Text strong>Method: </Text>
+                <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
+              </div>
+              <div className="detail-item">
+                <Text strong>By: </Text>
+                <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
+              </div>
+            </div>
 
-            <Text strong>Varitey: </Text>
-            <span>{lot.koiFishDto.variety || "..."}</span>
-            <br />
-
-            <Text strong>Method: </Text>
-            <span>{lot.auctionMethod.auctionMethodName || "..."}</span>
-            <br />
-
-            <Text strong>By: </Text>
-            <span>{lot.breederDetailDto?.farmName || "Unknown"}</span>
             {operation === "Remove" && (
               <>
-                <br />
-                <Text strong>Duration (minute): </Text>
-                <InputNumber
-                  min={MIN_DURATION_MINUTES}
-                  max={MAX_DURATION_MINUTES}
-                  value={duration}
-                  onChange={handleDurationChange}
-                />
-                <br />
-                {lot.auctionMethod.auctionMethodId >= 3 && (
-                  <>
-                    <Text strong>Step Percent (%): </Text>
+                <Form
+                  layout="inline" >
+                  <Form.Item
+                    label="Duration (minute)"
+                    name="duration"
+                    rules={[
+                      () => ({
+                        validator(_, value) {
+                          if (value !== undefined && value !== null) {
+                            if (value < 0) {
+                              return Promise.reject(
+                                new Error(`The input cannot be negative`)
+                              );
+                            }
+                            if (!Number.isInteger(value)) {
+                              return Promise.reject(
+                                new Error(`The input must be integer`)
+                              );
+                            }
+                            if (value > MAX_DURATION_MINUTES) {
+                              return Promise.reject(
+                                new Error(
+                                  `Duration must be lower ${MAX_DURATION_MINUTES} minutes`
+                                )
+                              );
+                            }
+                            if (value < MIN_DURATION_MINUTES) {
+                              return Promise.reject(
+                                new Error(
+                                  `Duration must be higher ${MIN_DURATION_MINUTES} minutes`
+                                )
+                              );
+                            }
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(
+                            new Error("Please enter a valid number!!!")
+                          );
+                        },
+                      }),
+                    ]}
+                  >
                     <InputNumber
-                      min={MIN_STEP_PRECENT}
-                      max={MAX_STEP_PRECENT}
-                      value={stepPercent}
-                      onChange={handleStepPercentChange}
+                      placeholder="Enter duration"
+                      style={{ width: "20ch" }}
+                      size="small"
+                      onChange={handleDurationChange}
+                      formatter={(value) =>
+                        `${value}`
+                      }
+                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                     />
-                  </>
-                )}
+                  </Form.Item>
+                  {lot?.auctionMethod?.auctionMethodId >= 3 && (
+                    <>
+                      <Form.Item
+                        label="Step's Percent (%)"
+                        name="stepPercent"
+                        rules={[
+                          () => ({
+                            validator(_, value) {
+                              if (value !== undefined && value !== null) {
+                                if (value < 0) {
+                                  return Promise.reject(
+                                    new Error(`The input cannot be negative`)
+                                  );
+                                }
+                                if (!Number.isInteger(value)) {
+                                  return Promise.reject(
+                                    new Error(`The input must be integer`)
+                                  );
+                                }
+                                if (value > MAX_STEP_PRECENT) {
+                                  return Promise.reject(
+                                    new Error(
+                                      `The input must be lower ${MAX_STEP_PRECENT}%`
+                                    )
+                                  );
+                                }
+                                if (value < MIN_STEP_PRECENT) {
+                                  return Promise.reject(
+                                    new Error(
+                                      `The input must be higher ${MIN_STEP_PRECENT}%`
+                                    )
+                                  );
+                                }
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(
+                                new Error("Please enter a valid number!!!")
+                              );
+                            },
+                          }),
+                        ]}
+                      >
+                        <InputNumber
+                          size="small"
+                          style={{ width: "20ch" }}
+                          placeholder="Enter step percent"
+                          onChange={handleStepPercentChange}
+                          formatter={(value) =>
+                            `${value}`
+                          }
+                          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                        />
+                      </Form.Item>
+                    </>
+                  )}
+                </Form>
               </>
             )}
           </Col>
         </Row>
-      </div>
+      </div >
     </>
   );
 };

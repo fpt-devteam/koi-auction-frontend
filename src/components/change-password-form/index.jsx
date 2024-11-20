@@ -20,15 +20,13 @@ const ChangePasswordForm = ({ cancel }) => {
     const onFinish = async (values) => {
         try {
             setLoading(true);
-            // console.log(values);
             const newPassword = { Password: values.newPassword };
-            const response = await userApi.patch("/update-password", newPassword);
-            console.log(response);
+            await userApi.patch("/update-password", newPassword);
             message.success('Password changed successfully');
             logoutUser();
             form.resetFields();
         } catch (error) {
-            message.error('Failed to change password');
+            message.error('Failed to change password', error);
         } finally {
             setLoading(false);
         }

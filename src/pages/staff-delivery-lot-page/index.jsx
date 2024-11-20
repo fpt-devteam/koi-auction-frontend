@@ -45,7 +45,7 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh }) => {
             try {
                 const response = await lotApi.get("lots");
                 if (response) {
-                    console.log(response.data);
+                    //console.log(response.data);
                     const filteredData = response.data.filter(
                         (lot) =>
                             lot.lotStatusDto.lotStatusId === lotStatusId
@@ -131,7 +131,7 @@ const LotCard = ({ lot }) => {
                         <div className="lot-detail-item">
                             <Button size="middle" type="primary" onClick={toggleLotInfoModal}>View</Button>
                             <Button size="middle" type="primary" onClick={toggleLotInfoModal}>Delivery</Button>
-                            
+
                         </div>
                     </Col>
                 </Row>
@@ -231,7 +231,7 @@ const DeliveryModal = ({ lotInfoData }) => {
         "WardCode": null,
         "address": "123 Main St, Anytown, USA"
     }
-    // console.log(lotInfoData);
+    // //console.log(lotInfoData);
     const [soldLotInfoData, setSoldLotInfoData] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -239,7 +239,7 @@ const DeliveryModal = ({ lotInfoData }) => {
             const response = await lotApi.get(`sold-lots/${lotInfoData.lotId}`);
             if (response) {
                 setSoldLotInfoData(response.data);
-                console.log(response.data);
+                //console.log(response.data);
                 setLoading(false);
             }
         }
@@ -248,7 +248,7 @@ const DeliveryModal = ({ lotInfoData }) => {
     const [winnerInfoData, setWinnerInfoData] = useState(null);
     useEffect(() => {
         const fetchWinnerInfoData = async () => {
-            console.log("winnerId", soldLotInfoData.winnerId);
+            //console.log("winnerId", soldLotInfoData.winnerId);
             // const response = await userApi.get(`manage/profile/${soldLotInfoData.winnerId}`);
             // if (response) {
             //     setWinnerInfoData(response.data);

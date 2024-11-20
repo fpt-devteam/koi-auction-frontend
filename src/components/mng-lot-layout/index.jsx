@@ -48,15 +48,15 @@ const LotLayout = ({
   // const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
   let statusId = useParams().LotStatusId;
   statusId = (statusId) ? statusId : 1;
-  console.log("statusId", statusId);
+  // //console.log("statusId", statusId);
   const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
   // const statusId = useSelector((state) => state.status.statusId);
   if (userRoleId === null) {
     return null;
   }
-  // console.log("statusId", statusId);
-  // console.log("userRoleId", userRoleId);
-  // console.log("onUpdate", onUpdate);
+  // //console.log("statusId", statusId);
+  // //console.log("userRoleId", userRoleId);
+  // //console.log("onUpdate", onUpdate);
   return (
     <div
       style={{
