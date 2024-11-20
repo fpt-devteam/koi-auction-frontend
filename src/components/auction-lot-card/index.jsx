@@ -45,7 +45,6 @@ const AuctionLotCard = ({ auctionLot }) => {
 
   const farmName = breederDetailDto ? breederDetailDto.farmName : "Unknown";
 
-  // console.log("lot", auctionLot);
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/auction-lot-detail/${auctionLot.lotDto.lotId}`);

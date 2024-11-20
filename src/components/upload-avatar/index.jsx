@@ -25,18 +25,18 @@ const UploadAvatar = ({ value, onChange }) => {
       try {
         setLoading(true);
         const firebaseUrl = await uploadToFirebase(file.originFileObj || file);
-        console.log("Uploaded URL:", firebaseUrl);
+        // //console.log("Uploaded URL:", firebaseUrl);
         onChange?.(firebaseUrl);
       } catch (error) {
         message.error('Upload failed. Please try again.');
-        console.error('Upload error:', error);
+        // //console.error('Upload error:', error);
       } finally {
         setLoading(false);
       }
     }
   };
 
-  console.log("Current value in UploadAvatar:", value);
+  // //console.log("Current value in UploadAvatar:", value);
 
   return (
     <Upload
@@ -95,7 +95,7 @@ const UploadAvatar = ({ value, onChange }) => {
           />
         </div>
       ) : (
-        <div style={{ 
+        <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

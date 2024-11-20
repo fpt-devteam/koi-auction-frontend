@@ -22,18 +22,18 @@ const UserDetail = () => {
     setSeed(seed + 1);
   };
 
-  console.log("isRequesting", isRequesting);
+  // //console.log("isRequesting", isRequesting);
 
   const handleApprove = async (userId, email, status) => {
     try {
-      console.log("userId: ", userId);
-      console.log("email: ", email);
+      // //console.log("userId: ", userId);
+      // //console.log("email: ", email);
       message.loading({ content: "Updating breeder...", key: "updatable" });
 
       const response = await userApi.patch(`verify-breeder/${userId}`, {
         Verified: status,
       });
-      console.log(response.status);
+      // //console.log(response.status);
       if (response.status === 201) {
         let subject, text;
         if (status == 1) {
@@ -50,7 +50,7 @@ const UserDetail = () => {
           Subject: subject,
           Text: text,
         });
-        console.log("da gui email", emailResponse);
+        // //console.log("da gui email", emailResponse);
         if (emailResponse.status === 200) {
           message.success({
             content: "Breeder update successfully!",
@@ -66,7 +66,7 @@ const UserDetail = () => {
         }
       }
     } catch (error) {
-      console.error("Error updating breeder:", error);
+      // //console.error("Error updating breeder:", error);
       message.error({
         content: "Failed to updating breeder",
         key: "updatable",
@@ -80,10 +80,10 @@ const UserDetail = () => {
       const response = await userApi.get(`manage/detail-profile/${userId}`);
       setUser(response.data);
 
-      console.log(response.data);
+      // //console.log(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      // //console.error("Error fetching user data:", error);
       message.error("Failed to fetch user data.");
     }
   };
@@ -106,14 +106,14 @@ const UserDetail = () => {
           message.loading({ content: "Updating user...", key: "updatable" });
           values.UserId = userId;
           values.Active = values.Active.toString();
-          console.log(values.Active);
+          // //console.log(values.Active);
 
           const response = await userApi.patch(
             `manage/profile/${userId}`,
             values
           );
-          console.log(response.data.message);
-          console.log(values.Active);
+          // //console.log(response.data.message);
+          // //console.log(values.Active);
           fetchUser(userId);
 
           // Show success message
@@ -126,7 +126,7 @@ const UserDetail = () => {
           // Close the modal
           setIsModalVisible(false);
         } catch (error) {
-          console.error("Error updating user:", error);
+          // //console.error("Error updating user:", error);
           message.error({
             content: error.response.data.message || "Failed to update user",
             key: "updatable",
@@ -135,7 +135,7 @@ const UserDetail = () => {
         }
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
+        // //console.log("Validate Failed:", info);
       });
   };
 

@@ -6,12 +6,12 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
   // const getAddress = async (address) => {
   //   try {
   //     const response = await addressApi.get(`address/${address}`);
-  //     console.log(address.data);
+  //     //console.log(address.data);
   //     return address.data;
   //   } catch (error) {
-  //     console.error("Failed to fetch address:", error);
+  //     //console.error("Failed to fetch address:", error);
   //   }
-    
+
   // };
   const [isVisible, setIsVisible] = React.useState(false);
 
@@ -94,30 +94,30 @@ function UserDetailCard({ data, loading, openModal, title, isRequesting, onAppro
               Update
             </Button>
           </Col>
-          {isRequesting == 0 && ( 
+          {isRequesting == 0 && (
             <>
-            <Col span={6}>
-              <Button
-                type="primary"
-                className="update-button"
-                onClick={() => onApprove()}
-                style={{ marginTop: "20px" }}
-              >
-                Approve
-              </Button>
-            </Col>
-            <Col span={6}>
-            <Button
-              type="primary"
-              className="update-button"
-              onClick={() => onReject()}
-              // onClick={showModal}
-              style={{ marginTop: "20px" }}
-            >
-              Reject
-            </Button>
-          </Col>
-          </>
+              <Col span={6}>
+                <Button
+                  type="primary"
+                  className="update-button"
+                  onClick={() => onApprove()}
+                  style={{ marginTop: "20px" }}
+                >
+                  Approve
+                </Button>
+              </Col>
+              <Col span={6}>
+                <Button
+                  type="primary"
+                  className="update-button"
+                  onClick={() => onReject()}
+                  // onClick={showModal}
+                  style={{ marginTop: "20px" }}
+                >
+                  Reject
+                </Button>
+              </Col>
+            </>
           )}
           {/* <Col span={8}>
             <Button

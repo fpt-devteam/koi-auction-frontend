@@ -9,7 +9,7 @@ import emailApi from "../../config/emailApi";
 
 
 export default function UserListPage({ number, isRequest }) {
-  console.log(number);
+  // //console.log(number);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Use React Router's navigate
@@ -34,7 +34,7 @@ export default function UserListPage({ number, isRequest }) {
     try {
       const response = await userApi.get("manage/profile");
       const users = response.data;
-      console.log(users);
+      // //console.log(users);
       setUsers(users);
       const members = (users) => {
         return users.filter((user) => user.UserRoleId === number);
@@ -42,7 +42,7 @@ export default function UserListPage({ number, isRequest }) {
       setUsers(members(users));
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch auctions:", error);
+      // //console.error("Failed to fetch auctions:", error);
       message.error("Failed to load auction data.");
       setLoading(false);
     }
@@ -51,15 +51,15 @@ export default function UserListPage({ number, isRequest }) {
 
   const handleApprove = async (userId, email, status) => {
     try {
-      console.log("userId: ", userId);
-      console.log("email: ", email);
-      console.log("status: ", status);
+      // //console.log("userId: ", userId);
+      // //console.log("email: ", email);
+      // //console.log("status: ", status);
       message.loading({ content: "Updating breeder...", key: "updatable" });
 
       const response = await userApi.patch(`verify-breeder/${userId}`, {
         Verified: status,
       });
-      console.log(response.status);
+      // //console.log(response.status);
       if (response.status === 201) {
         let subject, text;
         if (status == 1) {
@@ -74,7 +74,7 @@ export default function UserListPage({ number, isRequest }) {
           Subject: subject,
           Text: text,
         });
-        console.log("da gui email", emailResponse);
+        // //console.log("da gui email", emailResponse);
         if (emailResponse.status === 200) {
           message.success({
             content: "Breeder update successfully!",
@@ -86,7 +86,7 @@ export default function UserListPage({ number, isRequest }) {
         }
       }
     } catch (error) {
-      console.error("Error updating breeder:", error);
+      // //console.error("Error updating breeder:", error);
       message.error({
         content: "Failed to updating breeder",
         key: "updatable",
@@ -100,7 +100,7 @@ export default function UserListPage({ number, isRequest }) {
       let values = await form.validateFields();
       let newUser = { ...values, UserRoleId: number };
       message.loading({ content: "Creating user...", key: "updatable" });
-      console.log(newUser);
+      // //console.log(newUser);
       const response = await userApi.post("manage/profile", newUser);
       if (response.status === 201) {
         message.success({
@@ -114,7 +114,7 @@ export default function UserListPage({ number, isRequest }) {
         // setUsers([...users, response.data]);
       }
     } catch (error) {
-      console.error("Failed to create user:", error);
+      // //console.error("Failed to create user:", error);
       message.error({
         content: error.response.data.message,
         key: "updatable",
@@ -136,7 +136,7 @@ export default function UserListPage({ number, isRequest }) {
           // backgroundColor: "red",
         }}
       >
-        <h1 className="title" style={{fontSize: "30px"}}>
+        <h1 className="title" style={{ fontSize: "30px" }}>
           {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List
         </h1>
         {number === 3 && (
@@ -161,7 +161,7 @@ export default function UserListPage({ number, isRequest }) {
           }}
         >
           <Button
-            style={{  color: "black", borderColor: "black" }}
+            style={{ color: "black", borderColor: "black" }}
             size="large"
             type="link"
             onClick={() => {

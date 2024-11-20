@@ -73,7 +73,7 @@ export default function GeneralInfoForm({ user, refresh }) {
   const fetchBreederData = async () => {
     try {
       const response = await userApi.get(`/breeder/profile`);
-      console.log(response);
+      // //console.log(response);
       form.setFieldsValue({
         BreederId: response.data.BreederId,
         FarmName: response.data.FarmName,
@@ -82,7 +82,7 @@ export default function GeneralInfoForm({ user, refresh }) {
       });
       setBreederInfo(response.data);
     } catch (error) {
-      console.error("Error fetching breeder data:", error);
+      // //console.error("Error fetching breeder data:", error);
       message.error("Failed to load breeder data");
     }
   };
@@ -93,13 +93,13 @@ export default function GeneralInfoForm({ user, refresh }) {
         fetchDistricts(user.ProvinceCode),
         fetchWards(user.DistrictCode),
       ]);
-      console.log(provinces, districts, wards);
+      // //console.log(provinces, districts, wards);
       setProvinceList(provinces);
       setDistrictList(districts);
       setWardList(wards);
       setInitialLoading(false);
     } catch (error) {
-      console.error("Error initializing form data:", error);
+      // //console.error("Error initializing form data:", error);
       message.error("Failed to load initial data");
     }
   };
@@ -127,7 +127,7 @@ export default function GeneralInfoForm({ user, refresh }) {
       setProvinceList(response.data);
       return response.data;
     } catch (error) {
-      console.error("Error fetching provinces:", error);
+      // //console.error("Error fetching provinces:", error);
       message.error("Failed to load provinces");
     }
   };
@@ -139,7 +139,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         setDistrictList(response.data);
         return response.data;
       } catch (error) {
-        console.error("Error fetching districts:", error);
+        // //console.error("Error fetching districts:", error);
         message.error("Failed to load districts");
       }
     }
@@ -152,7 +152,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         setWardList(response.data);
         return response.data;
       } catch (error) {
-        console.error("Error fetching wards:", error);
+        // //console.error("Error fetching wards:", error);
         message.error("Failed to load wards");
       }
     }
@@ -161,17 +161,17 @@ export default function GeneralInfoForm({ user, refresh }) {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      console.log("Form data to submit:", values);
-      if (isBreeder) {
-        values.BreederId = values.BreederId;
-      }
+      // //console.log("Form data to submit:", values);
+      // if (isBreeder) {
+      //   values.BreederId = values.BreederId;
+      // }
       const response = await userApi.patch(`update-profile`, values);
-      console.log("Response:", response);
+      // //console.log("Response:", response);
       refresh();
       setIsEditing(false);
       message.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // //console.error("Error submitting form:", error);
       message.error("Failed to update profile");
     }
   };

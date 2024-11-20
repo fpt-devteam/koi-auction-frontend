@@ -100,11 +100,11 @@ const OrderList = ({ statusName, refresh, isPending }) => {
                     userId: trans.UserId,
                     description: trans.Description,
                 }));
-                console.log("response", response.data)
-                console.log("filteredTransactions", filteredTransactions);
+                ////console.log("response", response.data)
+                ////console.log("filteredTransactions", filteredTransactions);
                 setTransactions(filteredTransactions || []);
             } catch (error) {
-                console.log(error);
+                ////console.log(error);
             } finally {
                 setLoading(false);
             }
@@ -114,14 +114,14 @@ const OrderList = ({ statusName, refresh, isPending }) => {
 
     const handleApprove = async (record) => {
         try {
-            console.log("Approve transaction:", record);
+            // ////console.log("Approve transaction:", record);
             const response = await paymentApi.patch(`/manage/withdraw/${record.userId}/${record.transId}`, {
                 Status: "Success"
             });
             message.success("Approve transaction successfully");
-            console.log("Approve transaction response:", response);
+            // ////console.log("Approve transaction response:", response);
         } catch (error) {
-            console.error("Error approving transaction:", error);
+            // ////console.error("Error approving transaction:", error);
         }
         refresh();
     };
@@ -132,13 +132,13 @@ const OrderList = ({ statusName, refresh, isPending }) => {
                 Reason: rejectReason,
                 Status: "Fail"
             });
-            // console.log(rejectReason);
+            // ////console.log(rejectReason);
             message.success("Reject transaction successfully");
             setIsRejectModalOpen(false);
             setRejectReason('');
             setSelectedRecord(null);
         } catch (error) {
-            console.error("Error rejecting transaction:", error);
+            // ////console.error("Error rejecting transaction:", error);
         }
         refresh();
     };

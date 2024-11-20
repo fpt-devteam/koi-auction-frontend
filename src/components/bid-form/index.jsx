@@ -30,10 +30,10 @@ const BidForm = ({ onBidSubmit }) => {
     //     onBidSubmit(bidAmount);
     //   },
     //   onCancel() {
-    //     console.log("Cancel");
+    //     //console.log("Cancel");
     //   },
     // });
-    console.log("Bid amount: ", bidAmount);
+    // //console.log("Bid amount: ", bidAmount);
     if (bidAmount && bidAmount > 0) {
       //modal are you sure you want to place this bid?
       Modal.confirm({
@@ -43,7 +43,7 @@ const BidForm = ({ onBidSubmit }) => {
           onBidSubmit(bidAmount);
         },
         onCancel() {
-          console.log("Cancel");
+          // //console.log("Cancel");
         },
       });
     } else {

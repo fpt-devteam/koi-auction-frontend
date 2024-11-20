@@ -11,7 +11,7 @@ function UserListMng({ users, loading, isRequesting, onApprove }) {
   } else if (isRequesting == 2) {
     users = users.filter((user) => user.Verified == 2);
   }
-  console.log("isRequesting", isRequesting);
+  //console.log("isRequesting", isRequesting);
   const columns = [
     {
       title: <span className="titleName">User ID</span>,
@@ -71,21 +71,21 @@ function UserListMng({ users, loading, isRequesting, onApprove }) {
         //   {verified ? "Approved" : "Pending"}
         // </Tag>
         <>
-        {verified == 0 && (
-          <Tag color="blue" key="pending">
-            Pending
-          </Tag>
-        )}
-        {verified == 1 && (
-          <Tag color="green" key="approved">
-            Approved
-          </Tag>
-        )}
-        {verified == 2 && (
-          <Tag color="red" key="rejected">
-            Rejected
-          </Tag>
-        )}
+          {verified == 0 && (
+            <Tag color="blue" key="pending">
+              Pending
+            </Tag>
+          )}
+          {verified == 1 && (
+            <Tag color="green" key="approved">
+              Approved
+            </Tag>
+          )}
+          {verified == 2 && (
+            <Tag color="red" key="rejected">
+              Rejected
+            </Tag>
+          )}
         </>
       ),
     },
@@ -106,19 +106,19 @@ function UserListMng({ users, loading, isRequesting, onApprove }) {
           </Button>
           {isRequesting == 0 && (
             <>
-            <Button
-              className="approveButton"
-              onClick={() => onApprove(record.UserId, record.Email, 1)}
-            >
-              Approve
-            </Button>
-            <Button
-            className="approveButton"
-            onClick={() => onApprove(record.UserId, record.Email, 2)}
-          >
-            Reject
-          </Button>
-          </>
+              <Button
+                className="approveButton"
+                onClick={() => onApprove(record.UserId, record.Email, 1)}
+              >
+                Approve
+              </Button>
+              <Button
+                className="approveButton"
+                onClick={() => onApprove(record.UserId, record.Email, 2)}
+              >
+                Reject
+              </Button>
+            </>
           )}
         </Space>
       ),

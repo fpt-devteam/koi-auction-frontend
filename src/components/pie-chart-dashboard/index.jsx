@@ -71,8 +71,8 @@ const PieChartComponent = ({
   useEffect(() => {
     if (data && data.length > 0) {
       setChartData(data);
-      console.log("Data received:", data);
-      console.log("ChartData updated:", data);
+      //console.log("Data received:", data);
+      //console.log("ChartData updated:", data);
     }
   }, [data]);
 

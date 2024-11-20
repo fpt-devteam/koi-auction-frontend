@@ -4,7 +4,7 @@ import { Select, Button, Row, Col } from "antd";
 const { Option } = Select;
 
 const KoiSearchBar = ({ allLots, setFilteredLots }) => {
-  console.log("all lot in component: ", allLots);
+  // //console.log("all lot in component: ", allLots);
 
   const [selectedVariety, setSelectedVariety] = useState("");
   const [selectedSex, setSelectedSex] = useState("");
@@ -16,7 +16,7 @@ const KoiSearchBar = ({ allLots, setFilteredLots }) => {
   ];
 
   const handleFilter = () => {
-    console.log("hello", selectedVariety);
+    // //console.log("hello", selectedVariety);
     const result = allLots.filter((lot) => {
       return (
         (selectedVariety ? lot.variety === selectedVariety : true) &&
@@ -24,7 +24,7 @@ const KoiSearchBar = ({ allLots, setFilteredLots }) => {
       );
     });
     setFilteredLots(result);
-    console.log("result: ", result);
+    // //console.log("result: ", result);
   };
 
   const handleReset = () => {
