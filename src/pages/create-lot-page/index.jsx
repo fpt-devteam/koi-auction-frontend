@@ -9,20 +9,20 @@ const CreateLotPage = () => {
   const { user } = useSelector((store) => store.user);
 
   const onCreate = async (values) => {
-    // console.log(values);
+    // //console.log(values);
     // Xử lý lưu form
     const updatedValues = {
       ...values, // Giữ lại các trường từ form
       breederId: user.UserId, // Thêm trường mới
     };
-    console.log(updatedValues);
+    //console.log(updatedValues);
     try {
       const response = await lotApi.post("lots", updatedValues);
-      // console.log("Create Lot Response:", response);
+      // //console.log("Create Lot Response:", response);
       message.success(response.statusText);
       navigate("/management/lots");
     } catch (error) {
-      console.error("Failed to create Lot:", error);
+      //console.error("Failed to create Lot:", error);
     }
   };
 

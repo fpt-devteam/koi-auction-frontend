@@ -44,7 +44,7 @@ function BreederDashboardPage() {
   //       (a, b) => new Date(a.dateFormatted) - new Date(b.dateFormatted)
   //     );
 
-  //     console.log("revenue data", revenueData);
+  //     //console.log("revenue data", revenueData);
   //     setRevenueStatistics({
   //       labels: revenueData.map((item) => item.dateFormatted),
   //       datasets: [
@@ -79,7 +79,7 @@ function BreederDashboardPage() {
   //       ? response.data
   //       : [response.data];
   //     setTotal(dataArray);
-  //     console.log("huuhhuhhuhuhhu", response.data);
+  //     //console.log("huuhhuhhuhuhhu", response.data);
   //   } catch (error) {
   //     message.error(error.message);
   //   }
@@ -96,7 +96,7 @@ function BreederDashboardPage() {
   //     const response = await paymentApi.get(
   //       `/statistics/transaction-history?userId=${user.UserId}&dayAmount=${dayAmount}&Status=Success&TransType=${transType}`
   //     );
-  //     console.log(response);
+  //     //console.log(response);
   //     setPaymentStatistics(response.data);
   //   } catch (error) {
   //     message.error(error.message);
@@ -113,7 +113,7 @@ function BreederDashboardPage() {
     startDate: sevenDaysAgo,
     endDate: today,
   });
-  console.log(`startdate: ${today}`);
+  // //console.log(`startdate: ${today}`);
 
   // Hàm định dạng ngày cho API
   const formatDate = (date) => {
@@ -130,7 +130,7 @@ function BreederDashboardPage() {
 
     setDateRange({ startDate: formattedStartDate, endDate: formattedEndDate });
     // Log giá trị sau khi định dạng
-    console.log(`startdate2: ${formattedStartDate}`);
+    // //console.log(`startdate2: ${formattedStartDate}`);
     fetchRevenueStatistics(formattedStartDate, formattedEndDate);
   };
 
@@ -154,16 +154,16 @@ function BreederDashboardPage() {
     formattedEndDate
   ) => {
     try {
-      console.log(`startdategsfgsfg`);
-      console.log(`startdate3: ${formattedStartDate}`);
+      // //console.log(`startdategsfgsfg`);
+      // //console.log(`startdate3: ${formattedStartDate}`);
       // var tmp = formattedStartDate.format("MM-DD-YYYY");
-      // console.log(`startdate22: ${tmp}`);
-      console.log("API params: hehee", formattedStartDate, formattedEndDate);
+      // //console.log(`startdate22: ${tmp}`);
+      // //console.log("API params: hehee", formattedStartDate, formattedEndDate);
       const response = await paymentApi.get(
         `/breeder/statistics/get-sum-of-payout/${user.UserId}?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
       );
       const revenueData = response.data;
-      console.log("a nuon", revenueData);
+      // //console.log("a nuon", revenueData);
       setRevenueStatistics({
         labels: revenueData.map((item) => item.date),
         datasets: [
@@ -178,7 +178,7 @@ function BreederDashboardPage() {
           },
         ],
       });
-      console.log("a nuon 2", revenueStatistics);
+      // //console.log("a nuon 2", revenueStatistics);
     } catch (error) {
       message.error("Error fetching revenue data: " + error.message);
     }
@@ -212,13 +212,13 @@ function BreederDashboardPage() {
     try {
       const response = await soldLotApi.get(`?BreederID=${user.UserId}`);
       setStatusStatistic(response.data);
-      console.log(`ahihi cuoi cung thi ... ${response.data}`);
+      // //console.log(`ahihi cuoi cung thi ... ${response.data}`);
       // Log chi tiết
-      console.log("Chi tiết response.data:", response.data);
+      // //console.log("Chi tiết response.data:", response.data);
       response.data.forEach((item, index) => {
-        console.log(`Phần tử ${index + 1}:`, item);
+        // //console.log(`Phần tử ${index + 1}:`, item);
       });
-      console.log(`Dữ liệu đầy đủ: ${JSON.stringify(response.data, null, 2)}`);
+      // //console.log(`Dữ liệu đầy đủ: ${JSON.stringify(response.data, null, 2)}`);
     } catch (error) {
       message.error(error.message);
     }
@@ -273,9 +273,9 @@ function BreederDashboardPage() {
               className="custom-card"
               style={{ marginBottom: "1%" }}
             >
-              {console.log(
+              {/* {//console.log(
                 `total doanh thu: ${calculateTotalRevenue(revenueStatistics)}`
-              )}
+              )} */}
               <LineChartComponent
                 data={calculateTotalRevenue(revenueStatistics)}
                 fetchData={fetchRevenueStatistics}

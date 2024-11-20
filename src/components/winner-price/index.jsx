@@ -6,7 +6,7 @@ import { ref } from "firebase/storage";
 
 const { Text } = Typography;
 const WinnerPrice = ({ winnerPrice }) => {
-  console.log("price", winnerPrice);
+  // //console.log("price", winnerPrice);
   return (
     <Card
       style={{

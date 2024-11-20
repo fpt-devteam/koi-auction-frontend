@@ -26,7 +26,7 @@ const MIN_DEPOSIT_AMOUNT = 1000;
 const MIN_WITHDRAWAL_AMOUNT = 50000;
 
 function YourWallet({ balance, refresh, user }) {
-  console.log("user", user);
+  // //console.log("user", user);
   const [depositModal, setDepositModal] = useState(false);
   const [withdrawalModal, setWithdrawalModal] = useState(false);
   const gridStyle = {
@@ -50,17 +50,17 @@ function YourWallet({ balance, refresh, user }) {
   };
 
   const handleDepositSubmit = async (values) => {
-    console.log("Depositing amount:", values.depositAmount);
+    // //console.log("Depositing amount:", values.depositAmount);
     try {
       const response = await paymentApi.post("/deposit", {
         Amount: values.depositAmount,
         Description: "Deposit to wallet " + values.depositAmount,
       });
-      console.log(response.data.order_url);
+      // //console.log(response.data.order_url);
 
       window.open(response.data.order_url, "_blank");
     } catch (error) {
-      console.log(error);
+      // //console.log(error);
     }
     setDepositModal(false);
     refresh();
@@ -73,12 +73,12 @@ function YourWallet({ balance, refresh, user }) {
         BankName: values.bankName,
         AccountHolder: values.accountHolder,
       });
-      console.log(response.data);
+      // //console.log(response.data);
       message.success("Your withdrawal request submitted successfully");
       // window.location.reload();
       refresh();
     } catch (error) {
-      console.log(error);
+      // //console.log(error);
     }
     setWithdrawalModal(false);
   };

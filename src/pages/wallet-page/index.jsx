@@ -22,7 +22,7 @@ const WalletPage = () => {
       const response = await paymentApi.get("/get-wallet-balance");
       setBalance(response.data.balance);
     } catch (error) {
-      console.log(error);
+      // //console.log(error);
     }
   };
 
@@ -112,7 +112,7 @@ const WalletPage = () => {
       setTransactions(formattedTransactions);
       setWithdraw(withdraw);
     } catch (error) {
-      console.log(error);
+      // //console.log(error);
     }
   };
 
@@ -136,12 +136,12 @@ const WalletPage = () => {
       <Card>
         <YourWallet balance={balance} refresh={handleRefresh} user={user} />
       </Card>
-      <Card 
+      <Card
         title={<div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>Transaction History</div>}
       >
         <TransactionList transactions={transactions} />
       </Card>
-      <Card 
+      <Card
         title={<div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>Withdrawal History</div>}
       >
         <TransactionList transactions={withdraw} />

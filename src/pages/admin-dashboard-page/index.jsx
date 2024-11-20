@@ -32,7 +32,7 @@ function AdminDashboardPage() {
     startDate: sevenDaysAgo,
     endDate: today,
   });
-  console.log(`startdate: ${today}`);
+  // //console.log(`startdate: ${today}`);
 
   // Hàm định dạng ngày cho API
   const formatDate = (date) => {
@@ -49,7 +49,7 @@ function AdminDashboardPage() {
 
     setDateRange({ startDate: formattedStartDate, endDate: formattedEndDate });
     // Log giá trị sau khi định dạng
-    console.log(`startdate2: ${formattedStartDate}`);
+    // //console.log(`startdate2: ${formattedStartDate}`);
     fetchRevenueStatistics(formattedStartDate, formattedEndDate);
   };
 
@@ -59,7 +59,7 @@ function AdminDashboardPage() {
     try {
       const response = await lotApi.get(`/lots/auction-method-statistics`);
       setAuctionMethodData(response.data);
-      console.log("Nhe nhang va tinh cam", auctionMethodData);
+      // //console.log("Nhe nhang va tinh cam", auctionMethodData);
     } catch (error) {
       message.error(error.message);
     }
@@ -67,7 +67,7 @@ function AdminDashboardPage() {
 
   useEffect(() => {
     fetchAuctionMetodData();
-    console.log("Updated auctionMethodData:", auctionMethodData);
+    // //console.log("Updated auctionMethodData:", auctionMethodData);
   }, []);
 
   //total lot
@@ -86,7 +86,7 @@ function AdminDashboardPage() {
         `/lots/total-statistics?startDateTime=${formattedStartDate}&endDateTime=${formattedEndDate}`
       );
       setTotal(response.data); // Đặt dữ liệu từ API trực tiếp
-      console.log(response.data); // Log để xác nhận cấu trúc
+      // //console.log(response.data); // Log để xác nhận cấu trúc
     } catch (error) {
       message.error(error.message);
     }
@@ -144,17 +144,17 @@ function AdminDashboardPage() {
     formattedEndDate
   ) => {
     try {
-      console.log(`startdategsfgsfg`);
-      console.log(`startdate3: ${formattedStartDate}`);
+      // //console.log(`startdategsfgsfg`);
+      // //console.log(`startdate3: ${formattedStartDate}`);
       // var tmp = formattedStartDate.format("MM-DD-YYYY");
-      // console.log(`startdate22: ${tmp}`);
-      console.log("API params:", formattedStartDate, formattedEndDate);
+      // //console.log(`startdate22: ${tmp}`);
+      // //console.log("API params:", formattedStartDate, formattedEndDate);
       const response = await lotApi.get(
         `/lots/revenue-statistics?startDateTime=${formattedStartDate}&endDateTime=${formattedEndDate}`
       );
       const revenueData = response.data;
-      console.log(revenueData);
-      console.log("total", revenueData.total);
+      // //console.log(revenueData);
+      // //console.log("total", revenueData.total);
       setRevenueStatistics({
         labels: revenueData.map((item) => item.date),
         datasets: [
@@ -202,13 +202,13 @@ function AdminDashboardPage() {
     try {
       const response = await soldLotApi.get(``);
       setStatusStatistic(response.data);
-      console.log(`ahihi cuoi cung thi ... ${response.data}`);
+      // //console.log(`ahihi cuoi cung thi ... ${response.data}`);
       // Log chi tiết
-      console.log("Chi tiết response.data:", response.data);
+      // //console.log("Chi tiết response.data:", response.data);
       response.data.forEach((item, index) => {
-        console.log(`Phần tử ${index + 1}:`, item);
+        // //console.log(`Phần tử ${index + 1}:`, item);
       });
-      console.log(`Dữ liệu đầy đủ: ${JSON.stringify(response.data, null, 2)}`);
+      // //console.log(`Dữ liệu đầy đủ: ${JSON.stringify(response.data, null, 2)}`);
     } catch (error) {
       message.error(error.message);
     }
@@ -328,9 +328,9 @@ function AdminDashboardPage() {
               className="custom-card"
               style={{ marginBottom: "1%" }}
             >
-              {console.log(
+              {/* {//console.log(
                 `total doanh thu: ${calculateTotalRevenue(revenueStatistics)}`
-              )}
+              )} */}
               <LineChartComponent
                 data={calculateTotalRevenue(revenueStatistics)}
                 fetchData={fetchRevenueStatistics}

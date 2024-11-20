@@ -18,11 +18,11 @@ export default function ProfileFormPage() {
     useEffect(() => {
         if (!user) {
             setLoading(true);
-            console.log(user);
+            //console.log(user);
         }
     }, [user]);
 
-    return (loading && !user )? <Spin /> : (
+    return (loading && !user) ? <Spin /> : (
         <>
             <div key={seed}>
                 <Button style={{ marginTop: "20px", marginLeft: "20px" }} type="primary" onClick={() => window.history.back()}>Back</Button >

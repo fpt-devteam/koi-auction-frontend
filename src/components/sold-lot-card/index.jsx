@@ -6,6 +6,7 @@ const { Text } = Typography;
 
 import paymentApi from "../../config/paymentApi";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
 
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -139,6 +140,7 @@ const SoldLotCard = ({ soldLot, refresh, tabData, user }) => {
                         user={user}
                         tabData={tabData}
                         refresh={refresh}
+                        onCancel={toggleOrderModal}
                     />
                 </Modal>
 
@@ -227,13 +229,15 @@ const LotInfoModal = ({ lotInfoData }) => {
         </div>
     );
 };
-const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
+const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) => {
 
     const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
     const winner = soldlotInfoData.winnerDto;
     const [cancelReason, setCancelReason] = useState("");
     const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
-
+    const handleCheckExpireTime = () => {
+        return dayjs(soldlotInfoData?.expTime).isSame(dayjs(), 'second');
+    }
     const handleLotCancel = async () => {
         try {
             message.loading({ content: 'Loading...', key: 'cancel' });
@@ -248,9 +252,8 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                     Description: `Refund for lot ${soldlotInfoData?.lotDto?.lotId}, total ${soldlotInfoData?.finalPrice} VND due to cancelation ${cancelReason}`
                 })
             ]).then(([response, paymentResponse]) => {
-                console.log("response", response.data);
-                console.log("paymentResponse", paymentResponse.data);
                 message.success({ content: 'Canceled successfully!', key: 'cancel' });
+                onCancel();
                 refresh();
             });
         } catch (error) {
@@ -259,7 +262,6 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
     };
     const handleLotComplete = async () => {
         try {
-            console.log(soldlotInfoData);
             await Promise.all([
                 lotApi.put(`lots/${soldlotInfoData?.lotDto?.lotId}/status`, {
                     lotStatusName: "Completed",
@@ -270,10 +272,8 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                     Description: `Payout for lot ${soldlotInfoData?.lotDto?.lotId}, total ${soldlotInfoData?.finalPrice} but 90% for breeder ${soldlotInfoData?.breederDetailDto?.breederId} is ${0.9 * soldlotInfoData?.finalPrice}`,
                 }),
             ]).then(([response, paymentResponse]) => {
-                console.log("response", response.data);
-                console.log("paymentResponse", paymentResponse.data);
-                console.log(`Payout for lot ${soldlotInfoData?.lotDto?.lotId}, total ${soldlotInfoData?.finalPrice} but 90% for breeder ${soldlotInfoData?.breederDetailDto?.breederId} is ${0.9 * soldlotInfoData?.finalPrice}`)
                 message.success('Completed successfully!');
+                onCancel();
                 refresh();
             });
         } catch (error) {
@@ -286,31 +286,35 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                 lotStatusName: "To Receive",
             });
             message.success("Delivery approved");
+            onCancel();
             refresh();
         } catch (error) {
             message.error(error.message);
         }
     };
     const handlePayment = async () => {
+        if (handleCheckExpireTime()) {
+            message.error("Your order is out of time for payment!!!");
+            return;
+        }
+
         message.loading({ content: 'Loading...', key: 'payment' });
-        console.log("soldlotInfoData", soldlotInfoData);
         try {
             await Promise.all([await paymentApi.post("/payment", {
                 Amount: soldlotInfoData.finalPrice - soldlotInfoData.auctionDeposit,
                 SoldLotId: soldlotInfoData.lotId,
-                Description: `Payment for lot ${soldlotInfoData.lotId} - ${soldlotInfoData.finalPrice - soldlotInfoData.auctionDeposit} VND`
+                Description: `Payment for lot ${soldlotInfoData?.lotDto?.lotId} - ${soldlotInfoData.finalPrice - soldlotInfoData.auctionDeposit} VND`
             }),
-            await lotApi.put(`lots/${soldlotInfoData.lotDto.lotId}/status`, {
+            await lotApi.put(`lots/${soldlotInfoData?.lotDto?.lotId}/status`, {
                 lotStatusName: "To Ship"
             })]).then(([paymentResponse, updateResponse]) => {
-                console.log("paymentResponse", paymentResponse.data);
-                console.log("updateResponse", updateResponse.data);
                 if (paymentResponse.data) {
                     message.success({ content: 'Payment success', key: 'payment' });
                 } else {
                     message.error({ content: `${paymentResponse.data?.message}`, key: 'payment' });
                 }
             });
+            onCancel();
             refresh();
         } catch (error) {
             message.error({ content: `${error.message}`, key: 'payment' });
@@ -320,50 +324,55 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
         <>
             <div style={{ padding: "36px", paddingTop: "0px" }}>
                 <div style={{ paddingTop: "24px" }}>
-                    <div className="inner-card-container">
-                        <Card
-                            className="inner-card"
-                            title={
-                                <p className="inner-card-title">
-                                    Delivery Infomation
-                                </p>
-                            }
-                        >
-                            <div className="info-container">
-                                <span className="info-label">Full Name: </span>
-                                <span className="info-content">{winner?.firstName + winner?.lastName}</span>
-                            </div>
-                            <div className="info-container">
-                                <span className="info-label">Phone: </span>
-                                <span className="info-content">{winner?.phone}</span>
-                            </div>
-                            <div className="info-container">
-                                <span className="info-label">Email: </span>
-                                <span className="info-content">{winner?.email}</span>
-                            </div>
-                            <div className="info-container">
-                                <span className="info-label">Address: </span>
-                                <span className="info-content">{soldlotInfoData?.address}</span>
-                            </div>
-                        </Card>
-                        <Card
-                            className="inner-card"
-                            title={
-                                <p className="inner-card-title">
-                                    Status
-                                </p>
-                            }
-                        >
-                            <div className="info-container">
-                                <span className="info-label">Status: </span>
-                                <span className="info-content">{(soldlotInfoData) ? soldlotInfoData?.lotStatusDto?.lotStatusName : "N/A"}</span>
-                            </div>
-                            <div className="info-container">
-                                <span className="info-label">Update at: </span>
-                                <span className="info-content">{(soldlotInfoData) ? formatDateTime(soldlotInfoData?.createdAt) : "...."}</span>
-                            </div>
-                        </Card>
-                    </div>
+                    <Row gutter={16} style={{ alignItems: "flex-end" }}>
+                        <Col span={15}>
+                            <Card
+                                className="inner-card"
+                                title={
+                                    <p className="inner-card-title">
+                                        Delivery Infomation
+                                    </p>
+                                }
+                            >
+                                <div className="info-container">
+                                    <span className="info-label">Full Name: </span>
+                                    <span className="info-content">{winner?.firstName + winner?.lastName}</span>
+                                </div>
+                                <div className="info-container">
+                                    <span className="info-label">Phone: </span>
+                                    <span className="info-content">{winner?.phone}</span>
+                                </div>
+                                <div className="info-container">
+                                    <span className="info-label">Email: </span>
+                                    <span className="info-content">{winner?.email}</span>
+                                </div>
+                                <div className="info-container">
+                                    <span className="info-label">Address: </span>
+                                    <span className="info-content">{soldlotInfoData?.address}</span>
+                                </div>
+                            </Card>
+                        </Col>
+                        <Col span={9}>
+                            <Card
+                                className="inner-card"
+                                title={
+                                    <p className="inner-card-title">
+                                        Status
+                                    </p>
+                                }
+                            >
+                                <div className="info-container">
+                                    <span className="info-label">Status: </span>
+                                    <span className="info-content">{(soldlotInfoData) ? soldlotInfoData?.lotStatusDto?.lotStatusName : "N/A"}</span>
+                                </div>
+                                <div className="info-container">
+                                    <span className="info-label">Update at: </span>
+                                    <span className="info-content">{(soldlotInfoData) ? formatDateTime(soldlotInfoData?.createdAt) : "...."}</span>
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+
                     <Card className="inner-card">
                         <div>
                             <Row>
@@ -389,6 +398,10 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                                                 <span className="info-label">Farm Name: </span>
                                                 <span className="info-content">{soldlotInfoData?.breederDetailDto?.farmName || "Unknown"}</span>
                                             </div>
+                                            <div className="info-container">
+                                                <span className="info-label">Farm Address: </span>
+                                                <span className="info-content">{soldlotInfoData?.breederDetailDto?.farmAddress || "Unknown"}</span>
+                                            </div>
                                         </Col>
                                         <Col span={10}>
 
@@ -401,15 +414,18 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                         <div style={{ marginTop: "30px" }}>
                             <Row>
                                 <Col span={8}>
-                                    {soldlotInfoData?.lotStatusDto?.lotStatusId == 6 &&
+                                    {soldlotInfoData?.lotStatusDto?.lotStatusId == 6 && handleCheckExpireTime() &&
                                         (
-                                            <Statistic.Countdown
-                                                value={soldlotInfoData?.expTime}
-                                                format="HH:mm:ss"
-                                                valueStyle={{
-                                                    fontSize: "2.5rem",
-                                                }}
-                                            />
+                                            <>
+                                                <h2>Remain time for payment: </h2>
+                                                <Statistic.Countdown
+                                                    value={soldlotInfoData?.expTime}
+                                                    format="HH:mm:ss"
+                                                    valueStyle={{
+                                                        fontSize: "2.5rem",
+                                                    }}
+                                                />
+                                            </>
                                         )
                                     }
                                 </Col>
@@ -440,7 +456,6 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                                         </Col>
 
                                     </Row>
-
                                     <Row>
                                         <Col className="info-payment-item-title" span={18}>
                                             <span>Payment Status </span>
@@ -521,7 +536,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData }) => {
                         </>
                     )}
                 </div>
-            </div>
+            </div >
         </>
     )
 }

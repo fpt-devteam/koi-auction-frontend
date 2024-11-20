@@ -29,15 +29,15 @@ export default function UserOrderStatusPage() {
     let { LotStatusId } = useParams();
     // staticTabsData.forEach((tab) => {
     //     if (tab.lotStatusId == LotStatusId) {
-    //         console.log("here", LotStatusId);
-    //         console.log("here", tab.lotStatusIconLink);
+    //         //console.log("here", LotStatusId);
+    //         //console.log("here", tab.lotStatusIconLink);
     //     }
     // })
     useEffect(() => {
         setActiveTab(LotStatusId);
         setLoading(true);
-        console.log(staticTabsData)
-        console.log(LotStatusId)
+        // //console.log(staticTabsData)
+        // //console.log(LotStatusId)
         async function fetchLotDataByStatus() {
             try {
                 await Promise.all([
@@ -48,7 +48,8 @@ export default function UserOrderStatusPage() {
                         }
                     })
                 ]).then(([soldLotResponse]) => {
-                    const soldLotList = soldLotResponse?.data?.map((soldLot) => ({
+
+                    const soldLotList = soldLotResponse?.data?.reverse().map((soldLot) => ({
                         lotDto: {
                             lotId: soldLot?.soldLotId,
                             sku: soldLot?.sku,
@@ -66,7 +67,7 @@ export default function UserOrderStatusPage() {
                     }));
                     setOrderList(soldLotList);
                     setLoading(false);
-                    console.log("soldLotList", soldLotList);
+                    // //console.log("soldLotList", soldLotList);
                 })
             } catch (error) {
                 message.error(error.message);

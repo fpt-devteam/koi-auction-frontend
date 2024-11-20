@@ -134,9 +134,15 @@ const UserDetail = () => {
         try {
           message.loading({ content: "Updating user...", key: "updatable" });
           values.UserId = userId;
+          values.Active = values.Active.toString();
+          console.log(values.Active);
 
-          await userApi.patch(`manage/profile/${userId}`, values);
-
+          const response = await userApi.patch(
+            `manage/profile/${userId}`,
+            values
+          );
+          console.log(response.data.message);
+          console.log(values.Active);
           fetchUser(userId);
           
           message.success({ content: "User updated successfully!", key: "updatable" });
@@ -144,11 +150,15 @@ const UserDetail = () => {
           setIsModalVisible(false);
         } catch (error) {
           console.error("Error updating user:", error);
-          message.error({ content: "Failed to update user.", key: "updatable" });
+          message.error({
+            content: error.response.data.message || "Failed to update user",
+            key: "updatable",
+            duration: 2,
+          });
         }
       })
       .catch((info) => {
-        console.error("Validation Failed:", info);
+        console.log("Validate Failed:", info);
       });
   };
 

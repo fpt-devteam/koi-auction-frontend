@@ -132,7 +132,7 @@ const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
         try {
             const response = await lotApi.delete(`auctions/${auctionId}`);
             message.success("Deleted successfully!");
-            console.log(response);
+            // //console.log(response);
             refresh();
         } catch (error) {
             message.error("Failed to delete the auction.");
