@@ -42,13 +42,13 @@ const labels = {
   rejectedLots: "Rejected Lots",
 };
 
-const TotalHistoryComponent = ({ data, title = "" }) => {
+const TotalHistoryComponent = ({ data, fetchData, title = "" }) => {
   const [totalData, setTotalData] = useState([]);
 
   useEffect(() => {
     const dataArray = Array.isArray(data) ? data : [data];
     setTotalData(dataArray);
-    console.log("Data total received:", dataArray);
+    // //console.log("Data total received:", dataArray);
   }, [data]);
 
   if (!totalData || totalData.length === 0) {
@@ -114,10 +114,8 @@ const TotalHistoryComponent = ({ data, title = "" }) => {
 };
 
 TotalHistoryComponent.propTypes = {
-  data: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.object),
-    PropTypes.object,
-  ]).isRequired,
+  data: PropTypes.object.isRequired,
+  fetchData: PropTypes.func.isRequired,
   title: PropTypes.string,
 };
 

@@ -14,11 +14,11 @@ function BreederPage() {
     setIsLoading(true);
     try {
       const response = await userApi.get("/manage/breeder/profile");
-      setBreeders(response.data);
-
+      setBreeders(response.data.filter((breeder) => breeder.Verified === 1 && breeder.Active === true));
+      //setBreeders(breeders.filter((breeder) => breeder.Active === true));
     } catch (error) {
       message.error("Failed to load breeder information");
-      console.log(error);
+      //console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -27,7 +27,7 @@ function BreederPage() {
   useEffect(() => {
     fetchBreederInfo();
   }, []);
-  console.log(breeders)
+  //console.log(breeders)
   return (
     <div style={styles.pageContainer}>
       <Card
@@ -45,22 +45,23 @@ function BreederPage() {
             <Spin tip="Loading breeders..." />
           </div>
         ) : (
-          breeders.map((breeder) => (
-            <Card.Grid
-              style={styles.gridStyle}
-              key={breeder.BreederId}
-              onClick={() => navigate(`/breeder-detail/${breeder.BreederId}`)}
-              hoverable
-            >
-              <Image
-                src={breeder.Certificate}
-                preview={false}
-                alt="Breeder Certificate"
-                style={styles.imageStyle}
-              />
-              <div style={farmNameStyle}>{breeder.FarmName}</div>
-            </Card.Grid>
-          ))
+          breeders
+            .map((breeder) => (
+              <Card.Grid
+                style={styles.gridStyle}
+                key={breeder.BreederId}
+                onClick={() => navigate(`/breeder-detail/${breeder.BreederId}`)}
+                hoverable
+              >
+                <Image
+                  src={breeder.Certificate}
+                  preview={false}
+                  alt="Breeder Certificate"
+                  style={styles.imageStyle}
+                />
+                <div style={farmNameStyle}>{breeder.FarmName}</div>
+              </Card.Grid>
+            ))
         )}
       </Card>
     </div>

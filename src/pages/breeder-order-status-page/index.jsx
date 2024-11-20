@@ -33,7 +33,7 @@ export default function OrderStatusPage() {
 
     useEffect(() => {
         if (user) {
-            console.log(user)
+            //console.log(user)
             const staticTabsData = [
                 { lotStatusId: 6, lotStatusName: "To Ship" },
                 { lotStatusId: 7, lotStatusName: "To Receive" },
@@ -84,10 +84,10 @@ const OrderList = ({ lotStatusId, lotStatusName, refresh, userId }) => {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchOrderData = async () => {
-            // console.log("asdf", userId);
+            // //console.log("asdf", userId);
             try {
                 const response = await lotApi.get("lots");
-                console.log(response.data);
+                //console.log(response.data);
                 const filteredData = response.data.filter(
                     (lot) =>
                         lot.lotStatusDto.lotStatusId === lotStatusId

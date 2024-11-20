@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Typography, Space } from "antd";
 import "./index.css";
 
@@ -27,60 +27,155 @@ const checkStatus = (status) => {
   // }
   return status;
 };
+const checkTrans = (trans) => {
+  let isPositive;
+  switch (trans.transType) {
+    case "Deposit":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Withdraw":
+      if (trans.status === "Success") {
+        //- Amount va mau do
+        isPositive = false;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Payment":
+      if (trans.status === "Success") {
+        //- Amount va mau do
+        isPositive = false;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Payout":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    case "Refund":
+      if (trans.status === "Success") {
+        //+ Amount va mau xanh
+        isPositive = true;
+      } else {
+        isPositive = null;
+      }
+      break;
+    default:
+      isPositive = null;
+  }
+  return isPositive;
+};
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+const formatDate = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+};
+
+
 const TransactionList = ({ transactions }) => {
-  console.log("transaction nek: ", transactions);
+  // //console.log("transaction nek: ", transactions);
   const columns = [
     {
       title: "ID",
       dataIndex: "transId",
       key: "transId",
+      width: "5em",
+    },
+    {
+      title: "TIME",
+      dataIndex: "time",
+      key: "time",
+      align: "left",
+      render: (time) => <Text strong>{formatDate(time)}</Text>,
+      width: "15em",
+    },
+
+    {
+      title: "AMOUNT",
+      dataIndex: "amount",
+      key: "amount",
+      align: "left",
+      render: (amount, record) => {
+        const isPositive = checkTrans(record);
+        if (isPositive === null) {
+          return <Text strong>{`${amount?.toLocaleString()} VND`}</Text>;
+        }
+        const sign = isPositive ? "+" : "-";
+        const color = isPositive ? "green" : "red";
+        return (
+          <Text strong style={{ color }}>
+            {`${sign} ${amount?.toLocaleString()} VND`}
+          </Text>);
+      },
+      width: "15em",
+    },
+    {
+      title: "STATUS",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <Text strong className={checkStatus(status)}>
+          {checkStatus(status)}
+        </Text>
+      ),
+      width: "10em",
     },
     {
       title: "TYPE",
       dataIndex: "transType",
       key: "transType",
       render: (transType) => <Text strong>{checkTransType(transType)}</Text>,
-    },
-    {
-      title: "STATUS",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => <Text strong className={checkStatus(status)}>{checkStatus(status)}</Text>,
-    },
-    {
-      title: "AMOUNT",
-      dataIndex: "amount",
-      key: "amount",
-      align: "left",
-      render: (amount) => <Text strong>{amount?.toLocaleString()} VND</Text>,
+      width: "12em",
     },
     {
       title: "BALANCE BEFORE",
       dataIndex: "balanceBefore",
       key: "balanceBefore",
       align: "left",
-      render: (balanceBefore) => <Text strong>{balanceBefore?.toLocaleString()} VND</Text>,
+      render: (balanceBefore) => (
+        <Text strong>{balanceBefore?.toLocaleString()} VND</Text>
+      ),
+      width: "15em",
     },
     {
       title: "BALANCE AFTER",
       dataIndex: "balanceAfter",
       key: "balanceAfter",
       align: "left",
-      render: (balanceAfter) => <Text strong>{balanceAfter?.toLocaleString()} VND</Text>,
+      render: (balanceAfter) => (
+        <Text strong>{balanceAfter?.toLocaleString()} VND</Text>
+      ),
+      width: "15em",
     },
-  ];
-
-  // Conditionally add the description column if transType is 'Withdraw'
-  if (transactions.some(trans => trans.transType === 'Withdraw')) {
-    columns.push({
+    {
       title: "DESCRIPTION",
       dataIndex: "description",
       key: "description",
       render: (description) => <Text>{description}</Text>,
-    }); // {{ edit_2 }}: Push description column into columns array
-  }
+    },
+
+  ];
+
+
+
 
   return (
     <Table
@@ -88,7 +183,7 @@ const TransactionList = ({ transactions }) => {
       dataSource={transactions}
       pagination={false}
       showHeader={true}
-      scroll={{y: 400 }}
+      scroll={{ y: 400 }}
     />
   );
 };

@@ -62,7 +62,7 @@ const PolicyPage = () => {
     const toggleAccordion = (index) => {
         setOpenIndex(openIndex === index ? null : index);
     };
-    // console.log(policyData);
+    // //console.log(policyData);
     return (
         <div className="policy-container">
             <h1 className="policy-title">Privacy Policy</h1>

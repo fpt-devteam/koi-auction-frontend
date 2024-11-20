@@ -8,7 +8,7 @@ const MAX_IMAGE_SIZE_MB = 5; // 5MB cho mỗi ảnh
 const MAX_IMAGES = 4; // Tối đa 4 ảnh
 
 const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
-  // console.log("koiMedia", koiMedia);
+  // //console.log("koiMedia", koiMedia);
   const [koiMedia, setKoiMedia] = useState(initData || []);
   const fileList = koiMedia.map((file, index) => {
     // Nếu là file local (chưa upload lên Firebase) thì dùng createObjectURL
@@ -44,7 +44,9 @@ const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
       fileList.map(async (file) => {
         if (file.originFileObj) {
           // Upload file từ local lên Firebase
+          message.loading("Uploading image...", 0);
           const firebaseUrl = await uploadToFirebase(file.originFileObj);
+          message.destroy();
           return {
             filePath: firebaseUrl, // Lưu lại URL từ Firebase sau khi upload
           };
@@ -73,7 +75,7 @@ const UploadKoiMedia = ({ initData, form, showOnly = false }) => {
       >
         {!showOnly && (
           <>
-            <Button type="primary" icon={<UploadOutlined />}>
+            <Button type="primary" icon={<UploadOutlined />} disabled={fileList.length >= MAX_IMAGES}>
               Upload Images
             </Button>
             <span>

@@ -10,7 +10,8 @@ import {
   HomeOutlined,
   ShoppingOutlined,
   InfoCircleOutlined,
-  ShopOutlined 
+  ShopOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import Logo from "../logo";
 import "./index.scss";
@@ -81,16 +82,16 @@ function Header() {
         </div>
         <ul className="header__navigation">
           <li onClick={() => handleNavigation("/")}>
-            <HomeOutlined className="nav-icon"/> Home
+            <HomeOutlined className="nav-icon" /> Home
           </li>
           <li onClick={() => handleNavigation("/auction-list")}>
-            <ShoppingOutlined className="nav-icon"/> Auctions
+            <ShoppingOutlined className="nav-icon" /> Auctions
           </li>
           <li onClick={() => handleNavigation("/breeder")}>
-            <ShopOutlined     className="nav-icon"/> Breeders
+            <ShopOutlined className="nav-icon" /> Breeders
           </li>
           <li onClick={() => handleNavigation("/about")}>
-            <InfoCircleOutlined className="nav-icon"/> About
+            <InfoCircleOutlined className="nav-icon" /> About
           </li>
         </ul>
       </div>
@@ -98,8 +99,16 @@ function Header() {
         {user == null ? (
           <>
             <Button
+              icon={<TeamOutlined />}
+              onClick={() => {navigate("/breeder-register")}}
+              className="monochrome-button"
+            >
+              Become our Breeder
+            </Button>
+
+            <Button
               icon={<LoginOutlined />}
-              onClick={handleLoginClick}
+              onClick={(handleLoginClick)}
               className="monochrome-button"
             >
               Login

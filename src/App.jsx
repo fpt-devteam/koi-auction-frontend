@@ -17,7 +17,7 @@ import AuctionList from "./pages/auction-list-page";
 import Login from "./pages/login-page";
 import AuctionDetailPage from "./pages/auction-detail-page";
 import AuctionLotDetailPage from "./pages/auction-lot-detail-age";
-import UserList from "./pages/user-list-page";
+import UserListPage from "./pages/user-list-page";
 import UserDetail from "./pages/user-detail-page";
 import AuctionManagementPage from "./pages/auction-management-page";
 import UpdateAuctionPage from "./pages/update-auction-page";
@@ -39,6 +39,8 @@ import StaffOrderStatusPage from "./pages/staff-delivery-lot-page";
 import NotFoundPage from "./pages/not-found-page";
 import AdminDashboardPage from "./pages/admin-dashboard-page";
 import BreederDashboardPage from "./pages/breeder-dashboard-page";
+import BreederRegister from "./pages/breeder-register-page";
+import SuccessRegisterPage from "./pages/success-register-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,6 +64,16 @@ function App() {
     {
       path: "/unauthorized",
       element: <UnauthorizedPage />,
+    },
+    {
+      path: "/breeder-register",
+      element: <AppLayout />,
+      children: [{ path: "", element: <BreederRegister /> }]
+    },
+    {
+      path: "/success-register",
+      element: <AppLayout />,
+      children: [{ path: "", element: <SuccessRegisterPage /> }]
     },
 
     {
@@ -257,17 +269,27 @@ function App() {
         //admin
         {
           path: "user-list",
-          element: <UserList number={Roles.MEMBER} />,
+          element: <UserListPage number={Roles.MEMBER} isRequest={1} />,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "breeder-list",
-          element: <UserList number={Roles.BREEDER} />,
+          element: <UserListPage number={Roles.BREEDER} isRequest={1} />,
+          allowedRoles: [Roles.ADMIN],
+        },
+        {
+          path: "request-list",
+          element: <UserListPage number={Roles.BREEDER} isRequest={0}/>,
+          allowedRoles: [Roles.ADMIN],
+        },
+        {
+          path: "rejected-breeder-list",
+          element: <UserListPage number={Roles.BREEDER} isRequest={2}/>,
           allowedRoles: [Roles.ADMIN],
         },
         {
           path: "staff-list",
-          element: <UserList number={Roles.STAFF} />,
+          element: <UserListPage number={Roles.STAFF} isRequest={1} />,
           allowedRoles: [Roles.ADMIN],
         },
         {

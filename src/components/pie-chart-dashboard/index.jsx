@@ -71,8 +71,8 @@ const PieChartComponent = ({
   useEffect(() => {
     if (data && data.length > 0) {
       setChartData(data);
-      console.log("Data received:", data);
-      console.log("ChartData updated:", data);
+      //console.log("Data received:", data);
+      //console.log("ChartData updated:", data);
     }
   }, [data]);
 
@@ -107,9 +107,7 @@ const PieChartComponent = ({
             innerRadius={90}
             outerRadius={150}
             paddingAngle={4}
-            label={({ [nameKey]: value1, [dataKey]: value2 }) =>
-              `${value1} : ${value2}%`
-            }
+            label={({ [dataKey]: value2 }) => ` ${value2}%`}
             labelLine={true}
             dataKey={dataKey}
             nameKey={nameKey}

@@ -1,0 +1,39 @@
+.custom-range-picker .ant-picker {
+  border: 2px solid #4a90e2; /* Thicker border */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3); /* Stronger shadow */
+  background: linear-gradient(
+    135deg,
+    #f0f5ff,
+    #e6f7ff
+  ); /* Light gradient background */
+  transition: all 0.3s ease;
+}
+
+.custom-range-picker .ant-picker-input > input {
+  color: #333;
+  font-weight: 500;
+}
+
+.custom-range-picker .ant-picker-input > input::placeholder {
+  color: #9bb8d3; /* Softer placeholder color */
+}
+
+.custom-range-picker .ant-picker:hover,
+.custom-range-picker .ant-picker-focused {
+  border-color: #3a7ed1; /* Darker border on hover and focus */
+}
+
+.custom-range-picker .ant-picker-cell-inner:hover,
+.custom-range-picker .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: #4a90e2 !important;
+  color: white !important;
+}
+
+.custom-range-picker .ant-picker-cell-in-range .ant-picker-cell-inner {
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
+.custom-range-picker .ant-picker-clear {
+  color: #4a90e2;
+}

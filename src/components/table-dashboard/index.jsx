@@ -1,150 +1,118 @@
 import { useEffect, useState } from "react";
-import { Table, Typography, Avatar, Card, Tag } from "antd";
+import { Table, Typography, Card, Tag } from "antd";
 import "./styles.css";
-import PropTypes from "prop-types";
-import { priorityMap } from "../../helpers/priorityMap";
+
 const { Text } = Typography;
 
 const TableComponent = ({ data, title = "Custom Table" }) => {
   const [tableData, setTableData] = useState(data);
   const [columns, setColumns] = useState([]);
+
   useEffect(() => {
     if (data && data.length > 0) {
-      // Thêm key vào từng hàng dữ liệu
       const dataWithKeys = data.map((item, index) => ({
         ...item,
-        key: item.id || `row-${index}`, // Sử dụng `id` nếu có, nếu không thì dùng `index`
+        key: item.id || `row-${index}`, // Thêm key cho mỗi dòng
       }));
-      setTableData(dataWithKeys);
 
-      const getRandomColor = () => {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      };
-      // Tạo cột động dựa trên key của phần tử đầu tiên
+      // Sắp xếp dữ liệu theo `updatedAt` (ngày gần nhất lên đầu)
+      const sortedData = dataWithKeys.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
+
+      setTableData(sortedData);
+
       const customColumns = [
         {
-          title: "Farm",
-          dataIndex: "farmName",
-          key: "farmName",
-          align: "center", // Center align this column
-          render: (text, record) => (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Avatar
-                className="custom-avatar"
-                style={{
-                  backgroundColor: getRandomColor(),
-                  marginRight: "10%",
-                }}
-              >
-                {text[0]}
-              </Avatar>
-              <div>
-                <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-                  {text}
-                </Text>
-                <div
-                  style={{
-                    fontSize: "18px",
-                    color: "#8c8c8c",
-                    alignItems: "center",
-                  }}
-                >
-                  {record.role}
-                </div>
-              </div>
-            </div>
-          ),
-        },
-        {
-          title: "Success",
-          dataIndex: "percentSuccess",
-          key: "percentSuccess",
-          align: "center", // Center align this column
-          render: (text) => (
-            <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-              {text}%
-            </Text>
-          ),
-        },
-        {
-          title: "Unsold",
-          dataIndex: "percentUnsold",
-          key: "percentUnsold",
-          align: "center", // Center align this column
-          render: (text) => (
-            <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-              {text}%
-            </Text>
-          ),
-        },
-        {
-          title: "Canceled",
-          dataIndex: "percentCancelledSoldLot",
-          key: "percentCancelledSoldLot",
-          align: "center", // Center align this column
-          render: (text) => (
-            <Text strong style={{ fontSize: "18px", color: "#8c8c8c" }}>
-              {text}%
-            </Text>
-          ),
-        },
-
-        {
-          title: "Priority",
-          dataIndex: "priority",
-          key: "priority",
+          title: "Code",
+          dataIndex: "sku",
+          key: "sku",
           align: "center",
-          render: (priorityValue) => {
-            // Chuyển đổi priority từ số sang chuỗi mô tả bằng priorityMap
-            const priority = priorityMap[priorityValue] || "Unknown";
-            let color = "";
-
-            // Áp dụng màu sắc tùy thuộc vào mức độ ưu tiên
-            switch (priority) {
-              case "Low":
-                color = "#FF4C4C";
-                break;
-              case "Medium":
-                color = "#00C1D4";
-                break;
-              case "High":
-                color = "#FF7F50";
-                break;
-              // case "Very Low":
-              //   color = "#FF4C4C";
-              //   break;
-              default:
-                color = "grey";
-            }
+          render: (text) => (
+            <Text strong style={{ fontSize: "16px", color: "#595959" }}>
+              {text}
+            </Text>
+          ),
+        },
+        {
+          title: "Winner (Name)",
+          key: "winnerName",
+          align: "center",
+          render: (text, record) => (
+            <Text style={{ fontWeight: "bold" }}>
+              {record.winnerDto?.username || "N/A"}
+            </Text>
+          ),
+        },
+        {
+          title: "Farm",
+          key: "farmName",
+          align: "center",
+          render: (text, record) => (
+            <Text style={{ fontWeight: "bold" }}>
+              {record.breederDetailDto?.farmName || "N/A"}
+            </Text>
+          ),
+        },
+        {
+          title: "Final Price",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
+          align: "center",
+          render: (price) => {
+            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
-              <Tag
-                color={color}
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  borderRadius: "20px",
-                  padding: "5px 15px",
-                  textAlign: "center",
-                  minWidth: "80px",
-                }}
-              >
-                {priority}
-              </Tag>
+              <Text style={{ fontWeight: "bold" }}>
+                {price.toLocaleString()} VND
+              </Text>
             );
           },
         },
+        {
+          title: "Lot Status",
+          key: "lotStatusName",
+          align: "center",
+          render: (text, record) => {
+            const statusColorMap = {
+              Completed: "#52c41a", // Xanh lá cây
+              Unsold: "#ff4d4f", // Đỏ
+              Canceled: "#faad14", // Vàng cam
+              "Payment Overdue": "#1890ff", // Xanh dương
+            };
+            return (
+              <span
+                style={{
+                  backgroundColor:
+                    statusColorMap[record.lotStatus?.lotStatusName] ||
+                    "#d9d9d9",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                  padding: "5px 12px",
+                  borderRadius: "20px", // Bo góc tròn
+                  border: "none", // Loại bỏ viền
+                  display: "inline-block",
+                }}
+              >
+                {record.lotStatus?.lotStatusName || "No Status"}
+              </span>
+            );
+          },
+        },
+
+        {
+          title: "Date",
+          dataIndex: "updatedLot",
+          key: "updatedLot",
+          align: "center",
+          render: (date) => (
+            <Text style={{ color: "#8c8c8c" }}>
+              {new Date(date).toLocaleString()}
+            </Text>
+          ),
+        },
       ];
-      setColumns(customColumns); // Chỉ sử dụng các cột đã tùy chỉnh
+      setColumns(customColumns);
     }
   }, [data]);
 
@@ -160,35 +128,24 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
     <Card
       title={title}
       className="chart-card"
-      style={{ boxShadow: "0 15px 10px rgba(0, 0, 0, 0.1)" }}
+      style={{
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        borderRadius: "10px",
+      }}
     >
       <Table
         columns={columns}
         dataSource={tableData}
         bordered
-        size="small"
+        size="middle"
         pagination={{
-          pageSize: 6, // Cố định số dòng mỗi trang là 6
-          showSizeChanger: false, // Tắt tùy chọn thay đổi số dòng trên mỗi trang
+          pageSize: 6,
+          showSizeChanger: false,
         }}
-        rowKey="farm" // Đặt giá trị unique cho mỗi dòng
-        className="custom-table-header"
+        className="custom-table"
       />
     </Card>
   );
 };
 
-TableComponent.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      farmName: PropTypes.string.isRequired, // Định nghĩa các thuộc tính và kiểu dữ liệu mong muốn
-      percentUnsold: PropTypes.number.isRequired,
-      percentCancelledSoldLot: PropTypes.number.isRequired,
-      percentSuccess: PropTypes.number.isRequired,
-      percentUnsuccess: PropTypes.number.isRequired,
-      priority: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  title: PropTypes.string,
-};
 export default TableComponent;

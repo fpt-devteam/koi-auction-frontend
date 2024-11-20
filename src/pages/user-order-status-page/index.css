@@ -197,21 +197,31 @@
 }
 
 .info-payment-item-title {
+    font-size: large;
+    font-weight: bold;
     border-right: 2px solid #ccc;
     text-align: right;
-    color: rgba(0, 0, 0, .54);
     flex: 1;
     line-height: 16px;
     padding: 10px 10px 10px 24px;
 }
 
 .info-payment-item-content {
-    /* border: 2px solid #ccc; */
+    font-size: medium;
     text-align: right;
     justify-content: flex-end;
     padding: 10px 24px 10px 10px;
     width: 240px;
     word-wrap: break-word;
-    color: rgba(0, 0, 0, .87);
-    font-size: 14px;
+}
+
+.info-payment-item-content-money {
+    font-weight: bold;
+    font-size: larger;
+    text-align: right;
+    justify-content: flex-end;
+    padding: 10px 24px 10px 10px;
+    width: 240px;
+    word-wrap: break-word;
+    color: #ff5722;
 }

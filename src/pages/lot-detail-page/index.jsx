@@ -19,7 +19,7 @@ const LotDetailPage = ({ lotData, refetch, handleModalCancel }) => {
       refetch(); // Gọi hàm refetch để load lại d
       handleModalCancel(); // Đóng modal
     } catch (error) {
-      console.error("Failed to create Lot:", error);
+      //console.error("Failed to create Lot:", error);
     }
   };
 
@@ -34,10 +34,10 @@ const LotDetailPage = ({ lotData, refetch, handleModalCancel }) => {
       });
 
       // Handle success, display success message or process response
-      // console.log("Status updated successfully:", response.data);
+      // //console.log("Status updated successfully:", response.data);
       return response.data; // You can return the response data if needed
     } catch (error) {
-      console.error("Failed to update status:", error);
+      //console.error("Failed to update status:", error);
     }
   };
 

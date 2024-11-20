@@ -171,21 +171,21 @@ const MainLineChartComponent = ({
   data,
   fetchData,
   title = "",
-  numBack = 1,
   extra = "",
 }) => {
   const [offset, setOffset] = useState(0);
 
+  // //console.log("data: ", data);
   // Gọi hàm fetchData khi offset thay đổi
   useEffect(() => {
     fetchData(offset);
   }, [offset]);
 
-  // Xử lý khi nhấn nút Back
-  const handleBack = () => setOffset((prev) => prev + numBack);
+  // // Xử lý khi nhấn nút Back
+  // const handleBack = () => setOffset((prev) => prev);
 
-  // Xử lý khi nhấn nút Next
-  const handleNext = () => setOffset((prev) => (prev > 0 ? prev - numBack : 0));
+  // // Xử lý khi nhấn nút Next
+  // const handleNext = () => setOffset((prev) => (prev > 0 ? prev : 0));
 
   const options = {
     responsive: true,
@@ -249,22 +249,22 @@ const MainLineChartComponent = ({
           <Line data={data} options={options} style={{ width: "100%" }} />
         </div>
       </div>
-      {numBack == 1 && (
-        <Space
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <Button type="primary" onClick={handleBack}>
-            Back
-          </Button>
-          <Button type="primary" onClick={handleNext} disabled={offset === 0}>
-            Next
-          </Button>
-        </Space>
-      )}
+      {/* {numBack == 1 && ( */}
+      {/* <Space
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "10px",
+        }}
+      >
+        <Button type="primary" onClick={handleBack}>
+          Back
+        </Button>
+        <Button type="primary" onClick={handleNext} disabled={offset === 0}>
+          Next
+        </Button>
+      </Space> */}
+      {/* )} */}
     </Card>
   );
 };

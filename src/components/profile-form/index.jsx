@@ -73,7 +73,7 @@ export default function GeneralInfoForm({ user, refresh }) {
   const fetchBreederData = async () => {
     try {
       const response = await userApi.get(`/breeder/profile`);
-      console.log(response);
+      // //console.log(response);
       form.setFieldsValue({
         BreederId: response.data.BreederId,
         FarmName: response.data.FarmName,
@@ -82,7 +82,7 @@ export default function GeneralInfoForm({ user, refresh }) {
       });
       setBreederInfo(response.data);
     } catch (error) {
-      console.error("Error fetching breeder data:", error);
+      // //console.error("Error fetching breeder data:", error);
       message.error("Failed to load breeder data");
     }
   };
@@ -93,13 +93,13 @@ export default function GeneralInfoForm({ user, refresh }) {
         fetchDistricts(user.ProvinceCode),
         fetchWards(user.DistrictCode),
       ]);
-      console.log(provinces, districts, wards);
+      // //console.log(provinces, districts, wards);
       setProvinceList(provinces);
       setDistrictList(districts);
       setWardList(wards);
       setInitialLoading(false);
     } catch (error) {
-      console.error("Error initializing form data:", error);
+      // //console.error("Error initializing form data:", error);
       message.error("Failed to load initial data");
     }
   };
@@ -127,7 +127,7 @@ export default function GeneralInfoForm({ user, refresh }) {
       setProvinceList(response.data);
       return response.data;
     } catch (error) {
-      console.error("Error fetching provinces:", error);
+      // //console.error("Error fetching provinces:", error);
       message.error("Failed to load provinces");
     }
   };
@@ -139,7 +139,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         setDistrictList(response.data);
         return response.data;
       } catch (error) {
-        console.error("Error fetching districts:", error);
+        // //console.error("Error fetching districts:", error);
         message.error("Failed to load districts");
       }
     }
@@ -152,7 +152,7 @@ export default function GeneralInfoForm({ user, refresh }) {
         setWardList(response.data);
         return response.data;
       } catch (error) {
-        console.error("Error fetching wards:", error);
+        // //console.error("Error fetching wards:", error);
         message.error("Failed to load wards");
       }
     }
@@ -161,17 +161,17 @@ export default function GeneralInfoForm({ user, refresh }) {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      console.log("Form data to submit:", values);
-      if (isBreeder) {
-        values.BreederId = values.BreederId;
-      }
+      // //console.log("Form data to submit:", values);
+      // if (isBreeder) {
+      //   values.BreederId = values.BreederId;
+      // }
       const response = await userApi.patch(`update-profile`, values);
-      console.log("Response:", response);
+      // //console.log("Response:", response);
       refresh();
       setIsEditing(false);
       message.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // //console.error("Error submitting form:", error);
       message.error("Failed to update profile");
     }
   };
@@ -304,7 +304,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                   },
                 ]}
               >
-                <Input placeholder="example@gmail.com" disabled={!isEditing} />
+                <Input placeholder="example@gmail.com" disabled={true} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -313,6 +313,14 @@ export default function GeneralInfoForm({ user, refresh }) {
                 name="Phone"
                 rules={[
                   { required: true, message: "Please enter your phone number" },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Phone number must be numeric!",
+                  },
+                  {
+                    len: 10,
+                    message: "Phone number must be exactly 10 digits!",
+                  },
                 ]}
               >
                 <Input placeholder="+84 - 345 678 910" disabled={!isEditing} />
@@ -323,7 +331,16 @@ export default function GeneralInfoForm({ user, refresh }) {
           {isBreeder && (
             <Row gutter={16}>
               <Col span={24}>
-                <Form.Item label="About" name="About">
+                <Form.Item
+                  label="About"
+                  name="About"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your farm information",
+                    },
+                  ]}
+                >
                   <Input.TextArea
                     placeholder="Enter information about your farm"
                     disabled={!isEditing}
@@ -336,7 +353,16 @@ export default function GeneralInfoForm({ user, refresh }) {
 
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item label="Address" name="Address">
+              <Form.Item
+                label="Address"
+                name="Address"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your address",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="Enter your home address"
                   disabled={!isEditing}
@@ -344,7 +370,16 @@ export default function GeneralInfoForm({ user, refresh }) {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Province" name="ProvinceCode">
+              <Form.Item
+                label="Province"
+                name="ProvinceCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your province",
+                  },
+                ]}
+              >
                 <Select
                   placeholder="Select province"
                   onChange={handleSelectProvince}
@@ -359,7 +394,16 @@ export default function GeneralInfoForm({ user, refresh }) {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="District" name="DistrictCode">
+              <Form.Item
+                label="District"
+                name="DistrictCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your district",
+                  },
+                ]}
+              >
                 <Select
                   placeholder="Select district"
                   onChange={handleSelectDistrict}
@@ -374,7 +418,16 @@ export default function GeneralInfoForm({ user, refresh }) {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Ward" name="WardCode">
+              <Form.Item
+                label="Ward"
+                name="WardCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your ward",
+                  },
+                ]}
+              >
                 <Select placeholder="Select ward" disabled={!isEditing}>
                   {wardList?.map((ward) => (
                     <Option key={ward.code} value={ward.code}>

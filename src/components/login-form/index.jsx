@@ -18,7 +18,7 @@ const LoginForm = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: async (response) => {
       const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${response.access_token}` } });
-      console.log(userInfo.data);
+      // //console.log(userInfo.data);
       const { email, family_name, given_name, sub } = userInfo.data;
       const loginResponse = await userApi.post(
         '/auth/google',
@@ -30,7 +30,7 @@ const LoginForm = () => {
         },
         { withCredentials: true }
       );
-      console.log(loginResponse.data);
+      // //console.log(loginResponse.data);
       setLoading(false);
       if (loginResponse.status === 200) {
         let { user } = loginResponse.data;
@@ -44,12 +44,12 @@ const LoginForm = () => {
       }
     },
     onError: (error) => {
-      console.log(error);
+      // //console.log(error);
     }
   });
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    // //console.log('Failed:', errorInfo);
   };
 
   const handleLogin = async (values) => {
@@ -67,7 +67,7 @@ const LoginForm = () => {
         }
       );
       setLoading(false);
-      console.log(response);
+      // //console.log(response);
       if (response.status === 200) {
         const { user } = response.data;
 

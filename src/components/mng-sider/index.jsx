@@ -77,6 +77,23 @@ function MngSider() {
     },
   );
   }
+  if (userRoleId == 3) {
+    const accountDropdownItems = [
+      {
+        label: "Breeder Management",
+        key: "account-breeder-management",
+        onClick: () => navigate("/management/breeder-list"),
+      },
+    ];
+    items.push(
+      {
+      key: "account-management",
+      icon: <UserOutlined />,
+      label: "Account Management",
+      children: accountDropdownItems,
+    },
+  );
+  }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {

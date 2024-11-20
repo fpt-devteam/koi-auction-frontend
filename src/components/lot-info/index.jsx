@@ -153,9 +153,9 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               { required: true, message: 'Please enter size' },
               {
                 type: 'number',
-                min: 15,
+                min: 5,
                 max: 120,
-                message: 'Size must be between 15 and 120 cm'
+                message: 'Size must be between 5 and 120 cm'
               }
             ]}
           >
@@ -171,8 +171,8 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               {
                 type: 'number',
                 min: 0.2,
-                max: 15,
-                message: 'Weight must be between 0.2 and 15 kg'
+                max: 50,
+                message: 'Weight must be between 0.2 and 50 kg'
               }
             ]}
           >

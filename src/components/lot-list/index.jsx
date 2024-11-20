@@ -17,9 +17,7 @@ const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(false);
-    console.log("qwreqer", user)
   }, [user])
-  console.log("first,", tabData)
   return loading ? <Spin /> : (
     <div
       className="lot-list"
@@ -33,7 +31,7 @@ const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
             <Col key={lot.lotId || index} xs={24} sm={24} md={24} lg={24}>
               {tabData?.lotStatusId > 5 ? (
                 <>
-                  <SoldLotCard soldLot={lot} tabData={tabData} user={user} />
+                  <SoldLotCard soldLot={lot} tabData={tabData} user={user} refresh={refetch} />
                 </>
               ) : (
                 <LotCard
@@ -41,13 +39,15 @@ const LotList = ({ breederId = null, tabData, lotList, refetch }) => {
                   lot={lot}
                   refetch={refetch}
                   tabData={tabData}
-                  userRoleId={user?.userRoleId}
+                  userRoleId={user?.UserRoleId}
                 />
               )}
             </Col>
           ))}
         </Row>
       )}
+
+      {(!lotList || !lotList.length) && <p>No Data</p>}
 
     </div>
   );

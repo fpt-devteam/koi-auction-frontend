@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 // import styled from "styled-components";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import useFetchLots from "../../hooks/useFetchLots";
 import AuctionForm from "../../components/auction-form";
 import lotApi from "../../config/lotApi";
 
 export default function CreateAuctionPage() {
-  const { lots, refetch } = useFetchLots(2); //get lot list
-  const [seed, setSeed] = useState(1);
-  console.log(lots);
+  const { lots, loading, refetch } = useFetchLots(2); //get lot list
+  //console.log(lots);
   const convertToTimeFormat = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
@@ -40,18 +39,16 @@ export default function CreateAuctionPage() {
       message.success("Created successfully!");
       handleReset();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       message.error("Failed to create auction!");
     }
   };
   const handleReset = () => {
-    setSeed(Math.random());
     refetch();
   };
-  return (
+  return loading ? <Spin /> : (
     <>
       <AuctionForm
-        key={seed}
         auctionLots={[]}
         approvedLots={lots}
         onSubmit={handleCreate}
