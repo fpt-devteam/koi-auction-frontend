@@ -17,6 +17,9 @@ function ProfileForm({
   onSelectProvince,
   onSelectDistrict,
 }) {
+  console.log(provinceList);
+  const { Option } = Select;
+  
   const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
   const noLeadingTrailingSpacesRule = {
     pattern: /^\S.*\S$|^\S$/,
