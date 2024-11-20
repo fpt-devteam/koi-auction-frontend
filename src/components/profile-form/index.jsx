@@ -304,7 +304,7 @@ export default function GeneralInfoForm({ user, refresh }) {
                   },
                 ]}
               >
-                <Input placeholder="example@gmail.com" disabled={!isEditing} />
+                <Input placeholder="example@gmail.com" disabled={true} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -313,6 +313,14 @@ export default function GeneralInfoForm({ user, refresh }) {
                 name="Phone"
                 rules={[
                   { required: true, message: "Please enter your phone number" },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Phone number must be numeric!",
+                  },
+                  {
+                    len: 10,
+                    message: "Phone number must be exactly 10 digits!",
+                  },
                 ]}
               >
                 <Input placeholder="+84 - 345 678 910" disabled={!isEditing} />
