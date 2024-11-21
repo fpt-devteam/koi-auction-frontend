@@ -106,6 +106,16 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
             message: 'Please enter the starting price'
           },
           {
+            validator: (_, value) => {
+              if (!value || Number.isInteger(value)) {
+                return Promise.resolve(); // Không có lỗi nếu là số nguyên
+              }
+              return Promise.reject(
+                new Error('Starting price must be an integer (no decimals allowed)')
+              );
+            },
+          },
+          {
             type: 'number',
             min: 100000,
             message: 'Starting price must be at least 100,000 VND'
@@ -114,10 +124,14 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
       >
         <InputNumber
           style={{ width: '100%' }}
+          step={1}
           formatter={(value) =>
             `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
-          parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+          // parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+          // parser={(value) =>
+          //   value.replace(/[^0-9]/g, '') // Loại bỏ tất cả ký tự không phải số
+          // }
         />
       </Form.Item>
 
@@ -156,6 +170,16 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
                 min: 5,
                 max: 120,
                 message: 'Size must be between 5 and 120 cm'
+              },
+              {
+                validator: (_, value) => {
+                  if (!value || Number.isInteger(value)) {
+                    return Promise.resolve(); // Không có lỗi nếu là số nguyên
+                  }
+                  return Promise.reject(
+                    new Error('Starting price must be an integer (no decimals allowed)')
+                  );
+                },
               }
             ]}
           >
@@ -173,6 +197,16 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
                 min: 0.2,
                 max: 50,
                 message: 'Weight must be between 0.2 and 50 kg'
+              },
+              {
+                validator: (_, value) => {
+                  if (!value || Number.isInteger(value)) {
+                    return Promise.resolve(); // Không có lỗi nếu là số nguyên
+                  }
+                  return Promise.reject(
+                    new Error('Starting price must be an integer (no decimals allowed)')
+                  );
+                },
               }
             ]}
           >

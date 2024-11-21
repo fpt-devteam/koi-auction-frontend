@@ -63,7 +63,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
               <Text style={{ fontWeight: "bold" }}>
-                {startingPrice.toLocaleString()} VND
+                {startingPrice?.toLocaleString()} VND
               </Text>
             );
           },
@@ -74,7 +74,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           align: "left",
           render: (text, record) => (
             <Text style={{ fontWeight: "bold" }}>
-              {record.auctionDepositDto?.amount.toLocaleString() || "0"} VND
+              {record.auctionDepositDto?.amount?.toLocaleString() || "0"} VND
             </Text>
           ),
         },
@@ -87,21 +87,21 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
               <Text style={{ fontWeight: "bold" }}>
-                {price.toLocaleString()} VND
+                {price?.toLocaleString()} VND
               </Text>
             );
           },
         },
         {
           title: "Commission",
-          dataIndex: "startingPrice",
-          key: "startingPrice",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
           align: "left",
-          render: (startingPrice) => {
+          render: (price) => {
             // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
               <Text style={{ fontWeight: "bold" }}>
-                {(startingPrice * 0.1).toLocaleString()} VND
+                {(price * 0.1)?.toLocaleString()} VND
               </Text>
             );
           },
@@ -145,7 +145,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           align: "center",
           render: (date) => (
             <Text style={{ color: "#8c8c8c" }}>
-              {new Date(date).toLocaleString()}
+              {new Date(date)?.toLocaleString()}
             </Text>
           ),
         },
