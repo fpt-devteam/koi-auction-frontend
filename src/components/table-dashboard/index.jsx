@@ -93,6 +93,20 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           },
         },
         {
+          title: "Farm Revenue",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
+          align: "left",
+          render: (price) => {
+            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+            return (
+              <Text style={{ fontWeight: "bold" }}>
+                {(price * 0.9)?.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+        {
           title: "Commission",
           dataIndex: "finalPrice",
           key: "finalPrice",
