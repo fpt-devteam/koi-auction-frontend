@@ -6,7 +6,7 @@ import './index.css';
 import Modal from "antd/es/modal/Modal";
 import TextArea from "antd/es/input/TextArea";
 import internalPaymentApi from "../../config/internalPaymentApi.js";
-
+const formatTime = (time) => new Date(time).toLocaleString();
 export default function StaffWithdrawStatusPage() {
     const [loading, setLoading] = useState(true);
     const [seed, setSeed] = useState(1);
@@ -88,7 +88,7 @@ const OrderList = ({ statusName, refresh, isPending }) => {
             setLoading(true);
             try {
                 const response = await paymentApi.get("/manage/get-transaction-history");
-                const filteredTransactions = response?.data?.filter(
+                const filteredTransactions = response?.data?.reverse().filter(
                     (trans) => trans.Status === statusName && trans.TransType === "Withdraw"
                 ).map((trans) => ({
                     key: trans.TransId,
@@ -99,9 +99,9 @@ const OrderList = ({ statusName, refresh, isPending }) => {
                     walletId: trans.WalletId,
                     userId: trans.UserId,
                     description: trans.Description,
+                    createdAt: formatTime(trans.CreatedAt),
                 }));
                 ////console.log("response", response.data)
-                ////console.log("filteredTransactions", filteredTransactions);
                 setTransactions(filteredTransactions || []);
             } catch (error) {
                 ////console.log(error);
@@ -148,6 +148,11 @@ const OrderList = ({ statusName, refresh, isPending }) => {
             title: <span className="table-header">Transaction ID</span>,
             dataIndex: 'transId',
             key: 'transId',
+        },
+        {
+            title: <span className="table-header">Created at</span>,
+            dataIndex: 'createdAt',
+            key: 'createdAt',
         },
         {
             title: <span className="table-header">User ID</span>,

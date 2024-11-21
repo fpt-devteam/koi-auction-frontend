@@ -97,7 +97,7 @@ const AuctionList = ({ auctionStatusId, auctionStatusName, refresh }) => {
             const response = await lotApi.get("auctions");
             if (response) {
                 let data;
-                data = response?.data.filter((auction) => auction.auctionStatus.auctionStatusId === auctionStatusId);
+                data = response?.data?.reverse().filter((auction) => auction.auctionStatus.auctionStatusId === auctionStatusId);
                 setAuctionList(data);
                 setLoading(false);
             }

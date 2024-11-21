@@ -15,9 +15,9 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         key: item.id || `row-${index}`, // Thêm key cho mỗi dòng
       }));
 
-      // Sắp xếp dữ liệu theo `updatedAt` (ngày gần nhất lên đầu)
+      // Sắp xếp dữ liệu theo `updatedLot` (ngày gần nhất lên đầu)
       const sortedData = dataWithKeys.sort(
-        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+        (a, b) => new Date(b.updatedLot) - new Date(a.updatedLot)
       );
 
       setTableData(sortedData);

@@ -8,6 +8,8 @@ import paymentApi from "../../config/paymentApi";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 
+const TO_PAY_STATUS_ID = 6;
+// const EXPIRE_TIME_DATA = "2024-11-21T20:11:00.527"
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -236,7 +238,8 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
     const [cancelReason, setCancelReason] = useState("");
     const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
     const handleCheckExpireTime = () => {
-        return dayjs(soldlotInfoData?.expTime).isSame(dayjs(), 'second');
+        // console.log(soldlotInfoData?.expTime)
+        return dayjs(soldlotInfoData?.expTime).isAfter((dayjs().add(1, 'millisecond')));
     }
     const handleLotCancel = async () => {
         try {
@@ -293,8 +296,9 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
         }
     };
     const handlePayment = async () => {
-        if (handleCheckExpireTime()) {
+        if (!handleCheckExpireTime()) {
             message.error("Your order is out of time for payment!!!");
+            onCancel();
             return;
         }
 
@@ -367,7 +371,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
                                 </div>
                                 <div className="info-container">
                                     <span className="info-label">Update at: </span>
-                                    <span className="info-content">{(soldlotInfoData) ? formatDateTime(soldlotInfoData?.createdAt) : "...."}</span>
+                                    <span className="info-content">{(soldlotInfoData) ? formatDateTime(soldlotInfoData?.updatedLot) : "...."}</span>
                                 </div>
                             </Card>
                         </Col>
@@ -414,10 +418,10 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
                         <div style={{ marginTop: "30px" }}>
                             <Row>
                                 <Col span={8}>
-                                    {soldlotInfoData?.lotStatusDto?.lotStatusId == 6 && handleCheckExpireTime() &&
+                                    {soldlotInfoData?.lotStatusDto?.lotStatusId == TO_PAY_STATUS_ID && handleCheckExpireTime() &&
                                         (
                                             <>
-                                                <h2>Remain time for payment: </h2>
+                                                <h2>Remaining time for payment: </h2>
                                                 <Statistic.Countdown
                                                     value={soldlotInfoData?.expTime}
                                                     format="HH:mm:ss"
@@ -492,7 +496,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
                     gap: "36px",
                     margin: "24px"
                 }}>
-                    {(user?.UserRoleId == 1 && soldlotInfoData?.lotStatusDto?.lotStatusId == 6) && (
+                    {(user?.UserRoleId == 1 && soldlotInfoData?.lotStatusDto?.lotStatusId == TO_PAY_STATUS_ID && handleCheckExpireTime()) && (
                         <Button type="primary" size="large" key="view-lot" onClick={handlePayment}>
                             Payment
                         </Button>

@@ -26,7 +26,7 @@ function UserDetailCard({
         loading={loading}
         title={
           <span style={{ fontWeight: "600", fontSize: "2em" }}>
-            {data.UserRoleId === 2 ? data.FarmName : data.Username}
+            {data.UserRoleId == 2 ? data.FarmName : data.Username}
           </span>
         }
         style={{

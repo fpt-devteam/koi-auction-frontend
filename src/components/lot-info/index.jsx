@@ -6,11 +6,11 @@ import {
   Row,
   Col,
   message,
-  Button
-} from 'antd';
-import { useEffect, useMemo, useState } from 'react';
-import lotApi from '../../config/lotApi';
-import axios from 'axios';
+  Button,
+} from "antd";
+import { useEffect, useMemo, useState } from "react";
+import lotApi from "../../config/lotApi";
+import axios from "axios";
 
 const { Option } = Select;
 
@@ -21,7 +21,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   //fetch auction methods
   const fetchAuctionMethods = async () => {
     try {
-      const response = await lotApi.get('auction-methods');
+      const response = await lotApi.get("auction-methods");
       const fetchedAuctionMethods = response.data;
       setAuctionMethods(fetchedAuctionMethods);
     } catch (error) {
@@ -31,7 +31,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const fetchKoiVarieties = async () => {
     try {
       const response = await axios.get(
-        'https://66f961f6afc569e13a989d9d.mockapi.io/KOi'
+        "https://66f961f6afc569e13a989d9d.mockapi.io/koi"
       );
       setKoiVarieties(response.data);
     } catch (error) {
@@ -43,7 +43,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const koiOptions = useMemo(() => {
     return koiVarieties.map((koi) => ({
       value: koi.variety,
-      label: koi.variety
+      label: koi.variety,
     }));
   }, [koiVarieties]);
   useEffect(() => {
@@ -57,20 +57,20 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
   const defaultLot = useMemo(() => {
     return (
       initData || {
-        startingPrice: '',
-        createdAt: 'N/A',
+        startingPrice: "",
+        createdAt: "N/A",
         koiFishDto: {
-          variety: '',
-          sex: '',
-          sizeCm: '',
-          yearOfBirth: ''
+          variety: "",
+          sex: "",
+          sizeCm: "",
+          yearOfBirth: "",
         },
         lotStatusDto: {
-          lotStatusName: 'Unknown'
+          lotStatusName: "Unknown",
         },
         auctionMethod: {
-          auctionMethodName: ''
-        }
+          auctionMethodName: "",
+        },
       }
     );
   }, [initData]);
@@ -86,13 +86,13 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
       weightKg: defaultLot.koiFishDto.weightKg,
       yearOfBirth: defaultLot.koiFishDto.yearOfBirth,
       auctionMethodId: defaultLot.auctionMethod.auctionMethodId,
-      lotStatusName: defaultLot.lotStatusDto.lotStatusName
+      lotStatusName: defaultLot.lotStatusDto.lotStatusName,
     });
   }, [defaultLot, form]);
 
   return (
     <>
-      <p style={{ marginBottom: '24px', color: '#888' }}>
+      <p style={{ marginBottom: "24px", color: "#888" }}>
         Created at {defaultLot.createdAt}
       </p>
 
@@ -103,7 +103,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
         rules={[
           {
             required: true,
-            message: 'Please enter the starting price'
+            message: "Please enter the starting price",
           },
           {
             validator: (_, value) => {
@@ -116,17 +116,17 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
             },
           },
           {
-            type: 'number',
+            type: "number",
             min: 100000,
-            message: 'Starting price must be at least 100,000 VND'
-          }
+            message: "Starting price must be at least 100,000 VND",
+          },
         ]}
       >
         <InputNumber
           style={{ width: '100%' }}
           step={1}
           formatter={(value) =>
-            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           }
           // parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
           // parser={(value) =>
@@ -139,19 +139,17 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
       <Form.Item
         label="Variety"
         name="variety"
-        rules={[
-          { required: true, message: 'Please enter the variety' }
-        ]}
+        rules={[{ required: true, message: "Please enter the variety" }]}
       >
         <Select
           showSearch
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           placeholder="Search to Select"
           optionFilterProp="label"
           filterSort={(optionA, optionB) =>
-            (optionA?.label ?? '')
+            (optionA?.label ?? "")
               .toLowerCase()
-              .localeCompare((optionB?.label ?? '').toLowerCase())
+              .localeCompare((optionB?.label ?? "").toLowerCase())
           }
           options={koiOptions}
         />
@@ -164,9 +162,9 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
             label="Size (cm)"
             name="sizeCm"
             rules={[
-              { required: true, message: 'Please enter size' },
+              { required: true, message: "Please enter size" },
               {
-                type: 'number',
+                type: "number",
                 min: 5,
                 max: 120,
                 message: 'Size must be between 5 and 120 cm'
@@ -183,7 +181,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               }
             ]}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -191,9 +189,9 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
             label="Weight (kg)"
             name="weightKg"
             rules={[
-              { required: true, message: 'Please enter weight' },
+              { required: true, message: "Please enter weight" },
               {
-                type: 'number',
+                type: "number",
                 min: 0.2,
                 max: 50,
                 message: 'Weight must be between 0.2 and 50 kg'
@@ -210,7 +208,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               }
             ]}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
       </Row>
@@ -221,9 +219,7 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
           <Form.Item
             label="Sex"
             name="sex"
-            rules={[
-              { required: true, message: 'Please select the sex' }
-            ]}
+            rules={[{ required: true, message: "Please select the sex" }]}
           >
             <Select placeholder="Select sex">
               <Option value={true}>Male</Option>
@@ -238,17 +234,17 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
             rules={[
               {
                 required: true,
-                message: 'Please enter year of birth'
+                message: "Please enter year of birth",
               },
               {
-                type: 'number',
+                type: "number",
                 min: 1900,
                 max: new Date().getFullYear(),
-                message: `Year of birth must be between 1900 and ${new Date().getFullYear()}`
-              }
+                message: `Year of birth must be between 1900 and ${new Date().getFullYear()}`,
+              },
             ]}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
       </Row>
@@ -260,16 +256,13 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
         rules={[
           {
             required: true,
-            message: 'Please select the auction method'
-          }
+            message: "Please select the auction method",
+          },
         ]}
       >
         <Select placeholder="Select auction method">
           {auctionMethods.map((method) => (
-            <Option
-              key={method.auctionMethodId}
-              value={method.auctionMethodId}
-            >
+            <Option key={method.auctionMethodId} value={method.auctionMethodId}>
               {method.auctionMethodId}. {method.auctionMethodName}
             </Option>
           ))}
