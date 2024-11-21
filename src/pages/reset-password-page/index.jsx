@@ -1,23 +1,27 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
+import userApi from '../../config/userApi';
+import { useNavigate } from 'react-router-dom';
 
 const ResetPasswordPage = () => {
   const [form] = Form.useForm();
+  // get params from url
+  const searchParams = new URLSearchParams(window.location.search);
+  const token = searchParams.get('token');
+  const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
     try {
-      // Simulate API call
-      const response = await fetch('https://your-api-endpoint/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
+      console.log('Reset password:', values);
+      console.log('Token:', token);
+      const response = await userApi.patch(`/reset-password/${token}`, {
+        Password: values.newPassword,
       });
 
-      if (response.ok) {
+      if (response.status === 201) {
         message.success('Password has been reset successfully!');
         form.resetFields();
+        navigate('/login');
       } else {
         message.error('Failed to reset password. Please try again.');
       }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
+import userApi from '../../config/userApi';
 
 const ForgotPasswordPage = () => {
   const [form] = Form.useForm();
@@ -7,15 +8,8 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (values) => {
     try {
       // Simulate API call
-      const response = await fetch('https://your-api-endpoint/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (response.ok) {
+      const response = await userApi.post('/forgot-password', values);
+      if (response.status === 200) {
         message.success('Password reset link sent to your email!');
         form.resetFields();
       } else {
@@ -41,10 +35,10 @@ const ForgotPasswordPage = () => {
         >
           <Form.Item
             label="Email Address"
-            name="email"
+            name="Email"
             rules={[
               { required: true, message: 'Please enter your email address!' },
-              { type: 'email', message: 'Please enter a valid email address!' },
+              { type: 'Email', message: 'Please enter a valid email address!' },
             ]}
           >
             <Input placeholder="Enter your email" style={styles.input} />
