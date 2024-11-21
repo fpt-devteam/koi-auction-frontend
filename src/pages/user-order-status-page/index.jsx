@@ -62,6 +62,7 @@ export default function UserOrderStatusPage() {
                             ...soldLot.breederDetailDto,
                             farmAddress: addressResponse.data.find((add) => add.UserId == soldLot.breederId).Address || "Unknown",
                         },
+                        updatedLot: soldLot?.updatedLot,
                         address: soldLot?.address,
                         winnerDto: soldLot?.winnerDto,
                         finalPrice: soldLot?.finalPrice,

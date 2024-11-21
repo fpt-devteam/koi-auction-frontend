@@ -63,7 +63,8 @@ const AuctionList = () => {
       // Past auction là auction status là "Ended"
       const past = data.filter(
         (auction) => auction.auctionStatus.auctionStatusName === "Ended"
-      );
+      )
+        .sort((a, b) => moment(a.endTime).diff(moment(b.endTime)));
 
       // Ongoing & Upcoming auction là auction status khác "Ended"
       const ongoing_upcomming = data
