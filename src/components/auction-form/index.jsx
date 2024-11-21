@@ -66,8 +66,8 @@ export default function AuctionForm({
       ...item,
       auctionLotId: item.lotId,
       orderInAuction: 0,
-      duration: MIN_DURATION_MINUTES,
-      stepPercent: MIN_STEP_PRECENT,
+      duration: 0,
+      stepPercent: 0,
     }));
     setApprovedLotSource(list);
   }, [approvedLots]);
@@ -327,10 +327,10 @@ const LotTable = ({
 
 const LotCardRow = ({ lot, operation, onLotChange }) => {
   const [duration, setDuration] = useState(
-    lot.duration || MIN_DURATION_MINUTES
+    0
   );
   const [stepPercent, setStepPercent] = useState(
-    lot.stepPercent || MIN_STEP_PRECENT
+    0
   );
   const handleDurationChange = (value) => {
     setDuration(value);
@@ -447,9 +447,12 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                       size="small"
                       onChange={handleDurationChange}
                       formatter={(value) =>
-                        `${value}`
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                       }
-                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                      // parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                      parser={(value) =>
+                        value.replace(/[^0-9]/g, '') // Loại bỏ tất cả ký tự không phải số
+                      }
                     />
                   </Form.Item>
                   {lot?.auctionMethod?.auctionMethodId >= 3 && (
@@ -500,9 +503,12 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                           placeholder="Enter step percent"
                           onChange={handleStepPercentChange}
                           formatter={(value) =>
-                            `${value}`
+                            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                           }
-                          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                          // parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                          parser={(value) =>
+                            value.replace(/[^0-9]/g, '') // Loại bỏ tất cả ký tự không phải số
+                          }
                         />
                       </Form.Item>
                     </>
