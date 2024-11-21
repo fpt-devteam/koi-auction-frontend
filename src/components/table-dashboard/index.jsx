@@ -7,7 +7,7 @@ const { Text } = Typography;
 const TableComponent = ({ data, title = "Custom Table" }) => {
   const [tableData, setTableData] = useState(data);
   const [columns, setColumns] = useState([]);
-
+  console.log(tableData);
   useEffect(() => {
     if (data && data.length > 0) {
       const dataWithKeys = data.map((item, index) => ({
@@ -27,7 +27,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           title: "Code",
           dataIndex: "sku",
           key: "sku",
-          align: "center",
+          align: "left",
           render: (text) => (
             <Text strong style={{ fontSize: "16px", color: "#595959" }}>
               {text}
@@ -35,9 +35,9 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           ),
         },
         {
-          title: "Winner (Name)",
+          title: "Winner",
           key: "winnerName",
-          align: "center",
+          align: "left",
           render: (text, record) => (
             <Text style={{ fontWeight: "bold" }}>
               {record.winnerDto?.username || "N/A"}
@@ -47,7 +47,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         {
           title: "Farm",
           key: "farmName",
-          align: "center",
+          align: "left",
           render: (text, record) => (
             <Text style={{ fontWeight: "bold" }}>
               {record.breederDetailDto?.farmName || "N/A"}
@@ -55,15 +55,53 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           ),
         },
         {
+          title: "Start Price",
+          dataIndex: "startingPrice",
+          key: "startingPrice",
+          align: "left",
+          render: (startingPrice) => {
+            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+            return (
+              <Text style={{ fontWeight: "bold" }}>
+                {startingPrice.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+        {
+          title: "Deposit",
+          key: "amount",
+          align: "left",
+          render: (text, record) => (
+            <Text style={{ fontWeight: "bold" }}>
+              {record.auctionDepositDto?.amount.toLocaleString() || "0"} VND
+            </Text>
+          ),
+        },
+        {
           title: "Final Price",
           dataIndex: "finalPrice",
           key: "finalPrice",
-          align: "center",
+          align: "left",
           render: (price) => {
             // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
               <Text style={{ fontWeight: "bold" }}>
                 {price.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+        {
+          title: "Commission",
+          dataIndex: "startingPrice",
+          key: "startingPrice",
+          align: "left",
+          render: (startingPrice) => {
+            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+            return (
+              <Text style={{ fontWeight: "bold" }}>
+                {(startingPrice * 0.1).toLocaleString()} VND
               </Text>
             );
           },
@@ -131,17 +169,34 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
       style={{
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         borderRadius: "10px",
+        overflow: "hidden",
       }}
     >
       <Table
-        columns={columns}
+        columns={columns.map((col) => ({
+          ...col,
+          title: (
+            <span
+              style={{ fontSize: "14px", fontWeight: "bold", color: "#595959" }}
+            >
+              {col.title}
+            </span>
+          ),
+        }))}
         dataSource={tableData}
         bordered
         size="middle"
         pagination={{
           pageSize: 6,
           showSizeChanger: false,
+          showQuickJumper: false,
+          total: tableData.length,
         }}
+        rowClassName={(record, index) =>
+          index % 2 === 0
+            ? "custom-row custom-row-even"
+            : "custom-row custom-row-odd"
+        }
         className="custom-table"
       />
     </Card>

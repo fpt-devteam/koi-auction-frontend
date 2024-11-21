@@ -40,3 +40,45 @@
   display: inline-block;
   text-align: center;
 }
+.custom-table .ant-table-thead > tr > th {
+  background: #f5f5f5;
+  font-weight: bold;
+  color: #595959;
+  text-align: center;
+}
+
+/* Row hover effect */
+.custom-table .ant-table-row:hover {
+  background: #e6f7ff !important;
+}
+
+/* Row zebra striping */
+.custom-row-even {
+  background-color: #fafafa;
+}
+.custom-row-odd {
+  background-color: #fff;
+}
+
+/* Lot Status badges */
+.lot-status-badge {
+  background-color: #d9d9d9;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.lot-status-badge[data-status="Completed"] {
+  background-color: #52c41a;
+}
+.lot-status-badge[data-status="Unsold"] {
+  background-color: #ff4d4f;
+}
+.lot-status-badge[data-status="Canceled"] {
+  background-color: #faad14;
+}
+.lot-status-badge[data-status="Payment Overdue"] {
+  background-color: #1890ff;
+}
