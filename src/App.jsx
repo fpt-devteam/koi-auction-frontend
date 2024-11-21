@@ -41,6 +41,8 @@ import AdminDashboardPage from "./pages/admin-dashboard-page";
 import BreederDashboardPage from "./pages/breeder-dashboard-page";
 import BreederRegister from "./pages/breeder-register-page";
 import SuccessRegisterPage from "./pages/success-register-page";
+import ForgotPasswordPage from "./pages/forgot-password-page";
+import ResetPasswordPage from "./pages/reset-password-page";
 
 function App() {
   const dispatch = useDispatch();
@@ -74,6 +76,16 @@ function App() {
       path: "/success-register",
       element: <AppLayout />,
       children: [{ path: "", element: <SuccessRegisterPage /> }]
+    },
+    {
+      path: "/forgot-password",
+      element: <AppLayout />,
+      children: [{ path: "", element: <ForgotPasswordPage /> }]
+    },
+    {
+      path: "/reset-password",
+      element: <AppLayout />,
+      children: [{ path: "", element: <ResetPasswordPage /> }]
     },
 
     {
