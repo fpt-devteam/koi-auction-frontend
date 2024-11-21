@@ -72,6 +72,7 @@ const StatusTab = ({ LotList }) => {
             auctionDeposit: soldLot?.auctionDepositDto?.amount,
             createdAt: soldLot?.createdAt,
             updatedAt: soldLot?.updatedAt,
+            updatedLot: soldLot?.updatedLot,
             expTime: soldLot?.expTime,
             breederDetailDto: {
               ...soldLot.breederDetailDto,
