@@ -236,7 +236,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
     const [cancelReason, setCancelReason] = useState("");
     const handleClickCancelModal = () => setIsCancelModalVisible(!isCancelModalVisible);
     const handleCheckExpireTime = () => {
-        return dayjs(soldlotInfoData?.expTime).isSame(dayjs(), 'second');
+        return dayjs(soldlotInfoData?.expTime).isBefore(dayjs(), 'second');
     }
     const handleLotCancel = async () => {
         try {
@@ -295,6 +295,7 @@ const OrderInfoModal = ({ refresh, soldlotInfoData, user, tabData, onCancel }) =
     const handlePayment = async () => {
         if (handleCheckExpireTime()) {
             message.error("Your order is out of time for payment!!!");
+            onCancel();
             return;
         }
 

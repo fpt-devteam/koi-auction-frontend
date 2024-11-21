@@ -1,4 +1,4 @@
-import { Form, Input, Button, Card, Checkbox, message } from 'antd';
+import { Form, Input, Button, Card, Checkbox, message, Flex, Divider, Image } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './index.scss'; // Custom CSS for styling
 import userApi from '../../config/userApi';
@@ -55,6 +55,7 @@ const LoginForm = () => {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
+      console.log("asfas", userApi)
       const response = await userApi.post(
         '/login',
         {
@@ -126,35 +127,51 @@ const LoginForm = () => {
           </Form.Item>
 
           {/* Password */}
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]} hasFeedback>
+          <Form.Item style={{ marginBottom: "5px" }} label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]} hasFeedback>
             <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
           </Form.Item>
 
           {/* Remember Me */}
-          <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Remember me</Checkbox>
+          {/* <Form.Item>
+            <Flex justify="space-between" align="center">
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+              <a href="/forgot-password">Forgot your password? </a>.
+            </Flex>
+          </Form.Item> */}
+          <Form.Item style={{ marginTop: "0px" }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+              <a href="/forgot-password">Forgot your password?</a>
+            </div>
           </Form.Item>
-
           {/* Submit Button */}
           <Form.Item>
             <Button type="primary" htmlType="submit" block loading={isLoading} style={{ fontWeight: '500', height: '40px' }}>
               Log In
             </Button>
           </Form.Item>
-
+          <Divider orientation="left" plain>Or login with</Divider>
           {/* Google Login */}
-          <GoogleLogin buttonText="Login with Google" onSuccess={() => googleLogin()} onFailure={() => googleLogin()} width={400} size="large" />
-
+          <div className="icon-login-container">
+            <GoogleLogin className="icon-login-button" buttonText="Login with Google" onSuccess={() => googleLogin()} onFailure={() => googleLogin()} size="large" />
+          </div>
           {/* Forgot Password and Register Link */}
-          <p style={{ textAlign: 'center', marginTop: '10px' }}>
-            Forgot your password? <a href="/forgot-password">Click here</a>.
-          </p>
           <p style={{ textAlign: 'center' }}>
-            Don&apos;t have an account? <a href="/register">Create an account</a>.
+            Don&apos;t have an account? <a href="/register">Create account</a>.
           </p>
         </Form>
       </Card>
-    </div>
+    </div >
   );
 };
 

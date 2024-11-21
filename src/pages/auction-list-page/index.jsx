@@ -58,7 +58,7 @@ const AuctionList = () => {
   const fetchAuctions = async () => {
     try {
       const response = await lotApi.get("/auctions");
-      const data = response.data;
+      const data = response.data.reverse();
 
       // Past auction là auction status là "Ended"
       const past = data.filter(

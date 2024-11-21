@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import './index.css';
 import paymentApi from "../../config/paymentApi";
 import SoldLotCard from "../../components/sold-lot-card";
+import userApi from "../../config/userApi";
 const { Text } = Typography;
 const staticTabsData = [
     { lotStatusId: 6, lotStatusName: "To Pay", lotStatusIconLink: "/src/assets/icon/payment-method.png" },
@@ -46,9 +47,10 @@ export default function UserOrderStatusPage() {
                             UserID: user.UserId,
                             LotStatusId: LotStatusId || 6,
                         }
-                    })
-                ]).then(([soldLotResponse]) => {
+                    }),
+                    userApi.get("/manage/profile/address"),
 
+                ]).then(([soldLotResponse, addressResponse]) => {
                     const soldLotList = soldLotResponse?.data?.reverse().map((soldLot) => ({
                         lotDto: {
                             lotId: soldLot?.soldLotId,
@@ -56,7 +58,10 @@ export default function UserOrderStatusPage() {
                             koiFishDto: soldLot?.koiFish,
                         },
                         lotStatusDto: soldLot?.lotStatus,
-                        breederDetailDto: soldLot?.breederDetailDto,
+                        breederDetailDto: {
+                            ...soldLot.breederDetailDto,
+                            farmAddress: addressResponse.data.find((add) => add.UserId == soldLot.breederId).Address || "Unknown",
+                        },
                         address: soldLot?.address,
                         winnerDto: soldLot?.winnerDto,
                         finalPrice: soldLot?.finalPrice,
