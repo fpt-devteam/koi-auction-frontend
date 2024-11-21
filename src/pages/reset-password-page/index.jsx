@@ -1,13 +1,13 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 
-const ForgotPasswordPage = () => {
+const ResetPasswordPage = () => {
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
     try {
       // Simulate API call
-      const response = await fetch('https://your-api-endpoint/forgot-password', {
+      const response = await fetch('https://your-api-endpoint/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -16,10 +16,10 @@ const ForgotPasswordPage = () => {
       });
 
       if (response.ok) {
-        message.success('Password reset link sent to your email!');
+        message.success('Password has been reset successfully!');
         form.resetFields();
       } else {
-        message.error('Failed to send password reset email. Please try again.');
+        message.error('Failed to reset password. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -30,9 +30,9 @@ const ForgotPasswordPage = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.title}>Forgot Password</h1>
+        <h1 style={styles.title}>Reset Password</h1>
         <p style={styles.description}>
-          Enter your email address below to receive a password reset link.
+          Enter your new password below to reset your account password.
         </p>
         <Form
           form={form}
@@ -40,19 +40,40 @@ const ForgotPasswordPage = () => {
           onFinish={handleSubmit}
         >
           <Form.Item
-            label="Email Address"
-            name="email"
+            label="New Password"
+            name="newPassword"
             rules={[
-              { required: true, message: 'Please enter your email address!' },
-              { type: 'email', message: 'Please enter a valid email address!' },
+              { required: true, message: 'Please enter your new password!' },
+              { min: 6, message: 'Password must be at least 6 characters long!' },
             ]}
           >
-            <Input placeholder="Enter your email" style={styles.input} />
+            <Input.Password placeholder="Enter new password" style={styles.input} />
+          </Form.Item>
+
+          <Form.Item
+            label="Confirm Password"
+            name="confirmPassword"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: 'Please confirm your password!' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error('Passwords do not match!')
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Confirm new password" style={styles.input} />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block style={styles.button}>
-              Send Reset Link
+              Reset Password
             </Button>
           </Form.Item>
         </Form>
@@ -67,7 +88,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '80vh',
-    backgroundColor: '#f0f2f5',
+    backgroundColor: '#f9fafc',
   },
   card: {
     backgroundColor: '#fff',
@@ -98,7 +119,9 @@ const styles = {
     fontWeight: 'bold',
     height: '40px',
     borderRadius: '4px',
+    backgroundColor: '#1890ff',
+    borderColor: '#1890ff',
   },
 };
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;
