@@ -50,9 +50,9 @@ export default function GeneralInfoForm({ user, refresh }) {
 
   useEffect(() => {
     if (user) {
-      setIsBreeder(user.UserRoleId === 2);
+      setIsBreeder(user.UserRoleId == 2);
       initializeFormData();
-      if (user.UserRoleId === 2) {
+      if (user.UserRoleId == 2) {
         fetchBreederData();
       }
     }

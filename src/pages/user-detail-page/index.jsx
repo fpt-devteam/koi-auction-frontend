@@ -109,9 +109,9 @@ const UserDetail = () => {
 
       const emailContent = {
         Email: email,
-        Subject: status === 1 ? "Account Approved" : "Account Rejected",
+        Subject: status == 1 ? "Account Approved" : "Account Rejected",
         Text:
-          status === 1
+          status == 1
             ? "Your account has been approved."
             : `Your account has been rejected. Reason: ${reason || "None"}`,
       };
@@ -144,8 +144,11 @@ const UserDetail = () => {
           console.log(response.data.message);
           console.log(values.Active);
           fetchUser(userId);
-          
-          message.success({ content: "User updated successfully!", key: "updatable" });
+
+          message.success({
+            content: "User updated successfully!",
+            key: "updatable",
+          });
           handleReset();
           setIsModalVisible(false);
         } catch (error) {

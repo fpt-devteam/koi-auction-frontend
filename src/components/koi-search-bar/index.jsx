@@ -19,8 +19,8 @@ const KoiSearchBar = ({ allLots, setFilteredLots }) => {
     // //console.log("hello", selectedVariety);
     const result = allLots.filter((lot) => {
       return (
-        (selectedVariety ? lot.variety === selectedVariety : true) &&
-        (selectedSex !== "" ? lot.sex === (selectedSex === "Female") : true)
+        (selectedVariety ? lot.variety == selectedVariety : true) &&
+        (selectedSex !== "" ? lot.sex == (selectedSex == "Female") : true)
       );
     });
     setFilteredLots(result);

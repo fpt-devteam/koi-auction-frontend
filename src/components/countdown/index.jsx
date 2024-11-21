@@ -33,16 +33,16 @@ const Countdown = ({ startTime, endTime, predictEndTime, statusName }) => {
               : "red",
         }}
       >
-        {statusName === "Upcoming" && "Upcoming"}
-        {statusName === "Scheduled" && "Before start:"}
-        {statusName === "Ongoing" && "Time Left:"}
-        {statusName === "Ended" &&
+        {statusName == "Upcoming" && "Upcoming"}
+        {statusName == "Scheduled" && "Before start:"}
+        {statusName == "Ongoing" && "Time Left:"}
+        {statusName == "Ended" &&
           `Ended at ${new Date(endTime).toLocaleString()}`}
       </Text>
 
-      {(statusName === "Scheduled" || statusName === "Ongoing") && (
+      {(statusName == "Scheduled" || statusName == "Ongoing") && (
         <Statistic.Countdown
-          value={statusName === "Scheduled" ? startTime : predictEndTime}
+          value={statusName == "Scheduled" ? startTime : predictEndTime}
           format="HH:mm:ss"
           valueStyle={{
             fontSize: "2.5rem",

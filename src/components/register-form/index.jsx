@@ -172,7 +172,7 @@ const RegisterForm = ({ isBreeder }) => {
       if (error.response) {
         message.error(
           error.response.data.message ||
-          "Verification failed. Please try again."
+            "Verification failed. Please try again."
         );
       }
     }
@@ -470,7 +470,7 @@ const RegisterForm = ({ isBreeder }) => {
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
+                if (!value || getFieldValue("password") == value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -497,8 +497,8 @@ const RegisterForm = ({ isBreeder }) => {
                 value
                   ? Promise.resolve()
                   : Promise.reject(
-                    new Error("You must agree to our terms and policy!")
-                  ),
+                      new Error("You must agree to our terms and policy!")
+                    ),
             },
           ]}
         >

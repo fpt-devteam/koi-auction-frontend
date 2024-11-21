@@ -192,9 +192,9 @@ const LotInfo = ({ initData, showLotStatus = true, form }) => {
               { required: true, message: "Please enter weight" },
               {
                 type: "number",
-                min: 0.2,
+                min: 1,
                 max: 50,
-                message: 'Weight must be between 0.2 and 50 kg'
+                message: 'Weight must be between 1 and 50 kg'
               },
               {
                 validator: (_, value) => {

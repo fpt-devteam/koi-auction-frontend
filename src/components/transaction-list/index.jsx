@@ -31,7 +31,7 @@ const checkTrans = (trans) => {
   let isPositive;
   switch (trans.transType) {
     case "Deposit":
-      if (trans.status === "Success") {
+      if (trans.status == "Success") {
         //+ Amount va mau xanh
         isPositive = true;
       } else {
@@ -39,7 +39,7 @@ const checkTrans = (trans) => {
       }
       break;
     case "Withdraw":
-      if (trans.status === "Success") {
+      if (trans.status == "Success") {
         //- Amount va mau do
         isPositive = false;
       } else {
@@ -47,7 +47,7 @@ const checkTrans = (trans) => {
       }
       break;
     case "Payment":
-      if (trans.status === "Success") {
+      if (trans.status == "Success") {
         //- Amount va mau do
         isPositive = false;
       } else {
@@ -55,7 +55,7 @@ const checkTrans = (trans) => {
       }
       break;
     case "Payout":
-      if (trans.status === "Success") {
+      if (trans.status == "Success") {
         //+ Amount va mau xanh
         isPositive = true;
       } else {
@@ -63,7 +63,7 @@ const checkTrans = (trans) => {
       }
       break;
     case "Refund":
-      if (trans.status === "Success") {
+      if (trans.status == "Success") {
         //+ Amount va mau xanh
         isPositive = true;
       } else {
@@ -78,17 +78,16 @@ const checkTrans = (trans) => {
 
 const formatDate = (isoString) => {
   const date = new Date(isoString);
-  return date.toLocaleString('en-US', {
-    year: 'numeric',
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
   });
 };
-
 
 const TransactionList = ({ transactions }) => {
   // //console.log("transaction nek: ", transactions);
@@ -115,7 +114,7 @@ const TransactionList = ({ transactions }) => {
       align: "left",
       render: (amount, record) => {
         const isPositive = checkTrans(record);
-        if (isPositive === null) {
+        if (isPositive == null) {
           return <Text strong>{`${amount?.toLocaleString()} VND`}</Text>;
         }
         const sign = isPositive ? "+" : "-";
@@ -123,7 +122,8 @@ const TransactionList = ({ transactions }) => {
         return (
           <Text strong style={{ color }}>
             {`${sign} ${amount?.toLocaleString()} VND`}
-          </Text>);
+          </Text>
+        );
       },
       width: "15em",
     },
@@ -171,11 +171,7 @@ const TransactionList = ({ transactions }) => {
       key: "description",
       render: (description) => <Text>{description}</Text>,
     },
-
   ];
-
-
-
 
   return (
     <Table

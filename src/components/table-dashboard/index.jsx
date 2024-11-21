@@ -93,7 +93,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           },
         },
         {
-          title: "Farm Revenue",
+          title: "Payout",
           dataIndex: "finalPrice",
           key: "finalPrice",
           align: "left",
@@ -107,7 +107,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           },
         },
         {
-          title: "Commission",
+          title: "Website Fee",
           dataIndex: "finalPrice",
           key: "finalPrice",
           align: "left",
@@ -168,7 +168,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
     }
   }, [data]);
 
-  if (!tableData || tableData.length === 0) {
+  if (!tableData || tableData.length == 0) {
     return (
       <Card title={title} className="chart-card">
         <div style={{ textAlign: "center" }}>No data available</div>
@@ -207,7 +207,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           total: tableData.length,
         }}
         rowClassName={(record, index) =>
-          index % 2 === 0
+          index % 2 == 0
             ? "custom-row custom-row-even"
             : "custom-row custom-row-odd"
         }

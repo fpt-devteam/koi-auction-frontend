@@ -1,25 +1,25 @@
-import { Row, Col, Typography, message, Spin, Modal } from 'antd';
-import { useSelector } from 'react-redux';
-import KoiMedia from '../../components/koi-media';
-import KoiInfo from '../../components/koi-info';
-import Countdown from '../../components/countdown';
-import SuggestLogin from '../../components/suggest-login';
-import { useParams } from 'react-router-dom';
-import BidHistoryTable from '../../components/bid-history-table';
-import BackButton from '../../components/back-button';
-import { useEffect, useState } from 'react';
-import lotApi from '../../config/lotApi';
-import AuctionMethod from '../../components/auction-method';
+import { Row, Col, Typography, message, Spin, Modal } from "antd";
+import { useSelector } from "react-redux";
+import KoiMedia from "../../components/koi-media";
+import KoiInfo from "../../components/koi-info";
+import Countdown from "../../components/countdown";
+import SuggestLogin from "../../components/suggest-login";
+import { useParams } from "react-router-dom";
+import BidHistoryTable from "../../components/bid-history-table";
+import BackButton from "../../components/back-button";
+import { useEffect, useState } from "react";
+import lotApi from "../../config/lotApi";
+import AuctionMethod from "../../components/auction-method";
 const { Text } = Typography;
-import * as signalR from '@microsoft/signalr';
-import PriceDisplayComponent from '../../components/price-display';
-import BidForm from '../../components/bid-form';
-import CurrentBid from '../../components/current-bid';
-import PriceBuy from '../../components/price-buy';
-import WinnerPrice from '../../components/winner-price';
-import { placeBid } from '../../helpers/signalRHelper';
-import useSignalRConnection from '../../hooks/useSignalRConnection';
-import DepositButton from '../../components/deposit-button';
+import * as signalR from "@microsoft/signalr";
+import PriceDisplayComponent from "../../components/price-display";
+import BidForm from "../../components/bid-form";
+import CurrentBid from "../../components/current-bid";
+import PriceBuy from "../../components/price-buy";
+import WinnerPrice from "../../components/winner-price";
+import { placeBid } from "../../helpers/signalRHelper";
+import useSignalRConnection from "../../hooks/useSignalRConnection";
+import DepositButton from "../../components/deposit-button";
 
 const AuctionLotDetailPage = () => {
   const { user } = useSelector((state) => state.user);
@@ -38,9 +38,7 @@ const AuctionLotDetailPage = () => {
 
   const fetchAuctionLot = async () => {
     try {
-      const response = await lotApi.get(
-        `auction-lots/${auctionLotId}`
-      );
+      const response = await lotApi.get(`auction-lots/${auctionLotId}`);
       const fetchedAuctionLot = response.data;
       // //console.log('fetchedAuctionLot', fetchedAuctionLot);
       setAuctionLot(fetchedAuctionLot);
@@ -55,9 +53,7 @@ const AuctionLotDetailPage = () => {
 
   const fetchBigLog = async () => {
     try {
-      const response = await lotApi.get(
-        `bid-log?AuctionLotId=${auctionLotId}`
-      );
+      const response = await lotApi.get(`bid-log?AuctionLotId=${auctionLotId}`);
       const fetchedBidLogs = response.data;
       setBidLogs(fetchedBidLogs);
     } catch (error) {
@@ -71,9 +67,7 @@ const AuctionLotDetailPage = () => {
 
   const fetchWinner = async () => {
     try {
-      const response = await lotApi.get(
-        `bid-log/highest-bid/${auctionLotId}`
-      );
+      const response = await lotApi.get(`bid-log/highest-bid/${auctionLotId}`);
       const fetchedData = response.data;
       // //console.log('fetchedWinner', fetchedData);
       setWinner(fetchedData);
@@ -147,15 +141,11 @@ const AuctionLotDetailPage = () => {
     lotDto: {
       sku,
       startingPrice,
-      auctionMethod: {
-        auctionMethodId,
-        auctionMethodName,
-        description
-      },
+      auctionMethod: { auctionMethodId, auctionMethodName, description },
       koiFishDto: { variety, sex, sizeCm, yearOfBirth, koiMedia },
-      breederDetailDto
+      breederDetailDto,
     },
-    auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName }
+    auctionLotStatusDto: { auctionLotStatusId, auctionLotStatusName },
   } = auctionLot;
   const stepPrice =
     stepPercent != null
@@ -163,8 +153,7 @@ const AuctionLotDetailPage = () => {
       : stepPercent;
   const softCap = startingPrice / 2;
   const depositRate = 0.2;
-  const depositAmount =
-    auctionLot.lotDto?.startingPrice * depositRate;
+  const depositAmount = auctionLot.lotDto?.startingPrice * depositRate;
 
   const handleBid = (bidAmount) => {
     placeBid(connection, userId, auctionLotId, bidAmount);
@@ -173,22 +162,22 @@ const AuctionLotDetailPage = () => {
   const handleDeposit = async () => {
     const depositDto = {
       AucitonLotId: auctionLotId,
-      Amount: depositAmount
+      Amount: depositAmount,
     };
     try {
-      message.loading('Processing deposit...', 0);
-      await lotApi.post('auction-deposit', depositDto);
-      message.destroy();
-      message.success('Deposit successful');
+      message.loading("Processing deposit...", 0);
+      await lotApi.post("auction-deposit", depositDto);
+      message.success("Deposit successful");
       fetchDeposit();
-    }
-    catch (error) {
+    } catch (error) {
       message.error(error.response.data);
+    } finally {
+      message.destroy();
     }
   };
 
   return (
-    <div style={{ padding: '20px 120px' }}>
+    <div style={{ padding: "20px 120px" }}>
       {/* Row 1 - Auction Lot Detail */}
       <Row gutter={(0, 20)}>
         {/* Koi Media */}
@@ -198,16 +187,16 @@ const AuctionLotDetailPage = () => {
         </Col>
 
         <Col span={13}>
-          {/* Auction Lot Name */}{' '}
+          {/* Auction Lot Name */}{" "}
           <div
             style={{
-              marginBottom: '10px',
-              display: 'flex',
-              alignItems: 'center'
+              marginBottom: "10px",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            <Text strong style={{ fontSize: '2rem' }}>
-              {variety + ' #' + sku}
+            <Text strong style={{ fontSize: "2rem" }}>
+              {variety + " #" + sku}
             </Text>
           </div>
           {/* Info */}
@@ -248,9 +237,7 @@ const AuctionLotDetailPage = () => {
                 />
               )}
               {/* Auction Method */}
-              <AuctionMethod
-                auctionMethod={auctionLot.lotDto.auctionMethod}
-              />
+              <AuctionMethod auctionMethod={auctionLot.lotDto.auctionMethod} />
             </Col>
           </Row>
           {/* Current Bid */}
@@ -259,9 +246,7 @@ const AuctionLotDetailPage = () => {
               {/* Current Bid */}
               {auctionMethodId == 3 && auctionLotStatusId == 3 && (
                 <CurrentBid
-                  currentBid={
-                    winner != null ? winner.bidAmount : null
-                  }
+                  currentBid={winner != null ? winner.bidAmount : null}
                 />
               )}
 
@@ -292,7 +277,8 @@ const AuctionLotDetailPage = () => {
           {/* Bid Form */}
           {userId &&
             (auctionMethodId == 3 || auctionMethodId == 2) &&
-            auctionLotStatusId == 3 && isRegistered != null && (
+            auctionLotStatusId == 3 &&
+            isRegistered != null && (
               <BidForm
                 currentBid={winner != null ? winner.bidAmount : null}
                 onBidSubmit={handleBid}
@@ -302,17 +288,16 @@ const AuctionLotDetailPage = () => {
           {/* Price Buy Method 1*/}
           {userId &&
             auctionMethodId == 1 &&
-            auctionLotStatusId == 3 && isRegistered != null && (
-              <PriceBuy
-                price={startingPrice}
-                onBuySubmit={handleBid}
-              />
+            auctionLotStatusId == 3 &&
+            isRegistered != null && (
+              <PriceBuy price={startingPrice} onBuySubmit={handleBid} />
             )}
 
           {/* Price Buy Method 4*/}
           {userId &&
             auctionMethodId == 4 &&
-            auctionLotStatusId == 3 && isRegistered != null && (
+            auctionLotStatusId == 3 &&
+            isRegistered != null && (
               <PriceBuy price={priceDesc} onBuySubmit={handleBid} />
             )}
 
@@ -342,9 +327,7 @@ const AuctionLotDetailPage = () => {
           {/* Bid History Table */}
           {(auctionMethodId == 1 ||
             auctionMethodId == 3 ||
-            auctionLotStatusId == 4) && (
-              <BidHistoryTable data={bidLogs} />
-            )}
+            auctionLotStatusId == 4) && <BidHistoryTable data={bidLogs} />}
           <BackButton />
         </Col>
       </Row>

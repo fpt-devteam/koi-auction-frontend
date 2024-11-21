@@ -19,7 +19,7 @@ function ProfileForm({
 }) {
   console.log(provinceList);
   const { Option } = Select;
-  
+
   const noSpacesRule = { pattern: /^\S*$/, message: "No spaces are allowed!" };
   const noLeadingTrailingSpacesRule = {
     pattern: /^\S.*\S$|^\S$/,
@@ -50,7 +50,7 @@ function ProfileForm({
           layout="horizontal"
           initialValues={initialValues}
         >
-          {isBreeder && (
+          {!isBreeder && (
             <Form.Item
               label="Avatar"
               name="Certificate"
@@ -135,7 +135,7 @@ function ProfileForm({
             ]}
             readOnly={true}
           >
-            <Input size="small" disabled={true} />
+            <Input size="small" />
           </Form.Item>
           {isRequesting ? (
             <Form.Item
@@ -151,7 +151,7 @@ function ProfileForm({
               <Switch size="middle" />
             </Form.Item>
           )}
-          {isBreeder && (
+          {!isBreeder && (
             <>
               <Form.Item
                 label="Farm Name"
@@ -159,7 +159,7 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the farm name!" },
                   { required: true },
-                  noLeadingTrailingSpacesRule,
+                  noLeadingTrailingSpacesRule, 
                 ]}
               >
                 <Input size="small" />
@@ -171,25 +171,25 @@ function ProfileForm({
                 rules={[
                   { message: "Please input the about section!" },
                   { required: true },
-                  noLeadingTrailingSpacesRule,
+                  //noLeadingTrailingSpacesRule,
                 ]}
               >
                 <Input.TextArea size="small" />
               </Form.Item>
             </>
           )}
-            <Form.Item
-              label="Address"
-              name="Address"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter your address",
-                },
-              ]}
-            >
-              <Input placeholder="Enter your home address" />
-            </Form.Item>
+          <Form.Item
+            label="Address"
+            name="Address"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your address",
+              },
+            ]}
+          >
+            <Input placeholder="Enter your home address" />
+          </Form.Item>
           <Row gutter={24}>
             <Col span={8}>
               <Form.Item
@@ -204,13 +204,13 @@ function ProfileForm({
               >
                 <Select
                   placeholder="Select province"
-                 onChange={onSelectProvince}
+                  onChange={onSelectProvince}
                 >
                   {provinceList?.map((province) => (
-                        <Option key={province.code} value={province.code}>
-                          {province.name}
-                        </Option>
-                      ))}
+                    <Option key={province.code} value={province.code}>
+                      {province.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -230,10 +230,10 @@ function ProfileForm({
                   onChange={onSelectDistrict}
                 >
                   {districtList?.map((district) => (
-                        <Option key={district.code} value={district.code}>
-                          {district.name}
-                        </Option>
-                      ))}
+                    <Option key={district.code} value={district.code}>
+                      {district.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -250,10 +250,10 @@ function ProfileForm({
               >
                 <Select placeholder="Select ward">
                   {wardList?.map((ward) => (
-                        <Option key={ward.code} value={ward.code}>
-                          {ward.name}
-                        </Option>
-                      ))}
+                    <Option key={ward.code} value={ward.code}>
+                      {ward.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>

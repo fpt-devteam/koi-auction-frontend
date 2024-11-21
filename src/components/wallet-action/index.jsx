@@ -13,14 +13,14 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
   return (
     <div style={{ marginTop: "40px" }}>
       <Row gutter={24}>
-        {role === 1 ? (
+        {role == 1 ? (
           <>
             <Col span={8}>
               <Card
                 bordered={false}
                 hoverable={true}
                 onClick={() => {
-                   navigate("/order/6");
+                  navigate("/order/6");
                 }}
                 style={{
                   height: "150px",
@@ -38,7 +38,9 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                     alignItems: "center",
                   }}
                 />
-                <div style={{ textAlign: "center", fontWeight: "600" }}>Payment</div>
+                <div style={{ textAlign: "center", fontWeight: "600" }}>
+                  Payment
+                </div>
               </Card>
             </Col>
             <Col span={8}>
@@ -56,7 +58,6 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                   justifyContent: "center",
                 }}
               >
-              
                 <CreditCardOutlined
                   style={{
                     fontSize: "50px",
@@ -66,7 +67,9 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                     justifyContent: "center",
                   }}
                 />
-                <div style={{ textAlign: "center", fontWeight: "600" }}>Deposit</div>
+                <div style={{ textAlign: "center", fontWeight: "600" }}>
+                  Deposit
+                </div>
               </Card>
             </Col>
             <Col span={8}>
@@ -93,16 +96,20 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                     justifyContent: "center",
                   }}
                 />
-                <div style={{ textAlign: "center", fontWeight: "600" }}>Withdraw</div>
+                <div style={{ textAlign: "center", fontWeight: "600" }}>
+                  Withdraw
+                </div>
               </Card>
             </Col>
           </>
         ) : (
-          <Col span={8} style={{margin: "0 auto"}}>
+          <Col span={8} style={{ margin: "0 auto" }}>
             <Card
               bordered={false}
               hoverable={true}
-              onClick={() => {onWithdrawal()}}
+              onClick={() => {
+                onWithdrawal();
+              }}
               style={{
                 height: "150px",
                 display: "flex",
@@ -118,7 +125,9 @@ function WalletAction({ role, onPayment, onDeposit, onWithdrawal }) {
                   color: "#d9d9d9",
                 }}
               />
-              <div style={{ textAlign: "center", fontWeight: "600" }}>Withdraw</div>
+              <div style={{ textAlign: "center", fontWeight: "600" }}>
+                Withdraw
+              </div>
             </Card>
           </Col>
         )}

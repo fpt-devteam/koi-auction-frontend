@@ -58,24 +58,24 @@ export default function CreateAuctionPage() {
         message.error(errorStr);
         return;
       }
-      // const response = await lotApi.post("auctions", auctionData);
-      // let cnt = 0;
-      // let newAuctionLotList = atoiList.map(
-      //   (item) =>
-      //   (item = {
-      //     auctionId: response.data.auctionId,
-      //     auctionLotId: item.lotId,
-      //     orderInAuction: ++cnt,
-      //     duration: convertToTimeFormat(item.duration),
-      //     stepPercent: item.stepPercent,
-      //   })
-      // );
-      // const auctionLotRespone = await lotApi.post(
-      //   "auction-lots/listAuctionLot",
-      //   newAuctionLotList
-      // );
+      const response = await lotApi.post("auctions", auctionData);
+      let cnt = 0;
+      let newAuctionLotList = atoiList.map(
+        (item) =>
+        (item = {
+          auctionId: response.data.auctionId,
+          auctionLotId: item.lotId,
+          orderInAuction: ++cnt,
+          duration: convertToTimeFormat(item.duration),
+          stepPercent: item.stepPercent,
+        })
+      );
+      const auctionLotRespone = await lotApi.post(
+        "auction-lots/listAuctionLot",
+        newAuctionLotList
+      );
       message.success("Created successfully!");
-      // handleReset();
+      handleReset();
     } catch (error) {
       //console.log(error);
       message.error("Failed to create auction!");

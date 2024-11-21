@@ -77,7 +77,7 @@ const PieChartComponent = ({
   }, [data]);
 
   // Kiểm tra nếu chartData chưa có dữ liệu
-  if (!chartData || chartData.length === 0) {
+  if (!chartData || chartData.length == 0) {
     return (
       <Card title={title} className="chart-card">
         <div style={{ textAlign: "center" }}>No data available</div>
@@ -129,7 +129,7 @@ const PieChartComponent = ({
               // Tooltip displays `name: count`
               const count = data.find(
                 (item) =>
-                  item.auctionMethodName === props.payload.auctionMethodName
+                  item.auctionMethodName == props.payload.auctionMethodName
               )?.count;
               return [`${count}`, `${props.payload.auctionMethodName}`];
             }}

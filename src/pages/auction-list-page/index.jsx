@@ -61,9 +61,8 @@ const AuctionList = () => {
       const data = response.data.reverse();
 
       // Past auction là auction status là "Ended"
-      const past = data.filter(
-        (auction) => auction.auctionStatus.auctionStatusName === "Ended"
-      )
+      const past = data
+        .filter((auction) => auction.auctionStatus.auctionStatusName == "Ended")
         .sort((a, b) => moment(a.endTime).diff(moment(b.endTime)));
 
       // Ongoing & Upcoming auction là auction status khác "Ended"
@@ -159,7 +158,7 @@ const AuctionList = () => {
       key: "actions",
       render: (_, record) => (
         <Space>
-          {record.auctionStatus.auctionStatusName === "Ongoing" ? (
+          {record.auctionStatus.auctionStatusName == "Ongoing" ? (
             <Button
               className="joinButton"
               onClick={() =>

@@ -100,7 +100,9 @@ function Header() {
           <>
             <Button
               icon={<TeamOutlined />}
-              onClick={() => {navigate("/breeder-register")}}
+              onClick={() => {
+                navigate("/breeder-register");
+              }}
               className="monochrome-button"
             >
               Become our Breeder
@@ -108,7 +110,7 @@ function Header() {
 
             <Button
               icon={<LoginOutlined />}
-              onClick={(handleLoginClick)}
+              onClick={handleLoginClick}
               className="monochrome-button"
             >
               Login
@@ -128,11 +130,11 @@ function Header() {
               menu={{
                 items,
                 onClick: ({ key }) => {
-                  if (key === "2") {
+                  if (key == "2") {
                     handleNavigation("/profile");
-                  } else if (key === "3") {
+                  } else if (key == "3") {
                     handleNavigation("/wallet");
-                  } else if (key === "4") {
+                  } else if (key == "4") {
                     handleNavigation("/order");
                   }
                 },

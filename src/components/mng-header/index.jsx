@@ -1,6 +1,11 @@
 // import { useNavigate } from "react-router-dom";
 import "./index.scss";
-import { UserOutlined, LogoutOutlined, ProfileOutlined, WalletOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LogoutOutlined,
+  ProfileOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { Button, Dropdown, Space } from "antd";
 import Search from "antd/es/input/Search";
 import userApi from "../../config/userApi";
@@ -32,7 +37,6 @@ function MngHeader() {
       label: "Profile",
       extra: "⌘P",
     },
-   
   ];
 
   const { user } = useSelector((store) => store.user);
@@ -48,17 +52,16 @@ function MngHeader() {
   };
 
   if (user == null) {
-    return <Loading />
+    return <Loading />;
   }
   if (user.UserRoleId == 2) {
-    items.push( {
+    items.push({
       key: "3",
       icon: <WalletOutlined />,
       label: "Wallet",
       extra: "⌘B",
     });
   }
-
 
   return (
     <div className="header">
@@ -83,9 +86,9 @@ function MngHeader() {
           menu={{
             items,
             onClick: ({ key }) => {
-              if (key === "2") {
+              if (key == "2") {
                 handleNavigation("/management/profile");
-              } else if (key === "3" && user.UserRoleId == 2) {
+              } else if (key == "3" && user.UserRoleId == 2) {
                 handleNavigation("/management/wallet");
               }
             },

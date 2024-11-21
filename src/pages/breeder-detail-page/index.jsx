@@ -80,8 +80,8 @@ function BreederDetailPage() {
   const handleFilter = (filters) => {
     const filtered = sampleLots.filter((lot) => {
       return (
-        (filters.variety ? lot.Variety === filters.variety : true) &&
-        (filters.sex !== "" ? lot.Sex === filters.sex : true)
+        (filters.variety ? lot.Variety == filters.variety : true) &&
+        (filters.sex !== "" ? lot.Sex == filters.sex : true)
       );
     });
     setFilteredLots(filtered);

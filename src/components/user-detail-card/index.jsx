@@ -37,19 +37,29 @@ function UserDetailCard({
           alignItems: "center",
         }}
       >
-        {data.UserRoleId === 2 && <Image src={data.Certificate} width={"50em"} />}
+        {data.UserRoleId == 2 && (
+          <Image src={data.Certificate} width={"50em"} />
+        )}
         <Descriptions bordered column={1} style={{ width: "50em" }}>
-          {data.UserRoleId === 2 && (
-            <Descriptions.Item label="Farm Name">{data.FarmName}</Descriptions.Item>
+          {data.UserRoleId == 2 && (
+            <Descriptions.Item label="Farm Name">
+              {data.FarmName}
+            </Descriptions.Item>
           )}
           <Descriptions.Item label="User ID">{data.UserId}</Descriptions.Item>
-          <Descriptions.Item label="Username">{data.Username}</Descriptions.Item>
-          <Descriptions.Item label="First Name">{data.FirstName}</Descriptions.Item>
-          <Descriptions.Item label="Last Name">{data.LastName}</Descriptions.Item>
+          <Descriptions.Item label="Username">
+            {data.Username}
+          </Descriptions.Item>
+          <Descriptions.Item label="First Name">
+            {data.FirstName}
+          </Descriptions.Item>
+          <Descriptions.Item label="Last Name">
+            {data.LastName}
+          </Descriptions.Item>
           <Descriptions.Item label="Email">{data.Email}</Descriptions.Item>
           <Descriptions.Item label="Phone">{data.Phone}</Descriptions.Item>
           <Descriptions.Item label="Address">{address}</Descriptions.Item>
-          {isRequesting === 1 && (
+          {isRequesting == 1 && (
             <Descriptions.Item label="Active">
               <Badge
                 status={data.Active ? "success" : "error"}
@@ -57,7 +67,7 @@ function UserDetailCard({
               />
             </Descriptions.Item>
           )}
-          {data.UserRoleId === 2 && (
+          {data.UserRoleId == 2 && (
             <Descriptions.Item label="About">{data.About}</Descriptions.Item>
           )}
         </Descriptions>
@@ -65,27 +75,38 @@ function UserDetailCard({
         <Row gutter={24} style={{ marginTop: 20 }}>
           {isRequesting !== 2 && (
             <Col span={6}>
-              <Button style={{color: "green"}} onClick={openModal}>
+              <Button style={{ color: "green" }} onClick={openModal}>
                 Update
               </Button>
             </Col>
           )}
-          {isRequesting === 0 && (
+          {isRequesting == 0 && (
             <>
               <Col span={6}>
-                <Button style={{backgroundColor: "green"}} type="primary" onClick={onApprove}>
+                <Button
+                  style={{ backgroundColor: "green" }}
+                  type="primary"
+                  onClick={onApprove}
+                >
                   Approve
                 </Button>
               </Col>
               <Col span={6}>
-                <Button type="primary" danger onClick={() => setRejectModalVisible(true)}>
+                <Button
+                  type="primary"
+                  danger
+                  onClick={() => setRejectModalVisible(true)}
+                >
                   Reject
                 </Button>
               </Col>
             </>
           )}
           <Col span={6}>
-            <Button style={{color: "green"}} onClick={() => setEmailModalVisible(true)}>
+            <Button
+              style={{ color: "green" }}
+              onClick={() => setEmailModalVisible(true)}
+            >
               Send Mail
             </Button>
           </Col>

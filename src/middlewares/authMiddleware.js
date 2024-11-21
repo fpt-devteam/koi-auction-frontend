@@ -2,7 +2,7 @@ import userApi from "../config/userApi";
 import { loginSuccess, loadStart, loadDone } from "../redux/features/userSlice";
 
 const authMiddleware = (store) => (next) => async (action) => {
-  if (action.type === "auth/checkAuth") {
+  if (action.type == "auth/checkAuth") {
     try {
       store.dispatch(loadStart())
       // //console.log("tao dang fetch user")
@@ -10,7 +10,7 @@ const authMiddleware = (store) => (next) => async (action) => {
       const response = await userApi.get("/profile");
       const user = response.data;
       store.dispatch(loginSuccess({ user }));
-      if (user.UserRoleId > 1 && window.location.pathname === "/") {
+      if (user.UserRoleId > 1 && window.location.pathname == "/") {
         window.location.href = '/management';
       }
       // //console.log("tao fetch duoc user")
