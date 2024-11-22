@@ -145,16 +145,16 @@ const AuctionList = ({ auctionStatusId, auctionStatusName, refresh }) => {
 
 const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
   const navigate = useNavigate();
-  const handleDelete = async (auctionId) => {
-    try {
-      const response = await lotApi.delete(`auctions/${auctionId}`);
-      message.success("Deleted successfully!");
-      // //console.log(response);
-      refresh();
-    } catch (error) {
-      message.error("Failed to delete the auction.");
-    }
-  };
+  // const handleDelete = async (auctionId) => {
+  //   try {
+  //     const response = await lotApi.delete(`auctions/${auctionId}`);
+  //     message.success("Deleted successfully!");
+  //     // //console.log(response);
+  //     refresh();
+  //   } catch (error) {
+  //     message.error("Failed to delete the auction.");
+  //   }
+  // };
 
   return (
     <Card
@@ -165,49 +165,49 @@ const AuctionCard = ({ auctionStatusId, auction, refresh }) => {
 
       //     // navigate(`/auction-detail?auction-id=${auction.auctionId}`)
       // }
-      extra={
-        auctionStatusId == 1 && ( // Conditional rendering based on auctionStatusId
-          <div
-            className="button-container"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
-              marginTop: "20px",
-            }}
-          >
-            {/* <Button
-                            type="primary"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(
-                                    `/management/update-auction-request?auction-id=${auction.auctionId}`
-                                );
-                            }}
-                        >
-                            Update
-                        </Button> */}
-            <Popconfirm
-              title="Are you sure?"
-              onConfirm={(e) => {
-                e.stopPropagation();
-                handleDelete(auction.auctionId);
-              }}
-            >
-              <Button
-                type="primary"
-                danger
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                Delete
-              </Button>
-            </Popconfirm>
-          </div>
-        )
-      }
+      // extra={
+      //   auctionStatusId == 1 && ( // Conditional rendering based on auctionStatusId
+      //     <div
+      //       className="button-container"
+      //       style={{
+      //         display: "flex",
+      //         justifyContent: "center",
+      //         alignItems: "center",
+      //         gap: "10px",
+      //         marginTop: "20px",
+      //       }}
+      //     >
+      //       {/* <Button
+      //                       type="primary"
+      //                       onClick={(e) => {
+      //                           e.stopPropagation();
+      //                           navigate(
+      //                               `/management/update-auction-request?auction-id=${auction.auctionId}`
+      //                           );
+      //                       }}
+      //                   >
+      //                       Update
+      //                   </Button> */}
+      //       <Popconfirm
+      //         title="Are you sure?"
+      //         onConfirm={(e) => {
+      //           e.stopPropagation();
+      //           handleDelete(auction.auctionId);
+      //         }}
+      //       >
+      //         <Button
+      //           type="primary"
+      //           danger
+      //           onClick={(e) => {
+      //             e.stopPropagation();
+      //           }}
+      //         >
+      //           Delete
+      //         </Button>
+      //       </Popconfirm>
+      //     </div>
+      //   )
+      // }
     />
   );
 };
