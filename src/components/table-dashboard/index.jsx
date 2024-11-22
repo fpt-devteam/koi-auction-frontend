@@ -92,34 +92,103 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             );
           },
         },
+        // {
+        //   title: "Payout (90%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price) => {
+        //     // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+        //     return (
+        //       <Text style={{ fontWeight: "bold" }}>
+        //         {(price * 0.9)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
+        // {
+        //   title: "Payout (90%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price, record) => {
+        //     // Danh sách các lotStatusId cần áp dụng màu đỏ
+        //     const redStatusIds = [11, 10, 5];
+        //     const isRed = redStatusIds.includes(record.lotStatusId);
+
+        //     return (
+        //       <Text
+        //         style={{
+        //           fontWeight: "bold",
+        //           color: isRed ? "#ff4d4f" : "#000", // Màu đỏ nếu thuộc redStatusIds
+        //         }}
+        //       >
+        //         {(price * 0.9)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
+        // {
+        //   title: "Website Fee (10%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price) => {
+        //     // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+        //     return (
+        //       <Text style={{ fontWeight: "bold" }}>
+        //         {(price * 0.1)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
         {
-          title: "Payout",
+          title: "Payout (90%)",
           dataIndex: "finalPrice",
           key: "finalPrice",
           align: "left",
-          render: (price) => {
-            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+          render: (price, record) => {
+            const statusColorMap = {
+              5: "#ff4d4f", // Đỏ
+              10: "#ff4d4f", // Đỏ
+              11: "#ff4d4f", // Đỏ
+              9: "#52C41A", // Xanh
+            };
+            const defaultColor = "#faad14"; // Vàng
+            const color =
+              statusColorMap[record.lotStatus?.lotStatusId] || defaultColor;
+
             return (
-              <Text style={{ fontWeight: "bold" }}>
+              <Text style={{ fontWeight: "bold", color }}>
                 {(price * 0.9)?.toLocaleString()} VND
               </Text>
             );
           },
         },
         {
-          title: "Website Fee",
+          title: "Website Fee (10%)",
           dataIndex: "finalPrice",
           key: "finalPrice",
           align: "left",
-          render: (price) => {
-            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+          render: (price, record) => {
+            const statusColorMap = {
+              5: "#ff4d4f", // Đỏ
+              10: "#ff4d4f", // Đỏ
+              11: "#52c41a", // Xanh
+              9: "#52c41a", // Xanh
+            };
+            const defaultColor = "#faad14"; // Vàng
+            const color =
+              statusColorMap[record.lotStatus?.lotStatusId] || defaultColor;
+
             return (
-              <Text style={{ fontWeight: "bold" }}>
+              <Text style={{ fontWeight: "bold", color }}>
                 {(price * 0.1)?.toLocaleString()} VND
               </Text>
             );
           },
         },
+
         {
           title: "Lot Status",
           key: "lotStatusName",
@@ -128,7 +197,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             const statusColorMap = {
               Completed: "#52c41a", // Xanh lá cây
               Unsold: "#ff4d4f", // Đỏ
-              Canceled: "#faad14", // Vàng cam
+              Canceled: "#d71920", // đỏ đậm
               "Payment Overdue": "#1890ff", // Xanh dương
             };
             return (
