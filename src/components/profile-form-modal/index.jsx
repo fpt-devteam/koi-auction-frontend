@@ -8,7 +8,6 @@ function ProfileForm({
   handleFormSubmit,
   isModalVisible,
   onClose,
-  isBreeder,
   isCreate,
   isRequesting,
   provinceList,
@@ -25,6 +24,7 @@ function ProfileForm({
     pattern: /^\S.*\S$|^\S$/,
     message: "No leading or trailing spaces are allowed!",
   };
+  const isBreeder = initialValues?.UserRoleId === 2;
 
   return (
     <div>
@@ -50,7 +50,7 @@ function ProfileForm({
           layout="horizontal"
           initialValues={initialValues}
         >
-          {!isBreeder && (
+          {isBreeder && (
             <Form.Item
               label="Avatar"
               name="Certificate"
@@ -151,7 +151,7 @@ function ProfileForm({
               <Switch size="middle" />
             </Form.Item>
           )}
-          {!isBreeder && (
+          {isBreeder && (
             <>
               <Form.Item
                 label="Farm Name"
