@@ -51,7 +51,7 @@ const TotalHistoryComponent = ({ data, fetchData, title = "" }) => {
     // //console.log("Data total received:", dataArray);
   }, [data]);
 
-  if (!totalData || totalData.length === 0) {
+  if (!totalData || totalData.length == 0) {
     return (
       <Card title={title} className="chart-card">
         <div style={{ textAlign: "center" }}>No data available</div>

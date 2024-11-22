@@ -7,7 +7,7 @@ const { Text } = Typography;
 const TableComponent = ({ data, title = "Custom Table" }) => {
   const [tableData, setTableData] = useState(data);
   const [columns, setColumns] = useState([]);
-
+  console.log(tableData);
   useEffect(() => {
     if (data && data.length > 0) {
       const dataWithKeys = data.map((item, index) => ({
@@ -15,9 +15,9 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         key: item.id || `row-${index}`, // Thêm key cho mỗi dòng
       }));
 
-      // Sắp xếp dữ liệu theo `updatedAt` (ngày gần nhất lên đầu)
+      // Sắp xếp dữ liệu theo `updatedLot` (ngày gần nhất lên đầu)
       const sortedData = dataWithKeys.sort(
-        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+        (a, b) => new Date(b.updatedLot) - new Date(a.updatedLot)
       );
 
       setTableData(sortedData);
@@ -27,7 +27,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           title: "Code",
           dataIndex: "sku",
           key: "sku",
-          align: "center",
+          align: "left",
           render: (text) => (
             <Text strong style={{ fontSize: "16px", color: "#595959" }}>
               {text}
@@ -35,9 +35,9 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           ),
         },
         {
-          title: "Winner (Name)",
+          title: "Winner",
           key: "winnerName",
-          align: "center",
+          align: "left",
           render: (text, record) => (
             <Text style={{ fontWeight: "bold" }}>
               {record.winnerDto?.username || "N/A"}
@@ -47,7 +47,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
         {
           title: "Farm",
           key: "farmName",
-          align: "center",
+          align: "left",
           render: (text, record) => (
             <Text style={{ fontWeight: "bold" }}>
               {record.breederDetailDto?.farmName || "N/A"}
@@ -55,19 +55,140 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           ),
         },
         {
-          title: "Final Price",
-          dataIndex: "finalPrice",
-          key: "finalPrice",
-          align: "center",
-          render: (price) => {
+          title: "Start Price",
+          dataIndex: "startingPrice",
+          key: "startingPrice",
+          align: "left",
+          render: (startingPrice) => {
             // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
             return (
               <Text style={{ fontWeight: "bold" }}>
-                {price.toLocaleString()} VND
+                {startingPrice?.toLocaleString()} VND
               </Text>
             );
           },
         },
+        {
+          title: "Deposit",
+          key: "amount",
+          align: "left",
+          render: (text, record) => (
+            <Text style={{ fontWeight: "bold" }}>
+              {record.auctionDepositDto?.amount?.toLocaleString() || "0"} VND
+            </Text>
+          ),
+        },
+        {
+          title: "Final Price",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
+          align: "left",
+          render: (price) => {
+            // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+            return (
+              <Text style={{ fontWeight: "bold" }}>
+                {price?.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+        // {
+        //   title: "Payout (90%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price) => {
+        //     // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+        //     return (
+        //       <Text style={{ fontWeight: "bold" }}>
+        //         {(price * 0.9)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
+        // {
+        //   title: "Payout (90%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price, record) => {
+        //     // Danh sách các lotStatusId cần áp dụng màu đỏ
+        //     const redStatusIds = [11, 10, 5];
+        //     const isRed = redStatusIds.includes(record.lotStatusId);
+
+        //     return (
+        //       <Text
+        //         style={{
+        //           fontWeight: "bold",
+        //           color: isRed ? "#ff4d4f" : "#000", // Màu đỏ nếu thuộc redStatusIds
+        //         }}
+        //       >
+        //         {(price * 0.9)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
+        // {
+        //   title: "Website Fee (10%)",
+        //   dataIndex: "finalPrice",
+        //   key: "finalPrice",
+        //   align: "left",
+        //   render: (price) => {
+        //     // const color = price > 500000 ? "#52c41a" : "#fa541c"; // Màu giá cao và thấp
+        //     return (
+        //       <Text style={{ fontWeight: "bold" }}>
+        //         {(price * 0.1)?.toLocaleString()} VND
+        //       </Text>
+        //     );
+        //   },
+        // },
+        {
+          title: "Payout (90%)",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
+          align: "left",
+          render: (price, record) => {
+            const statusColorMap = {
+              5: "#ff4d4f", // Đỏ
+              10: "#ff4d4f", // Đỏ
+              11: "#ff4d4f", // Đỏ
+              9: "#52C41A", // Xanh
+            };
+            const defaultColor = "#faad14"; // Vàng
+            const color =
+              statusColorMap[record.lotStatus?.lotStatusId] || defaultColor;
+
+            return (
+              <Text style={{ fontWeight: "bold", color }}>
+                {(price * 0.9)?.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+        {
+          title: "Website Fee (10%)",
+          dataIndex: "finalPrice",
+          key: "finalPrice",
+          align: "left",
+          render: (price, record) => {
+            const statusColorMap = {
+              5: "#ff4d4f", // Đỏ
+              10: "#ff4d4f", // Đỏ
+              11: "#52c41a", // Xanh
+              9: "#52c41a", // Xanh
+            };
+            const defaultColor = "#faad14"; // Vàng
+            const color =
+              statusColorMap[record.lotStatus?.lotStatusId] || defaultColor;
+
+            return (
+              <Text style={{ fontWeight: "bold", color }}>
+                {(price * 0.1)?.toLocaleString()} VND
+              </Text>
+            );
+          },
+        },
+
         {
           title: "Lot Status",
           key: "lotStatusName",
@@ -76,7 +197,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
             const statusColorMap = {
               Completed: "#52c41a", // Xanh lá cây
               Unsold: "#ff4d4f", // Đỏ
-              Canceled: "#faad14", // Vàng cam
+              Canceled: "#d71920", // đỏ đậm
               "Payment Overdue": "#1890ff", // Xanh dương
             };
             return (
@@ -107,7 +228,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
           align: "center",
           render: (date) => (
             <Text style={{ color: "#8c8c8c" }}>
-              {new Date(date).toLocaleString()}
+              {new Date(date)?.toLocaleString()}
             </Text>
           ),
         },
@@ -116,7 +237,7 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
     }
   }, [data]);
 
-  if (!tableData || tableData.length === 0) {
+  if (!tableData || tableData.length == 0) {
     return (
       <Card title={title} className="chart-card">
         <div style={{ textAlign: "center" }}>No data available</div>
@@ -131,17 +252,34 @@ const TableComponent = ({ data, title = "Custom Table" }) => {
       style={{
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         borderRadius: "10px",
+        overflow: "hidden",
       }}
     >
       <Table
-        columns={columns}
+        columns={columns.map((col) => ({
+          ...col,
+          title: (
+            <span
+              style={{ fontSize: "14px", fontWeight: "bold", color: "#595959" }}
+            >
+              {col.title}
+            </span>
+          ),
+        }))}
         dataSource={tableData}
         bordered
         size="middle"
         pagination={{
           pageSize: 6,
           showSizeChanger: false,
+          showQuickJumper: false,
+          total: tableData.length,
         }}
+        rowClassName={(record, index) =>
+          index % 2 == 0
+            ? "custom-row custom-row-even"
+            : "custom-row custom-row-odd"
+        }
         className="custom-table"
       />
     </Card>

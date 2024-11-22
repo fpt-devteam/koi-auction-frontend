@@ -6,6 +6,24 @@ import useFetchLots from "../../hooks/useFetchLots";
 import AuctionForm from "../../components/auction-form";
 import lotApi from "../../config/lotApi";
 
+const checkDuration = (value) => {
+  if (!Number.isInteger(value)) {
+    return false;
+  }
+  if (value < 1 || value > 30) {
+    return false;
+  }
+  return true;
+}
+const checkStepPercent = (value) => {
+  if (!Number.isInteger(value)) {
+    return false;
+  }
+  if (value < 1 || value > 5) {
+    return false;
+  }
+  return true;
+}
 export default function CreateAuctionPage() {
   const { lots, loading, refetch } = useFetchLots(2); //get lot list
   //console.log(lots);
@@ -20,6 +38,26 @@ export default function CreateAuctionPage() {
   };
   const handleCreate = async (auctionData, atoiList) => {
     try {
+      console.log(atoiList);
+      let errorStr = "";
+      atoiList.forEach(
+        (lot) => {
+          if (!checkDuration(lot.duration)) {
+            errorStr = "Please input valid duration!!!";
+            return;
+          }
+          if (lot.auctionMethod.auctionMethodId > 2) {
+            if (!checkStepPercent(lot.stepPercent)) {
+              errorStr = "Please input valid step percent!!!";
+              return;
+            }
+          }
+        }
+      )
+      if (errorStr != "") {
+        message.error(errorStr);
+        return;
+      }
       const response = await lotApi.post("auctions", auctionData);
       let cnt = 0;
       let newAuctionLotList = atoiList.map(

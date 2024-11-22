@@ -7,7 +7,6 @@ import ProfileForm from "../../components/profile-form-modal";
 import UserListMng from "../../components/user-list-management";
 import emailApi from "../../config/emailApi";
 
-
 export default function UserListPage({ number, isRequest }) {
   // //console.log(number);
   const [users, setUsers] = useState([]);
@@ -37,7 +36,7 @@ export default function UserListPage({ number, isRequest }) {
       // //console.log(users);
       setUsers(users);
       const members = (users) => {
-        return users.filter((user) => user.UserRoleId === number);
+        return users.filter((user) => user.UserRoleId == number);
       };
       setUsers(members(users));
       setLoading(false);
@@ -47,7 +46,6 @@ export default function UserListPage({ number, isRequest }) {
       setLoading(false);
     }
   };
-
 
   const handleApprove = async (userId, email, status, reason) => {
     try {
@@ -60,7 +58,7 @@ export default function UserListPage({ number, isRequest }) {
         Verified: status,
       });
       // //console.log(response.status);
-      if (response.status === 201) {
+      if (response.status == 201) {
         let subject, text;
         if (status == 1) {
           subject = "Your Farm Auction Account has been approved";
@@ -79,7 +77,7 @@ export default function UserListPage({ number, isRequest }) {
           Text: text,
         });
         // //console.log("da gui email", emailResponse);
-        if (emailResponse.status === 200) {
+        if (emailResponse.status == 200) {
           message.success({
             content: "Breeder update successfully!",
             key: "updatable",
@@ -106,7 +104,7 @@ export default function UserListPage({ number, isRequest }) {
       message.loading({ content: "Creating user...", key: "updatable" });
       // //console.log(newUser);
       const response = await userApi.post("manage/profile", newUser);
-      if (response.status === 201) {
+      if (response.status == 201) {
         message.success({
           content: "User created successfully!",
           key: "updatable",
@@ -141,9 +139,9 @@ export default function UserListPage({ number, isRequest }) {
         }}
       >
         <h1 className="title" style={{ fontSize: "30px" }}>
-          {number === 2 ? "Breeder" : number === 1 ? "User" : "Staff"} List
+          {number == 2 ? "Breeder" : number == 1 ? "User" : "Staff"} List
         </h1>
-        {number === 3 && (
+        {number == 3 && (
           <Button
             size="large"
             type="primary"
@@ -156,7 +154,7 @@ export default function UserListPage({ number, isRequest }) {
           </Button>
         )}
       </div>
-      {number === 2 && (
+      {number == 2 && (
         <div
           style={{
             display: "flex",
@@ -207,7 +205,7 @@ export default function UserListPage({ number, isRequest }) {
         handleFormSubmit={handleFormSubmit}
         isModalVisible={isModalVisible}
         onClose={handleCloseModal}
-        isBreeder={number === 2}
+        isBreeder={number == 2}
         isCreate={isCreate}
       />
     </div>

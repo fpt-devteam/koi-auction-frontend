@@ -29,35 +29,35 @@ const WalletPage = () => {
   const checkTrans = (trans) => {
     switch (trans.transType) {
       case "Deposit":
-        if (trans.status === "Success") {
+        if (trans.status == "Success") {
           trans.balanceAfter = trans.amount + trans.balanceBefore;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }
         break;
       case "Withdraw":
-        if (trans.status === "Success") {
+        if (trans.status == "Success") {
           trans.balanceAfter = trans.balanceBefore - trans.amount;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }
         break;
       case "Payment":
-        if (trans.status === "Success") {
+        if (trans.status == "Success") {
           trans.balanceAfter = trans.balanceBefore - trans.amount;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }
         break;
       case "Payout":
-        if (trans.status === "Success") {
+        if (trans.status == "Success") {
           trans.balanceAfter = trans.amount + trans.balanceBefore;
         } else {
           trans.balanceAfter = trans.balanceBefore;
         }
         break;
       case "Refund":
-        if (trans.status === "Success") {
+        if (trans.status == "Success") {
           trans.balanceAfter = trans.amount + trans.balanceBefore;
         } else {
           trans.balanceAfter = trans.balanceBefore;
@@ -91,7 +91,7 @@ const WalletPage = () => {
         });
 
       const withdraw = response.data
-        .filter((x) => x.TransType === "Withdraw")
+        .filter((x) => x.TransType == "Withdraw")
         .sort((a, b) => b.TransId - a.TransId)
         .map((trans) => {
           const formattedTrans = {
@@ -137,12 +137,34 @@ const WalletPage = () => {
         <YourWallet balance={balance} refresh={handleRefresh} user={user} />
       </Card>
       <Card
-        title={<div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>Transaction History</div>}
+        title={
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "#333",
+            }}
+          >
+            Transaction History
+          </div>
+        }
       >
         <TransactionList transactions={transactions} />
       </Card>
       <Card
-        title={<div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>Withdrawal History</div>}
+        title={
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "#333",
+            }}
+          >
+            Withdrawal History
+          </div>
+        }
       >
         <TransactionList transactions={withdraw} />
       </Card>

@@ -127,7 +127,7 @@
 //         <Button type="primary" onClick={handleBack}>
 //           Back
 //         </Button>
-//         <Button type="primary" onClick={handleNext} disabled={offset === 0}>
+//         <Button type="primary" onClick={handleNext} disabled={offset == 0}>
 //           Next
 //         </Button>
 //       </Space>
@@ -260,7 +260,7 @@ const MainLineChartComponent = ({
         <Button type="primary" onClick={handleBack}>
           Back
         </Button>
-        <Button type="primary" onClick={handleNext} disabled={offset === 0}>
+        <Button type="primary" onClick={handleNext} disabled={offset == 0}>
           Next
         </Button>
       </Space> */}

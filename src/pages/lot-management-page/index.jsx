@@ -9,15 +9,23 @@ function LotManagementPage() {
   const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
   return (
     <div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px'
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
         <h1 style={{ margin: 0 }}>Lot Management</h1>
-        {userRoleId === 2 && (
-          <Button size="large" type="primary" onClick={() => navigate("/management/create-lot-request")}>Create Lot</Button>
+        {userRoleId == 2 && (
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => navigate("/management/create-lot-request")}
+          >
+            Create Lot
+          </Button>
         )}
       </div>
       <StatusTab LotList={LotList} />

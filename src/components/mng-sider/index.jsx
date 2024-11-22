@@ -3,7 +3,15 @@ import { useState } from "react";
 import Logo from "../logo";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-import { FormOutlined, HistoryOutlined, UserOutlined, DashboardOutlined, DashboardFilled, DashboardTwoTone, MoneyCollectOutlined } from "@ant-design/icons";
+import {
+  FormOutlined,
+  HistoryOutlined,
+  UserOutlined,
+  DashboardOutlined,
+  DashboardFilled,
+  DashboardTwoTone,
+  MoneyCollectOutlined,
+} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
 function getItem(label, key, icon, children = null, url = "/management") {
@@ -22,7 +30,15 @@ function MngSider() {
 
   const items = [getItem("Lot management", counter++, <HistoryOutlined />)];
   if (userRoleId == 2) {
-    items.push(getItem("Dashboard ", counter++, <DashboardTwoTone />, null, "/management/breeder-dashboard"));
+    items.push(
+      getItem(
+        "Dashboard ",
+        counter++,
+        <DashboardTwoTone />,
+        null,
+        "/management/breeder-dashboard"
+      )
+    );
   }
   if (userRoleId > 2) {
     items.push(
@@ -64,18 +80,18 @@ function MngSider() {
     ];
     items.push(
       {
-      key: "account-management",
-      icon: <UserOutlined />,
-      label: "Account Management",
-      children: accountDropdownItems,
-    },
-    {
-      label: "Dashboard",
-      icon: <DashboardOutlined />,
-      key: "dashboard",
-      onClick: () => navigate("/management/admin-dashboard"),
-    },
-  );
+        key: "account-management",
+        icon: <UserOutlined />,
+        label: "Account Management",
+        children: accountDropdownItems,
+      },
+      {
+        label: "Dashboard",
+        icon: <DashboardOutlined />,
+        key: "dashboard",
+        onClick: () => navigate("/management/admin-dashboard"),
+      }
+    );
   }
   if (userRoleId == 3) {
     const accountDropdownItems = [
@@ -85,19 +101,17 @@ function MngSider() {
         onClick: () => navigate("/management/breeder-list"),
       },
     ];
-    items.push(
-      {
+    items.push({
       key: "account-management",
       icon: <UserOutlined />,
       label: "Account Management",
       children: accountDropdownItems,
-    },
-  );
+    });
   }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const handleMenuClick = (keyItem) => {
-    const item = items.find((item) => String(item.key) === keyItem.key);
+    const item = items.find((item) => String(item.key) == keyItem.key);
     if (item?.url) {
       navigate(item.url);
     }

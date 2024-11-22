@@ -19,6 +19,7 @@ const UserDetail = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [seed, setSeed] = useState(0);
+  const [isBreeder, setIsBreeder] = useState(false);
 
   const [form] = Form.useForm();
   const location = useLocation();
@@ -81,6 +82,9 @@ const UserDetail = () => {
     try {
       const response = await userApi.get(`manage/detail-profile/${id}`);
       setUser(response.data);
+      if (user?.UserRoleId === 2) {
+        setIsBreeder(true);
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
       message.error("Failed to fetch user data.");
@@ -109,9 +113,9 @@ const UserDetail = () => {
 
       const emailContent = {
         Email: email,
-        Subject: status === 1 ? "Account Approved" : "Account Rejected",
+        Subject: status == 1 ? "Account Approved" : "Account Rejected",
         Text:
-          status === 1
+          status == 1
             ? "Your account has been approved."
             : `Your account has been rejected. Reason: ${reason || "None"}`,
       };
@@ -144,8 +148,11 @@ const UserDetail = () => {
           console.log(response.data.message);
           console.log(values.Active);
           fetchUser(userId);
-          
-          message.success({ content: "User updated successfully!", key: "updatable" });
+
+          message.success({
+            content: "User updated successfully!",
+            key: "updatable",
+          });
           handleReset();
           setIsModalVisible(false);
         } catch (error) {
@@ -194,6 +201,7 @@ const UserDetail = () => {
   useEffect(() => {
     if (user) initializeFormData();
   }, [user]);
+  console.log("isBreeder", isBreeder);
 
   return loading ? (
     <Spin />

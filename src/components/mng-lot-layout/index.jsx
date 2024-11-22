@@ -20,9 +20,9 @@ const LotLayout = ({
   const [action, setAction] = useState(""); // Trạng thái để lưu hành động hiện tại (Create, Update)
 
   const handleSubmit = async (values) => {
-    if (action === "create") {
+    if (action == "create") {
       await onCreate(values); // Gọi hàm onCreate với giá trị của form
-    } else if (action === "update") {
+    } else if (action == "update") {
       await onUpdate(values); // Gọi hàm onUpdate với giá trị của form
     }
   };
@@ -47,11 +47,11 @@ const LotLayout = ({
 
   // const [isUserLoaded, setIsUserLoaded] = useState(false); // Biến trạng thái để kiểm tra việc khôi phục
   let statusId = useParams().LotStatusId;
-  statusId = (statusId) ? statusId : 1;
+  statusId = statusId ? statusId : 1;
   // //console.log("statusId", statusId);
   const userRoleId = useSelector((state) => state.user.user?.UserRoleId);
   // const statusId = useSelector((state) => state.status.statusId);
-  if (userRoleId === null) {
+  if (userRoleId == null) {
     return null;
   }
   // //console.log("statusId", statusId);

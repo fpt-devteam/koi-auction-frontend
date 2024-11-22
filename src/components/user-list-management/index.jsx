@@ -9,12 +9,12 @@ function UserListMng({ users, loading, isRequesting, onApprove, onReject }) {
   const [selectedUser, setSelectedUser] = useState(null); // Track the user being rejected
 
   // Filter users based on `isRequesting`
-  if (isRequesting === 0) {
-    users = users.filter((user) => user.Verified === 0);
-  } else if (isRequesting === 1) {
-    users = users.filter((user) => user.Verified === 1);
-  } else if (isRequesting === 2) {
-    users = users.filter((user) => user.Verified === 2);
+  if (isRequesting == 0) {
+    users = users.filter((user) => user.Verified == 0);
+  } else if (isRequesting == 1) {
+    users = users.filter((user) => user.Verified == 1);
+  } else if (isRequesting == 2) {
+    users = users.filter((user) => user.Verified == 2);
   }
 
   const columns = [
@@ -73,17 +73,17 @@ function UserListMng({ users, loading, isRequesting, onApprove, onReject }) {
       width: 100,
       render: (verified) => (
         <>
-          {verified === 0 && (
+          {verified == 0 && (
             <Tag color="blue" key="pending">
               Pending
             </Tag>
           )}
-          {verified === 1 && (
+          {verified == 1 && (
             <Tag color="green" key="approved">
               Approved
             </Tag>
           )}
-          {verified === 2 && (
+          {verified == 2 && (
             <Tag color="red" key="rejected">
               Rejected
             </Tag>

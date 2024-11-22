@@ -20,7 +20,8 @@ import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import lotApi from "../../config/lotApi";
 
-const DATE_FORMAT = "YYYY-MM-DD", TIME_FORMAT = "HH:mm";
+const DATE_FORMAT = "YYYY-MM-DD",
+  TIME_FORMAT = "HH:mm";
 const MIN_DURATION_MINUTES = 1;
 const MAX_DURATION_MINUTES = 30;
 const MIN_STEP_PRECENT = 1;
@@ -43,7 +44,7 @@ export default function AuctionForm({
   const handleLotChange = (lotId, updatedValues) => {
     setAuctionLotList((prevLots) => {
       const updatedList = prevLots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, ...updatedValues } : lot
+        lot.lotId == lotId ? { ...lot, ...updatedValues } : lot
       );
       return updatedList;
     });
@@ -66,8 +67,8 @@ export default function AuctionForm({
       ...item,
       auctionLotId: item.lotId,
       orderInAuction: 0,
-      duration: MIN_DURATION_MINUTES,
-      stepPercent: MIN_STEP_PRECENT,
+      duration: 0,
+      stepPercent: 0,
     }));
     setApprovedLotSource(list);
   }, [approvedLots]);
@@ -87,29 +88,36 @@ export default function AuctionForm({
   }, [auction, formVariable]);
   const handleSubmit = async (values) => {
     const hostDate = values.hostDate ? dayjs(values.hostDate) : null;
-    const startTime = values.startTime ? dayjs(values.startTime, TIME_FORMAT) : null;
-    const combinedDateTime = hostDate && startTime
-      ? hostDate
-        .hour(startTime.hour())
-        .minute(startTime.minute())
-        .second(startTime.second())
+    const startTime = values.startTime
+      ? dayjs(values.startTime, TIME_FORMAT)
       : null;
+    const combinedDateTime =
+      hostDate && startTime
+        ? hostDate
+            .hour(startTime.hour())
+            .minute(startTime.minute())
+            .second(startTime.second())
+        : null;
     const auctionData = {
       staffId: user.UserId,
       hostDate: hostDate ? hostDate.format(DATE_FORMAT) : null,
-      startTime: combinedDateTime ? combinedDateTime.format(`${DATE_FORMAT} HH:mm:00`) : null,
+      startTime: combinedDateTime
+        ? combinedDateTime.format(`${DATE_FORMAT} HH:mm:00`)
+        : null,
     };
     const now = dayjs();
-    if (combinedDateTime.isBefore(now.add(1, 'millisecond'))) {
+    if (combinedDateTime.isBefore(now.add(1, "millisecond"))) {
       message.error("The selected time is in the past");
       return;
     }
 
-    let itoaList = [], atoiList = [], updateAuctionLotList = [];
+    let itoaList = [],
+      atoiList = [],
+      updateAuctionLotList = [];
     //Get the list of lot need to change status form InAuction to Approved
     if (approvedLotSource.length > 0) {
-      approvedLotSource.forEach(e1 => {
-        let isExist = approvedLots.some(e2 => e1.lotId === e2.lotId);
+      approvedLotSource.forEach((e1) => {
+        let isExist = approvedLots.some((e2) => e1.lotId == e2.lotId);
         if (!isExist) {
           itoaList.push(e1);
         }
@@ -118,22 +126,22 @@ export default function AuctionForm({
     //Get the list of lot need to change status form Approved to InAuction
     let cnt = 0;
     if (auctionLotList.length > 0) {
-      auctionLotList.forEach(e1 => {
+      auctionLotList.forEach((e1) => {
         cnt++;
         e1.orderInAuction = cnt;
       });
-      auctionLotList.forEach(e1 => {
-        let isExist = approvedLots.some(e2 => e1.lotId === e2.lotId);
+      auctionLotList.forEach((e1) => {
+        let isExist = approvedLots.some((e2) => e1.lotId == e2.lotId);
         if (isExist) {
           atoiList.push(e1);
         }
       });
-      auctionLotList.forEach(e1 => {
-        let isExist = auctionLots.some(e2 => e1.lotId === e2.lotId);
+      auctionLotList.forEach((e1) => {
+        let isExist = auctionLots.some((e2) => e1.lotId == e2.lotId);
         if (isExist) {
           updateAuctionLotList.push(e1);
         }
-      })
+      });
     }
     onSubmit(auctionData, atoiList, itoaList, updateAuctionLotList);
   };
@@ -181,7 +189,7 @@ export default function AuctionForm({
             <TimePicker format={TIME_FORMAT} placeholder={TIME_FORMAT} />
           </Form.Item>{" "}
         </Form>
-      </div >
+      </div>
       <div></div>
       <div className="lots-container">
         <LotSection
@@ -204,21 +212,13 @@ export default function AuctionForm({
         />
       </div>
       <div className="button-container">
-        <Button
-          className="button"
-          type="primary"
-          onClick={handleClick}
-        >
+        <Button className="button" type="primary" onClick={handleClick}>
           {mode}
         </Button>
-        <Button
-          className="button reset"
-          type="primary"
-          onClick={handleReset}
-        >
+        <Button className="button reset" type="primary" onClick={handleReset}>
           Reset
         </Button>
-      </div >
+      </div>
     </>
   );
 }
@@ -326,12 +326,8 @@ const LotTable = ({
 };
 
 const LotCardRow = ({ lot, operation, onLotChange }) => {
-  const [duration, setDuration] = useState(
-    lot.duration || MIN_DURATION_MINUTES
-  );
-  const [stepPercent, setStepPercent] = useState(
-    lot.stepPercent || MIN_STEP_PRECENT
-  );
+  const [duration, setDuration] = useState(0);
+  const [stepPercent, setStepPercent] = useState(0);
   const handleDurationChange = (value) => {
     setDuration(value);
     onLotChange(lot.lotId, { duration: value, stepPercent });
@@ -351,7 +347,7 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
           </div>
         }
       >
-        <Row gutter={[16, 16]} >
+        <Row gutter={[16, 16]}>
           {/* Image Placeholder */}
           <Col
             span={8}
@@ -367,12 +363,10 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                 "default-placeholder.png"
               }
               height={"100%"}
-              style={
-                {
-                  aspectRatio: "cover",
-                  borderRadius: "10px"
-                }
-              }
+              style={{
+                aspectRatio: "cover",
+                borderRadius: "10px",
+              }}
             />
           </Col>
 
@@ -397,10 +391,9 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
               </div>
             </div>
 
-            {operation === "Remove" && (
+            {operation == "Remove" && (
               <>
-                <Form
-                  layout="inline" >
+                <Form layout="inline">
                   <Form.Item
                     label="Duration (minute)"
                     name="duration"
@@ -446,10 +439,14 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                       style={{ width: "20ch" }}
                       size="small"
                       onChange={handleDurationChange}
-                      formatter={(value) =>
-                        `${value}`
-                      }
-                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                      // formatter={(value) =>
+                      //   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      // }
+                      // // parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                      // parser={
+                      //   (value) => value.replace(/[^0-9]/g, "") // Loại bỏ tất cả ký tự không phải số
+                      // }
+                      //warning error if duration is not integer
                     />
                   </Form.Item>
                   {lot?.auctionMethod?.auctionMethodId >= 3 && (
@@ -499,10 +496,7 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
                           style={{ width: "20ch" }}
                           placeholder="Enter step percent"
                           onChange={handleStepPercentChange}
-                          formatter={(value) =>
-                            `${value}`
-                          }
-                          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                          
                         />
                       </Form.Item>
                     </>
@@ -512,7 +506,7 @@ const LotCardRow = ({ lot, operation, onLotChange }) => {
             )}
           </Col>
         </Row>
-      </div >
+      </div>
     </>
   );
 };

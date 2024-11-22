@@ -12,7 +12,7 @@ function DateRangeCard({ onDateChange }) {
 
   // Handle date change
   const handleDateChange = (dates) => {
-    if (dates && dates.length === 2) {
+    if (dates && dates.length == 2) {
       const startDate = dates[0].startOf("day");
       const endDate = dates[1].endOf("day");
       onDateChange(startDate, endDate); // Pass selected dates to parent component
